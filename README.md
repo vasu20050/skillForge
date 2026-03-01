@@ -1,152 +1,138 @@
-🔥 SkillForge
-Forging Student Skills into Real-World Impact
-📖 Overview
+# 🔥 SkillForge
 
-SkillForge is an open-source web platform that connects verified college students with local businesses for structured, skill-based micro projects.
+### Forging Student Skills into Real-World Impact
+
+---
+
+## 📖 Overview
+
+**SkillForge** is an open-source web platform that connects verified college students with local businesses for structured, skill-based micro projects.
 
 Unlike traditional freelance marketplaces, SkillForge operates on a managed workflow model — ensuring clarity, accountability, and quality delivery without chaotic bidding systems.
 
 The platform empowers students to gain real-world experience while helping small businesses access affordable and reliable talent.
 
-🎯 Problem Statement
-Students struggle to:
+---
 
-Get their first client
+## 🎯 Problem Statement
 
-Build a professional portfolio
+### Students struggle to:
 
-Gain real-world project exposure
+* Get their first client
+* Build a professional portfolio
+* Gain real-world project exposure
+* Earn flexible income
 
-Earn flexible income
+### Local businesses struggle to:
 
-Local businesses struggle to:
+* Afford professional agencies
+* Find reliable freelancers
+* Manage inconsistent project delivery
+* Execute small digital tasks efficiently
 
-Afford professional agencies
-
-Find reliable freelancers
-
-Manage inconsistent project delivery
-
-Execute small digital tasks efficiently
-
-Large freelance platforms such as:
-
-Fiverr
-
-Upwork
-
-are global, competitive, and often overwhelming for beginners and small local businesses.
+Large freelance platforms such as Fiverr and Upwork are global, competitive, and often overwhelming for beginners and small local businesses.
 
 SkillForge bridges this gap through a curated, structured system designed specifically for student talent.
 
-💡 Solution
+---
+
+## 💡 Solution
 
 SkillForge removes open bidding and introduces a controlled project lifecycle:
 
-Business submits structured project request
-
-Admin reviews and defines deliverables
-
-Verified student is assigned
-
-Student submits work
-
-Admin reviews and marks completion
+1. Business submits structured project request
+2. Admin reviews and defines deliverables
+3. Verified student is assigned
+4. Student submits work
+5. Admin reviews and marks completion
 
 This approach ensures:
 
-Defined scope
+* Defined scope
+* Reduced project disputes
+* Better quality control
+* Improved accountability
 
-Reduced project disputes
+---
 
-Better quality control
+## 🛠️ Core Features
 
-Improved accountability
+### 🔐 Role-Based Authentication
 
-🛠️ Core Features
-🔐 Role-Based Authentication
-
-Student
-
-Business
-
-Admin
+* Student
+* Business
+* Admin
 
 Secure JWT-based authentication system.
 
-🎨 Service Categories
+---
+
+### 🎨 Service Categories
 
 SkillForge supports the following skill-based micro services:
 
-Graphic Design (posters, thumbnails, creatives)
+* Graphic Design (posters, thumbnails, creatives)
+* Small Website Development
+* Video Editing
+* CAD Drafting
+* Content Writing
+* AI Data Cleaning
+* Social Media Management
 
-Small Website Development
+---
 
-Video Editing
+### 📦 Structured Project Workflow
 
-CAD Drafting
+* Clear project scope definition
+* Fixed timeline
+* Status tracking (Pending → Assigned → Submitted → Completed)
+* Internal quality review
 
-Content Writing
+---
 
-AI Data Cleaning
+### ⭐ Performance & Feedback System
 
-Social Media Management
+* Business feedback stored
+* Student performance tracking
+* Admin monitoring dashboard
 
-📦 Structured Project Workflow
+---
 
-Clear project scope definition
+### 📊 Admin Dashboard
 
-Fixed timeline
+* Manage users
+* Assign projects
+* Track project lifecycle
+* Monitor platform activity
 
-Status tracking (Pending → Assigned → Submitted → Completed)
+---
 
-Internal quality review
+## 🏗️ Tech Stack
 
-⭐ Performance & Feedback System
+### Frontend
 
-Business feedback stored
+* React.js
+* Tailwind CSS
 
-Student performance tracking
+### Backend
 
-Admin monitoring dashboard
+* Node.js
+* Express.js
 
-📊 Admin Dashboard
+### Database
 
-Manage users
+* MongoDB
 
-Assign projects
+### Authentication
 
-Track project lifecycle
-
-Monitor platform activity
-
-🏗️ Tech Stack
-Frontend
-
-React.js
-
-Tailwind CSS
-
-Backend
-
-Node.js
-
-Express.js
-
-Database
-
-MongoDB
-
-Authentication
-
-JWT (JSON Web Tokens)
-
-bcrypt for password hashing
+* JWT (JSON Web Tokens)
+* bcrypt for password hashing
 
 All technologies used are fully open-source.
-No paid APIs or third-party SaaS services are integrated.
 
-🧠 System Architecture
+---
+
+## 🧠 System Architecture
 
 SkillForge follows a standard client-server architecture:
 
@@ -156,9 +142,13 @@ Backend API (Express)
 ⬇
 MongoDB Database
 
-The system is modular, scalable, and designed for future expansion.
+The system is modular and scalable.
 
-📂 Project Structure
+---
+
+## 📂 Project Structure
+
+```
 SkillForge/
 │
 ├── client/             # React frontend
@@ -168,67 +158,97 @@ SkillForge/
 ├── controllers/        # Business logic
 ├── middleware/         # Authentication & validation
 └── README.md
-⚙️ Installation Guide
-1️⃣ Clone the Repository
+```
+
+---
+
+## ⚙️ Installation Guide
+
+### 1️⃣ Clone the Repository
+
+```
 git clone https://github.com/your-username/skillforge.git
 cd skillforge
-2️⃣ Install Dependencies
-Backend
+```
+
+### 2️⃣ Install Dependencies
+
+#### Backend
+
+```
 cd server
 npm install
-Frontend
+```
+
+#### Frontend
+
+```
 cd client
 npm install
-3️⃣ Configure Environment Variables
+```
 
-Create a .env file inside the /server directory:
+### 3️⃣ Configure Environment Variables
 
+Create a `.env` file inside the `/server` directory:
+
+```
 PORT=5000
 MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_secret_key
-4️⃣ Run the Application
-Start Backend
+```
+
+### 4️⃣ Run the Application
+
+#### Start Backend
+
+```
 npm run dev
-Start Frontend
+```
+
+#### Start Frontend
+
+```
 npm start
-🎯 Hackathon Goals
+```
 
-Provide a structured alternative to chaotic freelance marketplaces
+---
 
-Promote skill monetization among students
+## 🎯 Hackathon Goals
 
-Enable real-world exposure without academic misconduct
+* Provide a structured alternative to chaotic freelance marketplaces
+* Promote skill monetization among students
+* Enable real-world exposure through structured collaboration
+* Build a scalable open-source solution
 
-Build a scalable, open-source solution
+---
 
-📈 Future Scope
+## 📈 Future Scope
 
-Escrow-based payment integration
+* Escrow-based payment integration
+* AI-based skill matching system
+* Student portfolio auto-generation
+* Multi-city expansion model
+* Performance-based ranking system
 
-AI-based skill matching system
+---
 
-Student portfolio auto-generation
+## 🤝 Contribution Guidelines
 
-Multi-city expansion model
-
-Performance-based ranking system
-
-🤝 Contribution Guidelines
-
-Fork the repository
-
-Create a feature branch
-
-Commit changes
-
-Submit a pull request
+1. Fork the repository
+2. Create a feature branch
+3. Commit changes
+4. Submit a pull request
 
 Please follow clean coding standards and modular architecture principles.
 
-📜 License
+---
+
+## 📜 License
 
 This project is licensed under the MIT License.
 
-🌍 Vision
+---
+
+## 🌍 Vision
 
 To build a trusted ecosystem where student skills are forged into real-world impact — bridging education and industry through structured collaboration.
