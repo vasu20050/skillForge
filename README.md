@@ -1,211 +1,142 @@
-# 🔥 SkillForge
+# SkillForge
 
-### Forging Student Skills into Real-World Impact
+**A Campus-First Peer Skill Marketplace**
 
----
+> "Every student has a skill. Nobody gives them a chance to prove it — until now."
 
-## 📖 Overview
-
-**SkillForge** is an open-source web platform that connects verified college students with local businesses for structured, skill-based micro projects.
-
-Unlike traditional freelance marketplaces, SkillForge operates on a managed workflow model — ensuring clarity, accountability, and quality delivery without chaotic bidding systems.
-
-The platform empowers students to gain real-world experience while helping small businesses access affordable and reliable talent.
+SkillForge is a closed-campus, peer-to-peer (P2P) skill exchange platform built exclusively for college students. It breaks the "no experience, no work" cycle by creating a high-trust, credit-based environment where a student's college identity acts as their primary credential.
 
 ---
 
-## 🎯 Problem Statement
+# 🚀 Vision
 
-### Students struggle to:
+Traditional freelance platforms require experience before getting work. SkillForge flips that model by creating a safe campus ecosystem where students can:
 
-* Get their first client
-* Build a professional portfolio
-* Gain real-world project exposure
-* Earn flexible income
+* Work on **real projects inside their campus community**
+* Build a **verifiable portfolio**
+* Earn a **campus reputation score**
+* Exchange services through an **internal credit economy**
 
-### Local businesses struggle to:
-
-* Afford professional agencies
-* Find reliable freelancers
-* Manage inconsistent project delivery
-* Execute small digital tasks efficiently
-
-Large freelance platforms such as Fiverr and Upwork are global, competitive, and often overwhelming for beginners and small local businesses.
-
-SkillForge bridges this gap through a curated, structured system designed specifically for student talent.
+This removes payment friction and focuses on **learning, collaboration, and real experience.**
 
 ---
 
-## 💡 Solution
+# 🛠 Tech Stack
 
-SkillForge removes open bidding and introduces a controlled project lifecycle:
-
-1. Business submits structured project request
-2. Admin reviews and defines deliverables
-3. Verified student is assigned
-4. Student submits work
-5. Admin reviews and marks completion
-
-This approach ensures:
-
-* Defined scope
-* Reduced project disputes
-* Better quality control
-* Improved accountability
-
----
-
-## 🛠️ Core Features
-
-### 🔐 Role-Based Authentication
-
-* Student
-* Business
-* Admin
-
-Secure JWT-based authentication system.
-
----
-
-### 🎨 Service Categories
-
-SkillForge supports the following skill-based micro services:
-
-* Graphic Design (posters, thumbnails, creatives)
-* Small Website Development
-* Video Editing
-* CAD Drafting
-* Content Writing
-* AI Data Cleaning
-* Social Media Management
-
----
-
-### 📦 Structured Project Workflow
-
-* Clear project scope definition
-* Fixed timeline
-* Status tracking (Pending → Assigned → Submitted → Completed)
-* Internal quality review
-
----
-
-### ⭐ Performance & Feedback System
-
-* Business feedback stored
-* Student performance tracking
-* Admin monitoring dashboard
-
----
-
-### 📊 Admin Dashboard
-
-* Manage users
-* Assign projects
-* Track project lifecycle
-* Monitor platform activity
-
----
-
-## 🏗️ Tech Stack
-
-### Frontend
+**Frontend**
 
 * React.js
 * Tailwind CSS
 
-### Backend
+**Backend**
 
 * Node.js
 * Express.js
 
-### Database
+**Database**
 
-* MongoDB
+* MongoDB (Mongoose)
 
-### Authentication
+**Authentication**
 
-* JWT (JSON Web Tokens)
-* bcrypt for password hashing
+* JWT Authentication
+* College Email Domain Validation
 
-All technologies used are fully open-source.
+**Storage**
 
----
-
-## 🧠 System Architecture
-
-SkillForge follows a standard client-server architecture:
-
-Frontend (React)
-⬇
-Backend API (Express)
-⬇
-MongoDB Database
-
-The system is modular and scalable.
+* Cloudinary (portfolio files and project deliverables)
 
 ---
 
-## 📂 Project Structure
+# 📦 Core Features (MVP)
+
+### 1. Campus-Only Authentication
+
+Only students with approved college email domains can register.
+
+### 2. Dual User Roles
+
+Users can switch between:
+
+* **Worker** → Offers skills and completes projects
+* **Client** → Posts tasks and hires other students
+
+### 3. Credit Economy
+
+* Each user receives **100 credits on signup**
+* Credits transfer **only after project approval**
+* Prevents payment issues while encouraging fair exchange
+
+### 4. Skill Categories
+
+Platform supports multiple student skill categories including:
+
+* Graphic Design
+* Web Development
+* Content Writing
+* AI Data Tasks
+* Video Editing
+* Presentation Design
+* Research Assistance
+
+### 5. Managed Project Workflow
+
+Projects go through **admin approval** to maintain quality and prevent spam.
+
+### 6. Auto Portfolio System
+
+Every completed project automatically appears in the student's **public portfolio profile**.
+
+---
+
+# 🧩 Project Architecture
 
 ```
 SkillForge/
 │
-├── client/             # React frontend
-├── server/             # Express backend
-├── models/             # Database schemas
-├── routes/             # API endpoints
-├── controllers/        # Business logic
-├── middleware/         # Authentication & validation
-└── README.md
+├── client/                 # React Frontend
+│   ├── components/
+│   ├── pages/
+│   ├── services/
+│   └── App.js
+│
+└── server/                 # Node Backend
+    ├── controllers/        # Business logic
+    ├── models/             # MongoDB schemas
+    ├── routes/             # API routes
+    ├── middleware/         # Auth and validation
+    └── index.js            # Server entry point
 ```
 
 ---
 
-## ⚙️ Installation Guide
+# ⚙️ Installation
 
-### 1️⃣ Clone the Repository
+## 1️⃣ Clone Repository
 
 ```
-git clone https://github.com/your-username/skillforge.git
-cd skillforge
+git clone https://github.com/your-username/SkillForge.git
+cd SkillForge
 ```
 
-### 2️⃣ Install Dependencies
+---
 
-#### Backend
+## 2️⃣ Backend Setup
 
 ```
 cd server
 npm install
 ```
 
-#### Frontend
-
-```
-cd client
-npm install
-```
-
-### 3️⃣ Configure Environment Variables
-
-Create a `.env` file inside the `/server` directory:
+Create a `.env` file:
 
 ```
 PORT=5000
-MONGO_URI=your_mongodb_connection_string
-JWT_SECRET=your_secret_key
+MONGO_URI=your_mongodb_atlas_uri
+JWT_SECRET=your_secret
 ```
 
-### 4️⃣ Run the Application
-
-#### Start Backend
-
-```
-npm run dev
-```
-
-#### Start Frontend
+Run backend:
 
 ```
 npm start
@@ -213,42 +144,81 @@ npm start
 
 ---
 
-## 🎯 Hackathon Goals
+## 3️⃣ Frontend Setup
 
-* Provide a structured alternative to chaotic freelance marketplaces
-* Promote skill monetization among students
-* Enable real-world exposure through structured collaboration
-* Build a scalable open-source solution
+```
+cd client
+npm install
+npm start
+```
+
+Frontend runs at:
+
+```
+http://localhost:3000
+```
+
+Backend runs at:
+
+```
+http://localhost:5000
+```
 
 ---
 
-## 📈 Future Scope
+# 🔐 Authentication Flow
 
-* Escrow-based payment integration
-* AI-based skill matching system
-* Student portfolio auto-generation
-* Multi-city expansion model
-* Performance-based ranking system
+1. User signs up with **college email**
+2. Email domain validation checks if domain is approved
+3. JWT token issued after successful login
+4. Protected routes verify token for API access
 
 ---
 
-## 🤝 Contribution Guidelines
+# 🧠 Credit Economy Logic
+
+1. Client posts project with credit reward
+2. Worker accepts project
+3. Worker submits deliverables
+4. Client approves project
+5. Credits automatically transfer
+
+---
+
+# 📈 Future Improvements
+
+Planned features beyond MVP:
+
+* Reputation scoring algorithm
+* Skill endorsements
+* Campus leaderboards
+* AI project matching
+* Real internship pipeline
+* Cross-campus collaboration
+
+---
+
+# 🤝 Contributing
+
+SkillForge is open-source and welcomes contributions from student developers.
+
+Steps:
 
 1. Fork the repository
 2. Create a feature branch
-3. Commit changes
+3. Commit your changes
 4. Submit a pull request
 
-Please follow clean coding standards and modular architecture principles.
+---
+
+# 📜 License
+
+This project is released under the **MIT License**.
 
 ---
 
-## 📜 License
+# 👨‍💻 Developed For
 
-This project is licensed under the MIT License.
+**Campus Hackathon 2026**
 
----
-
-## 🌍 Vision
-
-To build a trusted ecosystem where student skills are forged into real-world impact — bridging education and industry through structured collaboration.
+SkillForge aims to empower students to gain **real
