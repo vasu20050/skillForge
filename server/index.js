@@ -16,6 +16,7 @@ connectDB();
 
 // basic route
 app.get('/', (req, res) => res.send('SkillForge API'));
+app.get('/api/health', (req, res) => res.json({ status: 'SkillForge API is Live', version: '1.0.0' }));
 
 // routers
 const authRoutes = require('./routes/authRoutes');
