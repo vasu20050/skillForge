@@ -14,9 +14,14 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Please provide name, email, and password.' });
     }
 
-    // Ensure it's a college email (.ac domain e.g. .ac.in, .ac.uk)
-    if (!email.includes('.ac.')) {
-      return res.status(400).json({ message: 'Must use a valid college email domain (e.g. .ac.in or .ac.uk).' });
+    // Ensure it's a college email (.ac, .edu, or common campus domains)
+    const collegeDomains = ['.ac.', '.edu', '@college.'];
+    const isValidDomain = collegeDomains.some(domain => email.toLowerCase().includes(domain));
+    
+    if (!isValidDomain) {
+      return res.status(400).json({ 
+        message: 'Must use a valid college email domain (e.g. .ac.in, .edu, name@college.domain).' 
+      });
     }
 
     const userExists = await User.findOne({ email });
