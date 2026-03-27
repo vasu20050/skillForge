@@ -4,11 +4,11 @@
   "description": "---",
   "main": "index.js",
   "scripts": {
-    "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "client": "cd client && npm start",
-    "server": "cd server && npm run dev",
-    "start": "cd server && npm start",
-    "test": "echo \"Run tests: cd server && npm test\" && echo \"OR: cd client && npm test\"",
+    "dev": "concurrently \"npm.cmd run server\" \"npm.cmd run client\"",
+    "client": "npm.cmd start --prefix client",
+    "server": "npm.cmd run dev --prefix server",
+    "start": "npm.cmd run dev",
+    "test": "echo \"Run tests: npm.cmd test --prefix server\"",
     "docker": "docker-compose up"
   },
   "keywords": [],

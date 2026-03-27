@@ -3,15 +3,25 @@ import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center py-20 animate-in fade-in duration-1000">
+    <div className="flex flex-col items-center justify-center py-10 page-transition">
       <div className="max-w-4xl text-center">
+        <div className="mb-12 flex justify-center">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 to-rose-500 rounded-3xl blur opacity-25 group-hover:opacity-50 transition duration-1000 group-hover:duration-200"></div>
+            <img 
+              src="/logo.png" 
+              alt="SkillForge Logo" 
+              className="relative w-32 h-32 md:w-40 md:h-40 rounded-[2.5rem] shadow-2xl transition-transform duration-500 group-hover:scale-105 animate-float" 
+            />
+          </div>
+        </div>
         <div className="inline-flex items-center space-x-2 bg-white/40 px-4 py-2 rounded-full border border-slate-200 mb-8 pointer-events-none shadow-sm">
            <span className="flex h-2 w-2 rounded-full bg-indigo-500 animate-pulse"></span>
            <span className="text-xs font-bold text-slate-500 uppercase tracking-widest">A Campus-First Marketplace</span>
         </div>
         
         <h1 className="text-6xl md:text-8xl font-black text-slate-900 tracking-tighter mb-8 leading-[0.9]">
-          Ignite Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-rose-500">Skill.</span>
+          Ignite Your <span className="text-gradient">Skill.</span>
         </h1>
         
         <p className="text-xl md:text-2xl text-slate-600 font-medium mb-12 max-w-2xl mx-auto leading-relaxed">

@@ -6,6 +6,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  photoUrl: {
+    type: String,
+    default: ''
+  },
+  headline: {
+    type: String,
+    default: 'Campus Pioneer'
+  },
   email: {
     type: String,
     required: true,
@@ -39,9 +47,38 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: 0
   },
+  avgRating: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 5
+  },
+  completionRate: {
+    type: Number,
+    default: 100 // Starts at 100%
+  },
+  onTimeDeliveryRate: {
+    type: Number,
+    default: 100
+  },
+  projectsCompleted: {
+    type: Number,
+    default: 0
+  },
+  disputesLost: {
+    type: Number,
+    default: 0
+  },
+  totalProjectsValue: {
+    type: Number,
+    default: 0
+  },
+  verifiedBadges: [{
+    type: String
+  }],
   isVerifiedContent: {
     type: Boolean,
-    default: true // Assuming true for MVP since .edu validates them
+    default: true
   }
 }, {
   timestamps: true

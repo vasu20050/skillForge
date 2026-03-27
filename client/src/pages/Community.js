@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Heart, MessageCircle, Share2, Send, TrendingUp, Users, Award } from 'lucide-react';
+import { Heart, MessageCircle, Share2, Send, TrendingUp, Users, Award, MoreHorizontal } from 'lucide-react';
+import avatarImg from '../avatar.png';
 
 const POSTS = [
   {
@@ -23,7 +24,37 @@ const POSTS = [
 ];
 
 export default function Community() {
+  const [posts, setPosts] = useState(POSTS);
   const [newPost, setNewPost] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const user = JSON.parse(localStorage.getItem('user')) || { name: 'Pioneer' };
+
+  const handlePost = () => {
+    if (!newPost.trim()) return;
+    setIsSubmitting(true);
+    
+    // Simulate API delay
+    setTimeout(() => {
+      const post = {
+        id: Date.now(),
+        user: { name: user.name, avatar: user.photoUrl || avatarImg },
+        content: newPost,
+        likes: 0,
+        comments: 0,
+        timestamp: 'Just now',
+        tag: 'Update'
+      };
+      setPosts([post, ...posts]);
+      setNewPost('');
+      setIsSubmitting(false);
+    }, 800);
+  };
+
+  const handleLike = (id) => {
+    setPosts(posts.map(p => 
+      p.id === id ? { ...p, likes: p.isLiked ? p.likes - 1 : p.likes + 1, isLiked: !p.isLiked } : p
+    ));
+  };
 
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
@@ -37,25 +68,32 @@ export default function Community() {
         </div>
       </div>
 
-      <div className="glass-card p-6 rounded-3xl shadow-sm">
-        <div className="flex items-start space-x-4">
-          <img src="https://i.pravatar.cc/150?u=myprofile" className="w-12 h-12 rounded-full ring-2 ring-indigo-100" alt="Me" />
+      <div className="glass-card p-8 rounded-[2.5rem] shadow-2xl shadow-indigo-500/5 bg-white/60 backdrop-blur-xl border-white">
+        <div className="flex items-start space-x-6">
+          <div className="w-14 h-14 rounded-2xl overflow-hidden shadow-lg ring-4 ring-white">
+             <img src={user.photoUrl || avatarImg} className="w-full h-full object-cover" alt="Me" />
+          </div>
           <div className="flex-1 space-y-4">
             <textarea 
               rows="3" 
-              className="w-full bg-slate-50/50 rounded-2xl p-4 border-none focus:ring-2 focus:ring-indigo-500 transition-all placeholder:text-slate-400 text-slate-700 resize-none outline-none"
-              placeholder="What's happening in your journey?"
+              className="w-full bg-slate-50/50 rounded-[2rem] p-6 border-none focus:ring-4 focus:ring-indigo-500/10 transition-all placeholder:text-slate-400 text-slate-700 resize-none outline-none font-medium h-32"
+              placeholder="Share a milestone or collaborate on a project..."
               value={newPost}
               onChange={(e) => setNewPost(e.target.value)}
+              disabled={isSubmitting}
             />
-            <div className="flex justify-between items-center border-t border-slate-100 pt-4">
-              <div className="flex items-center space-x-2 text-slate-500">
-                <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors"><Award className="w-5 h-5" /></button>
-                <button className="p-2 hover:bg-slate-100 rounded-lg transition-colors"><Users className="w-5 h-5" /></button>
+            <div className="flex justify-between items-center bg-slate-50/50 p-2 rounded-2xl">
+              <div className="flex items-center space-x-1 px-2">
+                <button className="p-3 hover:bg-white hover:text-indigo-600 rounded-xl transition-all text-slate-400"><Award className="w-5 h-5" /></button>
+                <button className="p-3 hover:bg-white hover:text-indigo-600 rounded-xl transition-all text-slate-400"><Users className="w-5 h-5" /></button>
               </div>
-              <button className="premium-btn text-white px-6 py-2 rounded-xl text-sm font-bold flex items-center space-x-2 shadow-lg shadow-indigo-200">
-                <span>Post Update</span>
-                <Send className="w-4 h-4" />
+              <button 
+                onClick={handlePost}
+                disabled={isSubmitting || !newPost.trim()}
+                className={`premium-btn text-white px-8 py-3.5 rounded-2xl text-xs font-black uppercase tracking-widest flex items-center space-x-3 shadow-xl transition-all ${isSubmitting ? 'opacity-70 cursor-not-allowed' : 'hover:scale-105 active:scale-95'}`}
+              >
+                <span>{isSubmitting ? 'Publishing...' : 'Post Update'}</span>
+                <Send className={`w-4 h-4 ${isSubmitting ? 'animate-ping' : ''}`} />
               </button>
             </div>
           </div>
@@ -79,37 +117,54 @@ export default function Community() {
           </div>
         </div>
 
-        <div className="md:col-span-3 space-y-6 order-1 md:order-2">
-          {POSTS.map(post => (
-            <div key={post.id} className="glass-card p-6 rounded-3xl shadow-sm border border-white hover:border-indigo-100 transition-colors">
-              <div className="flex items-center justify-between mb-4">
-                <div className="flex items-center space-x-3">
-                  <img src={post.user.avatar} className="w-10 h-10 rounded-full ring-1 ring-slate-100" alt={post.user.name} />
+        <div className="md:col-span-3 space-y-8 order-1 md:order-2">
+          {posts.map(post => (
+            <div key={post.id} className="glass-card p-8 rounded-[2.5rem] shadow-xl shadow-indigo-500/5 border border-white/50 hover:border-indigo-100 transition-all group backdrop-blur-sm">
+              <div className="flex items-center justify-between mb-6">
+                <div className="flex items-center space-x-4">
+                  <div className="w-12 h-12 rounded-2xl overflow-hidden ring-4 ring-slate-50 shadow-sm relative">
+                    <img src={post.user.avatar} className="w-full h-full object-cover" alt={post.user.name} />
+                  </div>
                   <div>
-                    <h4 className="font-bold text-slate-800 text-sm">{post.user.name}</h4>
-                    <span className="text-xs text-slate-400 font-medium">{post.timestamp}</span>
+                    <h4 className="font-extrabold text-slate-900 text-base flex items-center gap-2">
+                      {post.user.name}
+                      {post.id < 3 && <div className="w-4 h-4 bg-indigo-500 rounded-full flex items-center justify-center"><Award className="w-2 h-2 text-white" /></div>}
+                    </h4>
+                    <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{post.timestamp}</span>
                   </div>
                 </div>
-                <span className="text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-slate-50 text-slate-500 rounded-md border border-slate-100">
-                  {post.tag}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1.5 bg-indigo-50 text-indigo-600 rounded-xl border border-indigo-100/50">
+                    {post.tag}
+                  </span>
+                  <button className="p-2 text-slate-300 hover:text-slate-600 transition-colors"><MoreHorizontal size={20} /></button>
+                </div>
               </div>
               
-              <p className="text-slate-700 leading-relaxed mb-6 font-medium">
+              <p className="text-slate-700 leading-relaxed mb-8 font-medium text-lg tracking-tight">
                 {post.content}
               </p>
 
-              <div className="flex items-center space-x-6 pt-4 border-t border-slate-50">
-                <button className="flex items-center space-x-2 text-slate-500 hover:text-rose-500 transition-colors group">
-                  <Heart className="w-5 h-5 group-hover:fill-rose-500" />
-                  <span className="text-xs font-bold">{post.likes}</span>
+              <div className="flex items-center space-x-8 pt-6 border-t border-slate-50/50">
+                <button 
+                  onClick={() => handleLike(post.id)}
+                  className={`flex items-center space-x-3 transition-all group/btn ${post.isLiked ? 'text-rose-500' : 'text-slate-400 hover:text-rose-500'}`}
+                >
+                  <div className={`p-2.5 rounded-xl transition-all ${post.isLiked ? 'bg-rose-50 shadow-inner' : 'bg-slate-50 group-hover/btn:bg-rose-50'}`}>
+                    <Heart className={`w-5 h-5 ${post.isLiked ? 'fill-rose-500' : 'group-hover/btn:fill-rose-500 transition-all'}`} />
+                  </div>
+                  <span className="text-xs font-black tracking-widest">{post.likes}</span>
                 </button>
-                <button className="flex items-center space-x-2 text-slate-500 hover:text-indigo-600 transition-colors">
-                  <MessageCircle className="w-5 h-5" />
-                  <span className="text-xs font-bold">{post.comments}</span>
+                <button className="flex items-center space-x-3 text-slate-400 hover:text-indigo-600 transition-all group/btn">
+                  <div className="p-2.5 rounded-xl bg-slate-50 group-hover/btn:bg-indigo-50">
+                    <MessageCircle className="w-5 h-5" />
+                  </div>
+                  <span className="text-xs font-black tracking-widest">{post.comments}</span>
                 </button>
-                <button className="flex items-center space-x-2 text-slate-500 hover:text-emerald-500 transition-colors ml-auto">
-                  <Share2 className="w-5 h-5" />
+                <button className="flex items-center space-x-3 text-slate-400 hover:text-emerald-500 transition-all ml-auto group/btn">
+                   <div className="p-2.5 rounded-xl bg-slate-50 group-hover/btn:bg-emerald-50">
+                      <Share2 className="w-5 h-5" />
+                   </div>
                 </button>
               </div>
             </div>

@@ -3,38 +3,184 @@
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="%PUBLIC_URL%/logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
     <meta name="theme-color" content="#4F46E5" />
+    <meta name="author" content="SkillForge Team" />
     <meta
       name="description"
-      content="SkillForge - The premier campus-first peer skill marketplace. Master new skills, collaborate with peers, and build your portfolio."
+      content="SkillForge - The premier campus-first P2P skill marketplace. Master new skills, collaborate with peers, and build your professional portfolio within your college community."
     />
+    <meta name="keywords" content="SkillForge, campus marketplace, student skills, peer-to-peer, college freelancing, student portfolio, skill exchange, campus economy" />
+    
+    <!-- Open Graph / Meta -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://skillforge.campus/" />
+    <meta property="og:title" content="SkillForge | Your Campus Peer Marketplace" />
+    <meta property="og:description" content="Exchange skills, build professional projects, and grow your network within your campus community. Join the future of student freelancing." />
+    <meta property="og:image" content="%PUBLIC_URL%/logo.png" />
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://skillforge.campus/" />
+    <meta property="twitter:title" content="SkillForge | Master Your Craft" />
+    <meta property="twitter:description" content="Exchange skills, build projects, and grow your professional network within your campus community." />
+    <meta property="twitter:image" content="%PUBLIC_URL%/logo.png" />
+
     <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo.png" />
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&display=swap" rel="stylesheet" />
 
-    <!-- Open Graph / Meta -->
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content="https://skillforge.campus/" />
-    <meta property="og:title" content="SkillForge | Campus Peer Marketplace" />
-    <meta property="og:description" content="Exchange skills, build projects, and grow your professional network within your campus community." />
-    <meta property="og:image" content="%PUBLIC_URL%/logo.png" />
+    <title>SkillForge | Master Your Craft & Build Your Portfolio</title>
 
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content="https://skillforge.campus/" />
-    <meta property="twitter:title" content="SkillForge | Campus Peer Marketplace" />
-    <meta property="twitter:description" content="Exchange skills, build projects, and grow your professional network within your campus community." />
-    <meta property="twitter:image" content="%PUBLIC_URL%/logo.png" />
+    <style>
+      :root {
+        --sf-primary: #4F46E5;
+        --sf-bg: #ffffff;
+        --sf-text: #1e293b;
+        --sf-subtext: #64748b;
+      }
 
-    <title>SkillForge | Master Your Craft</title>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        overflow-x: hidden;
+      }
+
+      #splash-screen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: var(--sf-bg);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        font-family: 'Outfit', sans-serif;
+        transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      .loader-visuals {
+        position: relative;
+        width: 120px;
+        height: 120px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .loader-ring {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border: 2px solid #f1f5f9;
+        border-radius: 32px;
+        transform: rotate(45deg);
+      }
+
+      .loader-orbit {
+        position: absolute;
+        width: 100px;
+        height: 100px;
+        border: 4px solid var(--sf-primary);
+        border-radius: 32px;
+        animation: loader-spin 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+        box-shadow: 0 0 20px rgba(79, 70, 229, 0.15);
+      }
+
+      .loader-logo {
+        position: absolute;
+        width: 48px;
+        height: 48px;
+        z-index: 10;
+        animation: pulse 2s ease-in-out infinite;
+      }
+
+      .brand-container {
+        margin-top: 40px;
+        text-align: center;
+        animation: slide-up 0.8s ease-out;
+      }
+
+      .brand-title {
+        font-size: 2.25rem;
+        color: var(--sf-text);
+        font-weight: 800;
+        letter-spacing: -0.05em;
+        margin: 0;
+      }
+
+      .brand-title span {
+        color: var(--sf-primary);
+      }
+
+      .brand-divider {
+        height: 4px;
+        width: 60px;
+        background: linear-gradient(to right, var(--sf-primary), #818cf8);
+        border-radius: 2px;
+        margin: 16px auto;
+      }
+
+      .brand-tagline {
+        color: var(--sf-subtext);
+        font-size: 0.75rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        animation: fade-in 1s ease-in both;
+        animation-delay: 0.5s;
+      }
+
+      @keyframes loader-spin {
+        0% { transform: rotate(45deg) scale(0.9); border-radius: 32px; }
+        50% { transform: rotate(225deg) scale(1.1); border-radius: 50%; }
+        100% { transform: rotate(405deg) scale(0.9); border-radius: 32px; }
+      }
+
+      @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 0.9; }
+        50% { transform: scale(1.1); opacity: 1; }
+      }
+
+      @keyframes slide-up {
+        from { transform: translateY(20px); opacity: 0; }
+        to { transform: translateY(0); opacity: 1; }
+      }
+
+      @keyframes fade-in {
+        from { opacity: 0; }
+        to { opacity: 1; }
+      }
+    </style>
   </head>
   <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
+    <noscript>You need to enable JavaScript to run SkillForge.</noscript>
+    
+    <div id="root">
+      <!-- Premium Splash Screen -->
+      <div id="splash-screen">
+        <div class="loader-visuals">
+          <div class="loader-ring"></div>
+          <div class="loader-orbit"></div>
+          <img src="%PUBLIC_URL%/logo.png" alt="S" class="loader-logo" />
+        </div>
+        <div class="brand-container">
+          <h1 class="brand-title">Skill<span>Forge</span></h1>
+          <div class="brand-divider"></div>
+          <p class="brand-tagline">Initializing Campus Economy</p>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
+

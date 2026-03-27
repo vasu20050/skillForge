@@ -5,6 +5,7 @@ import {
   BookOpen, Users, Trophy, Settings, LogOut,
   LayoutDashboard, FolderKanban, Info, Mail
 } from 'lucide-react';
+import avatarImg from '../avatar.png';
 
 export default function Header() {
   const navigate = useNavigate();
@@ -40,9 +41,11 @@ export default function Header() {
       <div className="max-w-7xl mx-auto glass-card rounded-2xl px-6 py-3 flex justify-between items-center transition-all duration-300">
         <div className="flex items-center space-x-8">
           <Link to="/" className="flex items-center space-x-2 mr-4">
-            <div className="w-8 h-8 rounded-lg premium-btn flex items-center justify-center text-white font-bold text-lg">
-              S
-            </div>
+            <img 
+              src="/logo.png" 
+              alt="SkillForge Logo" 
+              className="w-10 h-10 rounded-xl shadow-sm hover:scale-105 transition-transform duration-300" 
+            />
             <span className="text-xl font-bold tracking-tight text-slate-800">SkillForge</span>
           </Link>
           
@@ -91,10 +94,10 @@ export default function Header() {
                    <span className="text-xs font-black text-slate-800 leading-none">{user.name || 'User'}</span>
                    <span className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest mt-1">Level 12</span>
                 </div>
-                <Link to="/dashboard" className="relative group">
+                <Link to="/profile" className="relative group">
                    <img 
-                    src={`https://i.pravatar.cc/150?u=${user.id || 'me'}`} 
-                    className="w-10 h-10 rounded-xl ring-2 ring-indigo-100 group-hover:ring-indigo-500 transition-all object-cover" 
+                    src={user.photoUrl || avatarImg} 
+                    className="w-10 h-10 rounded-xl ring-2 ring-indigo-100 group-hover:ring-indigo-500 transition-all object-cover shadow-sm bg-slate-900" 
                     alt="User" 
                    />
                 </Link>

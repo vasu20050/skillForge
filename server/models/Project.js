@@ -27,8 +27,25 @@ const projectSchema = new mongoose.Schema({
   },
   status: {
     type: String,
-    enum: ['open', 'assigned', 'submitted', 'completed', 'cancelled'],
+    enum: ['open', 'assigned', 'submitted', 'completed', 'cancelled', 'disputed', 'revision'],
     default: 'open'
+  },
+  deadline: {
+    type: Date,
+    required: true,
+    default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Default 7 days
+  },
+  disputeStatus: {
+    type: String,
+    enum: ['none', 'level1', 'level2', 'admin', 'resolved'],
+    default: 'none'
+  },
+  disputeReason: {
+    type: String
+  },
+  isVerifiedPortfolioEntry: {
+    type: Boolean,
+    default: false
   },
   client: {
     type: mongoose.Schema.Types.ObjectId,

@@ -52,6 +52,7 @@ exports.registerUser = async (req, res) => {
       res.status(400).json({ message: 'Invalid user data received.' });
     }
   } catch (error) {
+    console.error('Registration Error:', error);
     res.status(500).json({ message: 'Server error during registration.', error: error.message });
   }
 };
@@ -68,6 +69,8 @@ exports.loginUser = async (req, res) => {
         email: user.email,
         role: user.role,
         credits: user.credits,
+        photoUrl: user.photoUrl,
+        headline: user.headline,
         token: generateToken(user._id)
       });
     } else {
@@ -75,5 +78,37 @@ exports.loginUser = async (req, res) => {
     }
   } catch (error) {
     res.status(500).json({ message: 'Server error during login.', error: error.message });
+  }
+};
+
+exports.updateUserProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+    if (!user) return res.status(404).json({ message: 'User not found.' });
+
+    user.name = req.body.name || user.name;
+    user.email = req.body.email || user.email;
+    user.headline = req.body.headline || user.headline;
+    user.photoUrl = req.body.photoUrl || user.photoUrl;
+
+    if (req.body.password) {
+      const salt = await bcrypt.genSalt(10);
+      user.password = await bcrypt.hash(req.body.password, salt);
+    }
+
+    const updatedUser = await user.save();
+
+    res.json({
+      _id: updatedUser._id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      credits: updatedUser.credits,
+      photoUrl: updatedUser.photoUrl,
+      headline: updatedUser.headline,
+      token: generateToken(updatedUser._id)
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Server error updating profile.' });
   }
 };

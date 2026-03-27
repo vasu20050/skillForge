@@ -5,7 +5,9 @@ const {
   getProjects, 
   assignProject, 
   submitWork, 
-  approveWork 
+  approveWork,
+  requestRevision,
+  raiseDispute
 } = require('../controllers/projectController');
 const { protect } = require('../middleware/authMiddleware');
 
@@ -28,5 +30,13 @@ router.post('/:id/submit', protect, submitWork);
 // @route   POST /api/projects/:id/approve
 // @desc    Approve project and pay credits (Client only)
 router.post('/:id/approve', protect, approveWork);
+
+// @route   POST /api/projects/:id/revision
+// @desc    Request revision (Client only)
+router.post('/:id/revision', protect, requestRevision);
+
+// @route   POST /api/projects/:id/dispute
+// @desc    Raise a dispute
+router.post('/:id/dispute', protect, raiseDispute);
 
 module.exports = router;

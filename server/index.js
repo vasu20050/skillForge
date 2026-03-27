@@ -1,4 +1,4 @@
-require('dotenv').config();
+require('dotenv').config(); // Server startup: 2026
 const express = require('express');
 const morgan = require('morgan');
 const cors = require('cors');
@@ -14,8 +14,16 @@ app.use(express.json());
 // connect database
 connectDB();
 
-// basic route
-app.get('/', (req, res) => res.send('SkillForge API'));
+// basic routes
+app.get('/', (req, res) => res.send('SkillForge API Server is Running'));
+app.get('/api', (req, res) => res.json({ 
+  message: 'Welcome to SkillForge API', 
+  endpoints: {
+    health: '/api/health',
+    auth: '/api/auth',
+    projects: '/api/projects'
+  }
+}));
 app.get('/api/health', (req, res) => res.json({ status: 'SkillForge API is Live', version: '1.0.0' }));
 
 // routers

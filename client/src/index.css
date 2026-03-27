@@ -1,70 +1,178 @@
-@import "tailwindcss";
+/* skillForge Premium Design System */
+@import "tailwindcss/base";
+@import "tailwindcss/components";
+@import "tailwindcss/utilities";
 
 :root {
-  --primary: #4F46E5;
-  --primary-hover: #4338CA;
-  --secondary: #6366F1;
-  --accent: #F43F5E;
+  --primary: #6366f1;
+  --primary-glow: rgba(99, 102, 241, 0.5);
+  --secondary: #a855f7;
+  --accent: #f43f5e;
   --glass: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.3);
-  --bg-gradient: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
-}
-
-@theme {
-  --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --font-inter: 'Inter', system-ui, sans-serif;
   --font-outfit: 'Outfit', sans-serif;
 }
+
+/* ── Google Fonts ── */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;600;700;800;900&display=swap');
 
 body {
   margin: 0;
   font-family: var(--font-inter);
-  background: var(--bg-gradient);
+  background: #f8fafc;
+  background-image:
+    radial-gradient(at 0% 0%,   rgba(99, 102, 241, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(168, 85, 247, 0.05) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(244, 63, 94, 0.04) 0px, transparent 50%),
+    radial-gradient(at 0% 100%, rgba(99, 102, 241, 0.04) 0px, transparent 50%);
   min-height: 100vh;
   color: #1e293b;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(99,102,241,0.15); border-radius: 10px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(99,102,241,0.35); }
+
+/* ── Typography ── */
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-outfit);
-  font-weight: 600;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.03em;
 }
 
+/* ── Glass Card ── */
 .glass-card {
   background: var(--glass);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--glass-border);
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  box-shadow: 0 10px 40px -10px rgba(0,0,0,0.06);
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
+.glass-card:hover {
+  border-color: rgba(99,102,241,0.25);
+  box-shadow: 0 20px 60px -15px rgba(99,102,241,0.10);
+}
+
+/* ── Premium Button ── */
 .premium-btn {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  background: linear-gradient(to right, var(--primary), var(--secondary));
-}
-
-.premium-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
-}
-
-.nav-link {
   position: relative;
-  transition: color 0.3s ease;
+  overflow: hidden;
+  z-index: 1;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.nav-link::after {
+.premium-btn::before {
   content: '';
   position: absolute;
-  width: 0;
-  height: 2px;
-  bottom: -2px;
-  left: 0;
-  background-color: var(--primary);
-  transition: width 0.3s ease;
+  top: 0; left: -100%;
+  width: 100%; height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: 0.5s;
 }
 
-.nav-link:hover::after {
-  width: 100%;
+.premium-btn:hover::before { left: 100%; }
+.premium-btn:hover { transform: translateY(-2px) scale(1.01); box-shadow: 0 12px 28px -8px var(--primary-glow); }
+.premium-btn:active { transform: translateY(0) scale(0.98); }
+
+/* ── Nav Link ── */
+.nav-link { position: relative; transition: color 0.3s ease; }
+.nav-link::after {
+  content: ''; position: absolute; width: 0; height: 2px;
+  bottom: -2px; left: 0; background: var(--primary); transition: width 0.3s ease;
 }
+.nav-link:hover::after { width: 100%; }
+
+/* ── Animations ── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+.animate-float { animation: float 4s ease-in-out infinite; }
+
+@keyframes pulse-glow {
+  0%   { box-shadow: 0 0 0 0   rgba(99,102,241,0.4); }
+  70%  { box-shadow: 0 0 0 14px rgba(99,102,241,0); }
+  100% { box-shadow: 0 0 0 0   rgba(99,102,241,0); }
+}
+.animate-pulse-glow { animation: pulse-glow 2s infinite; }
+
+/* ── Page Transition ── */
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.page-transition { animation: slideUp 0.55s cubic-bezier(0.2, 0.8, 0.2, 1) forwards; }
+
+/* ── Shimmer Skeleton ── */
+@keyframes shimmer {
+  0%   { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+.shimmer {
+  position: relative; overflow: hidden;
+  background-color: rgba(226,232,240,0.55);
+}
+.shimmer::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Gradient Text ── */
+.text-gradient {
+  background: linear-gradient(to right, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ── 3-D Tilt Card ── */
+.tilt-card {
+  transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.45s ease;
+  transform-style: preserve-3d;
+}
+.tilt-card:hover {
+  transform: perspective(1000px) rotateX(2deg) rotateY(-2deg) translateY(-5px);
+  box-shadow: 18px 18px 55px rgba(0,0,0,0.06), -18px -18px 55px rgba(255,255,255,0.8);
+}
+
+/* ── Focal Glow ── */
+.focal-glow { position: relative; }
+.focal-glow::after {
+  content: ''; position: absolute; top: 50%; left: 50%;
+  width: 150%; height: 150%;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  transform: translate(-50%,-50%);
+  opacity: 0.12; pointer-events: none; z-index: -1;
+}
+
+/* ── Glass Tabs ── */
+.glass-tab {
+  background: rgba(255,255,255,0.4);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.2);
+  transition: all 0.3s ease;
+}
+.glass-tab-active {
+  background: white;
+  box-shadow: 0 4px 12px rgba(99,102,241,0.15);
+  border-color: var(--primary);
+}
+
+/* ── Inputs ── */
+input, select, textarea { transition: all 0.3s ease; }
+input:focus, select:focus, textarea:focus {
+  background: white !important;
+  box-shadow: 0 0 0 4px rgba(99,102,241,0.10) !important;
+}
+
+/* ── Selection ── */
+::selection { background: var(--primary); color: white; }

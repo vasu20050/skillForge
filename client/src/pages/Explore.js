@@ -1,12 +1,15 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Sparkles, Compass, TrendingUp, Zap, Clock, Bookmark } from 'lucide-react';
 
 export default function Explore() {
   const trending = [
     { title: 'Generative AI for Designers', type: 'Course', users: '1.2k', rating: '4.9', color: 'bg-indigo-600' },
-    { title: 'DeFi Dashboard Architecture', type: 'Project', users: '840', rating: '4.8', color: 'bg-emerald-600' },
-    { title: 'System Design Interview Prep', type: 'Event', users: '2.5k', rating: '5.0', color: 'bg-rose-600' }
+    { title: 'Campus Event Management 101', type: 'Certification', users: '2.1k', rating: '4.9', color: 'bg-rose-600' },
+    { title: 'Professional Event Photography', type: 'Workshop', users: '940', rating: '4.8', color: 'bg-emerald-600' }
   ];
+
+  const user = localStorage.getItem('user');
 
   return (
     <div className="space-y-12 pb-20 animate-in fade-in duration-1000">
@@ -35,31 +38,42 @@ export default function Explore() {
           <TrendingUp className="w-5 h-5 mr-3 text-rose-500" />
           Hot This Week
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {trending.map((item, i) => (
-            <div key={i} className="glass-card p-6 rounded-[2rem] border-2 border-transparent hover:border-indigo-100 transition-all group overflow-hidden relative">
-              <div className={`absolute top-0 right-0 w-32 h-32 ${item.color} opacity-[0.03] rounded-bl-[4rem]`}></div>
-              <div className="flex items-center justify-between mb-4">
-                <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-slate-50 text-slate-500 rounded-md border border-slate-100`}>
-                  {item.type}
-                </span>
-                <button className="text-slate-300 hover:text-rose-500 transition-colors">
-                  <Bookmark className="w-5 h-5" />
-                </button>
-              </div>
-              <h3 className="text-lg font-bold text-slate-800 mb-4 group-hover:text-indigo-600 transition-colors leading-snug">{item.title}</h3>
-              <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-                <div className="flex items-center">
-                  <Zap className="w-3 h-3 mr-1 text-amber-500" />
-                  {item.users} active
+        
+        {user ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {trending.map((item, i) => (
+              <div key={i} className="glass-card p-6 rounded-[2rem] border-2 border-transparent hover:border-indigo-100 transition-all group overflow-hidden relative">
+                <div className={`absolute top-0 right-0 w-32 h-32 ${item.color} opacity-[0.03] rounded-bl-[4rem]`}></div>
+                <div className="flex items-center justify-between mb-4">
+                  <span className={`text-[10px] font-black uppercase tracking-widest px-2 py-1 bg-slate-50 text-slate-500 rounded-md border border-slate-100`}>
+                    {item.type}
+                  </span>
+                  <button className="text-slate-300 hover:text-rose-500 transition-colors">
+                    <Bookmark className="w-5 h-5" />
+                  </button>
                 </div>
-                <div className="flex items-center">
-                   ⭐ {item.rating}
+                <h3 className="text-lg font-bold text-slate-800 mb-4 group-hover:text-indigo-600 transition-colors leading-snug">{item.title}</h3>
+                <div className="flex items-center justify-between text-xs font-bold text-slate-400">
+                  <div className="flex items-center">
+                    <Zap className="w-3 h-3 mr-1 text-amber-500" />
+                    {item.users} active
+                  </div>
+                  <div className="flex items-center">
+                     ⭐ {item.rating}
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        ) : (
+          <div className="glass-card p-12 text-center rounded-[2rem] border-dashed border-2 border-slate-200">
+            <h3 className="text-xl font-bold text-slate-800 mb-2">Projects are Protected</h3>
+            <p className="text-slate-500 mb-6">Log in with your college email to explore real-time campus opportunities.</p>
+            <Link to="/login" className="premium-btn text-white px-8 py-3 rounded-xl font-bold text-sm shadow-xl inline-block">
+              Authenticate to Explore
+            </Link>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
