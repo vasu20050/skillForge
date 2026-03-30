@@ -28,13 +28,14 @@ app.get('/api/health', (req, res) => res.json({ status: 'SkillForge API is Live'
 
 // routers
 const authRoutes = require('./routes/authRoutes');
+const projectRoutes = require('./routes/projectRoutes');
+const adminRoutes = require('./routes/adminRoutes');
+const walletRoutes = require('./routes/walletRoutes');
 
 app.use('/api/auth', authRoutes);
-
-// We will add these back once we create their models and routes
-const projectRoutes = require('./routes/projectRoutes');
 app.use('/api/projects', projectRoutes);
-// app.use('/api/admin', require('./routes/adminRoutes'));
+app.use('/api/admin', adminRoutes);
+app.use('/api/wallet', walletRoutes);
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

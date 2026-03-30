@@ -1,6 +1,12 @@
 const mongoose = require('mongoose');
 
 const projectSchema = new mongoose.Schema({
+  type: {
+    type: String,
+    enum: ['learn_dummy', 'earn_real'],
+    required: true,
+    default: 'learn_dummy'
+  },
   title: {
     type: String,
     required: true,
@@ -18,51 +24,44 @@ const projectSchema = new mongoose.Schema({
     ],
     required: true
   },
-  rewardParams: {
-    credits: {
-      type: Number,
-      required: true,
-      min: 1
-    }
-  },
-  status: {
-    type: String,
-    enum: ['open', 'assigned', 'submitted', 'completed', 'cancelled', 'disputed', 'revision'],
-    default: 'open'
-  },
-  deadline: {
-    type: Date,
-    required: true,
-    default: () => new Date(Date.now() + 7 * 24 * 60 * 60 * 1000) // Default 7 days
-  },
-  disputeStatus: {
-    type: String,
-    enum: ['none', 'level1', 'level2', 'admin', 'resolved'],
-    default: 'none'
-  },
-  disputeReason: {
-    type: String
-  },
-  isVerifiedPortfolioEntry: {
-    type: Boolean,
-    default: false
-  },
-  client: {
+  client_id: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
-  worker: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User'
+  team: {
+    worker_ids: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
+    apprentice_ids: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }]
   },
-  deliverables: [{
-    fileUrl: String,
-    description: String,
-    submittedAt: Date
-  }]
+  status: {
+    type: String,
+    enum: ['draft', 'open', 'pending_contract', 'active', 'submitted', 'completed', 'disputed', 'cancelled'],
+    default: 'draft'
+  },
+  credits_total: {
+    type: Number,
+    required: true,
+    min: 0
+  },
+  deadline: {
+    type: Date,
+    required: true
+  },
+  verification_required: {
+    type: Boolean,
+    default: false
+  },
+  proof_requirements: {
+    type: [String],
+    enum: ['github_url', 'demo_url', 'file_submission'],
+    default: ['github_url']
+  }
 }, {
   timestamps: true
 });
+
+projectSchema.index({ type: 1, status: 1 });
+projectSchema.index({ client_id: 1, createdAt: -1 });
+projectSchema.index({ deadline: 1 });
 
 module.exports = mongoose.model('Project', projectSchema);

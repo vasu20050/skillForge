@@ -1,15 +1,16 @@
 const express = require('express');
 const router = express.Router();
-const adminController = require('../controllers/adminController');
-const authMiddleware = require('../middleware/authMiddleware');
-const roleMiddleware = require('../middleware/roleMiddleware');
+const { listUsers, listProjects, seedLearnProjects, verifyUserStatus, evaluateLearnSubmission } = require('../controllers/adminController');
+const { protect } = require('../middleware/authMiddleware');
+const { roleMiddleware } = require('../middleware/roleMiddleware');
 
-// all admin routes need auth and admin role
-router.use(authMiddleware);
+router.use(protect);
 router.use(roleMiddleware('admin'));
 
-router.get('/users', adminController.listUsers);
-router.delete('/users/:id', adminController.deleteUser);
-router.get('/projects', adminController.listProjects);
+router.get('/users', listUsers);
+router.get('/projects', listProjects);
+router.post('/verify-user', verifyUserStatus);
+router.post('/seed-learn-projects', seedLearnProjects);
+router.post('/evaluate-learn', evaluateLearnSubmission);
 
 module.exports = router;

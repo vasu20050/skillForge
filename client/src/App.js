@@ -5,34 +5,34 @@ import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
-import Projects from './pages/Projects';
 import Profile from './pages/Profile';
 import NewProject from './pages/NewProject';
-import Skills from './pages/Skills';
-import Mentors from './pages/Mentors';
-import Community from './pages/Community';
-import Notifications from './pages/Notifications';
-import Settings from './pages/Settings';
-import Leaderboard from './pages/Leaderboard';
-import Messages from './pages/Messages';
 import About from './pages/About';
 import Contact from './pages/Contact';
 import Explore from './pages/Explore';
+import LearnMode from './pages/LearnMode';
+import Marketplace from './pages/Marketplace';
+import ProjectDetails from './pages/ProjectDetails';
+import WalletPage from './pages/WalletPage';
+import AdminPanel from './pages/AdminPanel';
 import SaharaBot from './components/SaharaBot';
+import { AuthProvider, useAuth } from './hooks/useAuth';
 
 // Protected Route Component
 const PrivateRoute = ({ children }) => {
-  const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/login" />;
+  const { user, loading } = useAuth();
+  if (loading) return <div>Loading SkillForge...</div>;
+  return user ? children : <Navigate to="/login" />;
 };
 
 function App() {
   return (
-    <Router>
-      <div className="App min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-indigo-100 selection:text-indigo-900">
-        <Header />
-        <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <Routes>
+    <AuthProvider>
+      <Router>
+        <div className="App min-h-screen bg-slate-50 font-sans text-slate-900 antialiased selection:bg-indigo-100 selection:text-indigo-900">
+          <Header />
+          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+            <Routes>
             {/* Public Routes */}
             <Route path="/" element={<Home />} />
             <Route path="/login" element={<Login />} />
@@ -43,21 +43,36 @@ function App() {
 
             {/* Protected Routes */}
             <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-            <Route path="/projects" element={<PrivateRoute><Projects /></PrivateRoute>} />
+            <Route path="/learn" element={<PrivateRoute><LearnMode /></PrivateRoute>} />
+            <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
+            <Route path="/projects/:id" element={<PrivateRoute><ProjectDetails /></PrivateRoute>} />
             <Route path="/projects/new" element={<PrivateRoute><NewProject /></PrivateRoute>} />
             <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-            <Route path="/skills" element={<PrivateRoute><Skills /></PrivateRoute>} />
-            <Route path="/mentors" element={<PrivateRoute><Mentors /></PrivateRoute>} />
-            <Route path="/community" element={<PrivateRoute><Community /></PrivateRoute>} />
-            <Route path="/notifications" element={<PrivateRoute><Notifications /></PrivateRoute>} />
-            <Route path="/settings" element={<PrivateRoute><Settings /></PrivateRoute>} />
-            <Route path="/leaderboard" element={<PrivateRoute><Leaderboard /></PrivateRoute>} />
-            <Route path="/messages" element={<PrivateRoute><Messages /></PrivateRoute>} />
+            <Route path="/wallet" element={<PrivateRoute><WalletPage /></PrivateRoute>} />
+            <Route path="/admin" element={<PrivateRoute><AdminPanel /></PrivateRoute>} />
+            
+            {/* Fallback */}
+            <Route path="*" element={<Navigate to="/dashboard" />} />
           </Routes>
         </main>
+        <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 relative z-10">
+          <div className="glass-card rounded-[2rem] p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+            <div className="flex items-center space-x-3">
+              <img src="/logo.png" className="w-8 h-8 rounded-lg grayscale opacity-50" alt="Logo" />
+              <span className="text-sm font-black text-slate-300 uppercase tracking-widest">SkillForge</span>
+            </div>
+            <div className="flex space-x-8">
+              <a href="#" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Privacy</a>
+              <a href="#" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Terms</a>
+              <a href="#" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Guidelines</a>
+            </div>
+            <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">© 2024 Built for the Campus Economy</p>
+          </div>
+        </footer>
         <SaharaBot />
       </div>
     </Router>
+    </AuthProvider>
   );
 }
 

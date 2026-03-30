@@ -1,42 +1,56 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+const bcrypt = require('bcryptjs');
 
 const generateToken = (id) => {
-  return jwt.sign({ id }, process.env.JWT_SECRET || 'fallback_secret', { expiresIn: '30d' });
+  return jwt.sign({ id }, process.env.JWT_SECRET || 'skillforge_secret_2026', { expiresIn: '30d' });
 };
 
+// Register
 exports.registerUser = async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
 
     if (!name || !email || !password) {
-      return res.status(400).json({ message: 'Please provide name, email, and password.' });
+      return res.status(400).json({ message: 'Missing required fields (name, email, password).' });
     }
 
-    // Ensure it's a college email (.ac, .edu, or common campus domains)
-    const collegeDomains = ['.ac.', '.edu', '@college.'];
-    const isValidDomain = collegeDomains.some(domain => email.toLowerCase().includes(domain));
+    // College Email Validation: Must have a known educational suffix or contains "edu" or "ac"
+    const collegeSuffixes = ['.edu', '.ac.in', '.ac.uk', '.edu.ng', '.edu.eg'];
+    const lowerEmail = email.toLowerCase();
+    const isValidCollegeEmail = collegeSuffixes.some(suffix => lowerEmail.endsWith(suffix)) || 
+                                (lowerEmail.includes('.edu') || lowerEmail.includes('.ac.'));
     
-    if (!isValidDomain) {
+    if (!isValidCollegeEmail) {
       return res.status(400).json({ 
-        message: 'Must use a valid college email domain (e.g. .ac.in, .edu, name@college.domain).' 
+        message: 'Registration restricted to verified college email domains.',
+        details: 'Supported: .edu, .ac.in, etc.'
       });
     }
 
     const userExists = await User.findOne({ email });
     if (userExists) {
-      return res.status(400).json({ message: 'User already exists with this email.' });
+      return res.status(400).json({ message: 'Account already registered with this email.' });
     }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Initial user setup
+    const userRole = role && ['student', 'client'].includes(role) ? role : 'student';
+    
     const user = await User.create({
       name,
       email,
       password: hashedPassword,
-      role: role || 'worker'
+      roles: [userRole],
+      mode_status: userRole === 'student' ? 'learner' : 'verified_earner', // Clients are verified by default in this context
+      credits_wallet: {
+        available: userRole === 'client' ? 1000 : 0, // Clients start with credits for testing
+        escrow_locked: 0,
+        lifetime_earned: 0,
+        lifetime_spent: 0
+      }
     });
 
     if (user) {
@@ -44,71 +58,51 @@ exports.registerUser = async (req, res) => {
         _id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role,
-        credits: user.credits,
+        roles: user.roles,
+        mode_status: user.mode_status,
+        credits: user.credits_wallet,
         token: generateToken(user._id)
       });
-    } else {
-      res.status(400).json({ message: 'Invalid user data received.' });
     }
   } catch (error) {
     console.error('Registration Error:', error);
-    res.status(500).json({ message: 'Server error during registration.', error: error.message });
+    res.status(500).json({ message: 'Internal Server Error during registration.' });
   }
 };
 
+// Login
 exports.loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
-
     const user = await User.findOne({ email }).select('+password');
+    
     if (user && (await bcrypt.compare(password, user.password))) {
       res.json({
         _id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role,
-        credits: user.credits,
-        photoUrl: user.photoUrl,
-        headline: user.headline,
+        roles: user.roles,
+        mode_status: user.mode_status,
+        credits_wallet: user.credits_wallet,
+        profile: user.profile,
         token: generateToken(user._id)
       });
     } else {
-      res.status(401).json({ message: 'Invalid email or password.' });
+      res.status(401).json({ message: 'Invalid credentials.' });
     }
   } catch (error) {
-    res.status(500).json({ message: 'Server error during login.', error: error.message });
+    console.error('Login Error:', error);
+    res.status(500).json({ message: 'Internal Server Error during login.' });
   }
 };
 
-exports.updateUserProfile = async (req, res) => {
+// Get Me (Profile)
+exports.getMe = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).select('-password');
     if (!user) return res.status(404).json({ message: 'User not found.' });
-
-    user.name = req.body.name || user.name;
-    user.email = req.body.email || user.email;
-    user.headline = req.body.headline || user.headline;
-    user.photoUrl = req.body.photoUrl || user.photoUrl;
-
-    if (req.body.password) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(req.body.password, salt);
-    }
-
-    const updatedUser = await user.save();
-
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      role: updatedUser.role,
-      credits: updatedUser.credits,
-      photoUrl: updatedUser.photoUrl,
-      headline: updatedUser.headline,
-      token: generateToken(updatedUser._id)
-    });
+    res.json(user);
   } catch (error) {
-    res.status(500).json({ message: 'Server error updating profile.' });
+    res.status(500).json({ message: 'Server error fetching user profile.' });
   }
 };

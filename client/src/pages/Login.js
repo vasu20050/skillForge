@@ -1,13 +1,14 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../api';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const { refreshProfile } = useAuth();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,7 +17,7 @@ export default function Login() {
     try {
       const res = await api.post('/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data));
+      await refreshProfile();
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Invalid credentials. Check your email and password.');

@@ -6,82 +6,61 @@ const userSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
-  photoUrl: {
-    type: String,
-    default: ''
-  },
-  headline: {
-    type: String,
-    default: 'Campus Pioneer'
-  },
   email: {
     type: String,
     required: true,
     unique: true,
     lowercase: true,
-    trim: true,
-    // Validation is handled in the controller (authController.js)
+    trim: true
   },
   password: {
     type: String,
     required: true,
-    select: false // Don't return password by default
+    select: false
   },
-  role: {
+  roles: {
+    type: [String],
+    enum: ['student', 'client', 'admin'],
+    default: ['student']
+  },
+  mode_status: {
     type: String,
-    enum: ['worker', 'client', 'admin'],
-    default: 'worker'
+    enum: ['learner', 'verified_earner', 'suspended'],
+    default: 'learner'
   },
-  credits: {
-    type: Number,
-    default: 100 // 100 starter credits
+  profile: {
+    department: String,
+    year: Number,
+    skills: [String],
+    photoUrl: String,
+    headline: {
+      type: String,
+      default: 'Campus Pioneer'
+    }
   },
-  skills: [{
-    type: String,
-    enum: [
-      'Graphic Design', 'Web Development', 'Content Writing', 
-      'AI Data Tasks', 'Video Editing', 'Presentation Design', 'Research Assistance'
-    ]
-  }],
-  reputationScore: {
-    type: Number,
-    default: 0
+  reputation: {
+    score: { type: Number, default: 0, min: 0, max: 100 },
+    completion_rate: { type: Number, default: 0 },
+    on_time_rate: { type: Number, default: 0 },
+    repeat_collab_rate: { type: Number, default: 0 }
   },
-  avgRating: {
-    type: Number,
-    default: 0,
-    min: 0,
-    max: 5
+  credits_wallet: {
+    available: { type: Number, default: 0 },
+    escrow_locked: { type: Number, default: 0 },
+    lifetime_earned: { type: Number, default: 0 },
+    lifetime_spent: { type: Number, default: 0 }
   },
-  completionRate: {
-    type: Number,
-    default: 100 // Starts at 100%
-  },
-  onTimeDeliveryRate: {
-    type: Number,
-    default: 100
-  },
-  projectsCompleted: {
-    type: Number,
-    default: 0
-  },
-  disputesLost: {
-    type: Number,
-    default: 0
-  },
-  totalProjectsValue: {
-    type: Number,
-    default: 0
-  },
-  verifiedBadges: [{
-    type: String
-  }],
-  isVerifiedContent: {
-    type: Boolean,
-    default: true
+  verification: {
+    completed_learn_projects: { type: Number, default: 0 },
+    average_learn_rating: { type: Number, default: 0 },
+    verified_at: Date
   }
 }, {
   timestamps: true
 });
+
+// Indexes for performance
+userSchema.index({ email: 1 });
+userSchema.index({ mode_status: 1, 'reputation.score': -1 });
 
 module.exports = mongoose.model('User', userSchema);

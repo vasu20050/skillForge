@@ -1,197 +1,269 @@
 const Project = require('../models/Project');
+const User = require('../models/User');
+const Milestone = require('../models/Milestone');
+const Contract = require('../models/Contract');
+const Transaction = require('../models/Transaction');
+const mongoose = require('mongoose');
 
+// Create a Project (Earn Real)
 exports.createProject = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
-    const { title, description, category, rewardCredits } = req.body;
+    const { title, description, category, credits_total, deadline, milestones } = req.body;
+    const client = await User.findById(req.user._id).session(session);
 
-    if (req.user.role !== 'client') {
-      return res.status(403).json({ message: 'Only clients can post projects.' });
-    }
-    
-    // Check if client has enough credits
-    if (req.user.credits < rewardCredits) {
-        return res.status(400).json({ message: 'Not enough credits to post this project.' });
+    if (!client.roles.includes('client')) {
+      return res.status(403).json({ message: 'Only clients can post real projects.' });
     }
 
-    const defaultDeadline = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days from now
+    if (client.credits_wallet.available < credits_total) {
+      return res.status(400).json({ message: 'Insufficient credits to fund this project.' });
+    }
 
-    const project = await Project.create({
+    const project = await Project.create([{
+      type: 'earn_real',
       title,
       description,
       category,
-      deadline: req.body.deadline || defaultDeadline,
-      rewardParams: { credits: rewardCredits },
-      client: req.user._id,
-      status: 'open'
+      client_id: client._id,
+      credits_total,
+      deadline,
+      status: 'open',
+      verification_required: true
+    }], { session });
+
+    // Fund the project (Escrow Lock)
+    await Transaction.create([{
+      tx_type: 'escrow_lock',
+      from_user_id: client._id,
+      project_id: project[0]._id,
+      amount: credits_total,
+      balance_snapshot: {
+        before: client.credits_wallet.available,
+        after: client.credits_wallet.available - credits_total
+      },
+      metadata: { reason: `Escrow locked for project: ${title}` }
+    }], { session });
+
+    client.credits_wallet.available -= credits_total;
+    client.credits_wallet.escrow_locked += credits_total;
+    await client.save({ session });
+
+    // Create milestones
+    for (const m of milestones) {
+      await Milestone.create([{
+        project_id: project[0]._id,
+        ...m,
+        status: 'pending'
+      }], { session });
+    }
+
+    await session.commitTransaction();
+    res.status(201).json(project[0]);
+  } catch (err) {
+    await session.abortTransaction();
+    console.error(err);
+    res.status(500).json({ message: 'Error creating project and funding escrow.' });
+  } finally {
+    session.endSession();
+  }
+};
+
+// Apply/Accept a Project
+exports.applyForProject = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const project = await Project.findById(id);
+
+    if (!project) return res.status(404).json({ message: 'Project not found.' });
+    if (project.status !== 'open') return res.status(400).json({ message: 'Project is no longer open for applications.' });
+
+    // Check verification status for Earn Real projects
+    if (project.type === 'earn_real' && req.user.mode_status !== 'verified_earner') {
+      return res.status(403).json({ 
+          message: 'Verification Required: Complete Learn Mode to unlock Earn Mode projects.',
+          code: 'LEARN_PIPELINE'
+      });
+    }
+
+    // Assign worker (In MVP, first come first serve or simple assignment)
+    project.team.worker_ids.push(req.user._id);
+    project.status = 'pending_contract';
+    await project.save();
+
+    // Auto-generate Contract
+    const milestones = await Milestone.find({ project_id: project._id });
+    await Contract.create({
+      project_id: project._id,
+      client_id: project.client_id,
+      worker_ids: [req.user._id],
+      scope: { title: project.title, description: project.description },
+      terms: { base_credits: project.credits_total, deadline: project.deadline },
+      status: 'pending_acceptance',
+      milestones_snapshot: milestones.map(m => ({
+        milestone_id: m._id,
+        title: m.title,
+        credits: m.amount_credits,
+        due_date: m.due_date
+      }))
     });
 
-    res.status(201).json(project);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error creating project.', error: error.message });
+    res.json({ message: 'Application accepted. Contract generated.', project });
+  } catch (err) {
+    res.status(500).json({ message: 'Error applying for project' });
   }
 };
 
-exports.getProjects = async (req, res) => {
+// Accept Contract
+exports.acceptContract = async (req, res) => {
   try {
-    const projects = await Project.find().populate('client', 'name email').populate('worker', 'name email');
-    res.json(projects);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error fetching projects.', error: error.message });
+    const { id } = req.params; // Contract ID
+    const contract = await Contract.findById(id);
+    const userId = req.user._id.toString();
+
+    if (!contract) return res.status(404).json({ message: 'Contract not found' });
+
+    if (contract.client_id.toString() === userId) {
+      contract.acceptance.client_accepted_at = new Date();
+    } else if (contract.worker_ids.map(w => w.toString()).includes(userId)) {
+      contract.acceptance.worker_accepted_at = new Date();
+    } else {
+      return res.status(403).json({ message: 'Access Denied' });
+    }
+
+    if (contract.acceptance.client_accepted_at && contract.acceptance.worker_accepted_at) {
+      contract.status = 'active';
+      // Activate project
+      await Project.findByIdAndUpdate(contract.project_id, { status: 'active' });
+    }
+
+    await contract.save();
+    res.json({ message: 'Contract updated', contract });
+  } catch (err) {
+    res.status(500).json({ message: 'Error accepting contract' });
   }
 };
 
-exports.assignProject = async (req, res) => {
+// Submit Milestone
+exports.submitMilestone = async (req, res) => {
   try {
-    const { id } = req.params;
-    
-    if (req.user.role !== 'worker') {
-        return res.status(403).json({ message: 'Only workers can accept projects.' });
+    const { id } = req.params; // Milestone ID
+    const { github_url, demo_url, notes } = req.body;
+    const milestone = await Milestone.findById(id);
+
+    if (!milestone) return res.status(404).json({ message: 'Milestone not found' });
+
+    const project = await Project.findById(milestone.project_id);
+    if (!project.team.worker_ids.includes(req.user._id)) {
+        return res.status(403).json({ message: 'Unauthorized: You are not assigned to this project.' });
     }
 
-    const project = await Project.findById(id);
-    if (!project) return res.status(404).json({ message: 'Project not found.' });
+    milestone.status = 'submitted';
+    milestone.submission_proof = { github_url, demo_url, notes, submitted_at: new Date() };
+    await milestone.save();
 
-    if (project.status !== 'open') {
-      return res.status(400).json({ message: 'Project is no longer open.' });
-    }
-
-    project.worker = req.user._id;
-    project.status = 'assigned';
-    await project.save();
-
-    res.json(project);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error assigning project.', error: error.message });
+    res.json({ message: 'Milestone submitted for review.', milestone });
+  } catch (err) {
+    res.status(500).json({ message: 'Error submitting milestone' });
   }
 };
 
-exports.submitWork = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { fileUrl, description } = req.body;
-
-    const project = await Project.findById(id);
-    if (!project) return res.status(404).json({ message: 'Project not found.' });
-
-    if (!project.worker || project.worker.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Only the assigned worker can submit deliverables.' });
-    }
-
-    project.status = 'submitted';
-    project.deliverables.push({ fileUrl, description, submittedAt: new Date() });
-    await project.save();
-
-    res.json(project);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error submitting work.', error: error.message });
-  }
-};
-
-exports.approveWork = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { rating } = req.body; 
-    const User = require('../models/User'); 
-    
-    const project = await Project.findById(id);
-    if (!project) return res.status(404).json({ message: 'Project not found.' });
-
-    if (project.client.toString() !== req.user._id.toString()) {
-      return res.status(403).json({ message: 'Only the client who posted the project can approve it.' });
-    }
-
-    if (project.status !== 'submitted') {
-      return res.status(400).json({ message: 'Project must be in submitted status to be approved.' });
-    }
-
-    // Transfer Credits Logic
-    const reward = project.rewardParams.credits;
-    const worker = await User.findById(project.worker);
-    const client = await User.findById(project.client);
-
-    if (client.credits < reward) {
-      return res.status(400).json({ message: 'Client has insufficient credits to complete transfer.' });
-    }
-
-    client.credits -= reward;
-    worker.credits += reward;
-
-    // Reputation System Update (PRD Logic)
-    worker.projectsCompleted = (worker.projectsCompleted || 0) + 1;
-    worker.totalProjectsValue = (worker.totalProjectsValue || 0) + reward;
-
-    if (rating !== undefined) {
-      const currentAvg = worker.avgRating || 5;
-      const totalCompleted = worker.projectsCompleted;
-      worker.avgRating = ((currentAvg * (totalCompleted - 1)) + Number(rating)) / totalCompleted;
-    }
-
-    const latestDeliverable = project.deliverables[project.deliverables.length - 1];
-    const isOnTime = latestDeliverable && latestDeliverable.submittedAt <= project.deadline;
-    
-    if (!isOnTime) {
-      worker.onTimeDeliveryRate = Math.max(0, (worker.onTimeDeliveryRate || 100) - 5);
-    }
-
-    // Reputation Score = (Avg Rating × 0.5) + (Completion Rate × 0.3) + (On-Time Delivery × 0.1) + (Project Value × 0.1)
-    const avgR = worker.avgRating || 5;
-    const compR = worker.completionRate || 100;
-    const onTimeR = worker.onTimeDeliveryRate || 100;
-    const projV = worker.totalProjectsValue || 0;
-    
-    worker.reputationScore = (avgR * 0.5) + (compR * 0.3) + (onTimeR * 0.1) + (Math.min(projV, 100) * 0.1);
-
-    // Verified Badge Criteria
-    if ((rating === undefined || rating >= 4) && isOnTime && project.disputeStatus === 'none') {
-      project.isVerifiedPortfolioEntry = true;
-    }
-
-    await client.save();
-    await worker.save();
-
-    project.status = 'completed';
-    await project.save();
-
-    res.json({ message: 'Project approved. Credits transferred.', project });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error approving work.', error: error.message });
-  }
-};
-
-exports.requestRevision = async (req, res) => {
+// Approve Milestone (Escrow Payout)
+exports.approveMilestone = async (req, res) => {
+  const session = await mongoose.startSession();
+  session.startTransaction();
   try {
     const { id } = req.params;
-    const project = await Project.findById(id);
-    if (!project) return res.status(404).json({ message: 'Project not found.' });
-    if (project.client.toString() !== req.user._id.toString()) return res.status(403).json({ message: 'Unauthorized' });
+    const milestone = await Milestone.findById(id).session(session);
+    if (!milestone) return res.status(404).json({ message: 'Milestone not found' });
 
-    project.status = 'revision';
-    await project.save();
-    res.json({ message: 'Revision requested.', project });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
-  }
-};
-
-exports.raiseDispute = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { reason } = req.body;
-    const project = await Project.findById(id);
-    
-    if (!project) return res.status(404).json({ message: 'Project not found.' });
-    if (project.client.toString() !== req.user._id.toString() && (!project.worker || project.worker.toString() !== req.user._id.toString())) {
+    const project = await Project.findById(milestone.project_id).session(session);
+    if (project.client_id.toString() !== req.user._id.toString()) {
       return res.status(403).json({ message: 'Unauthorized' });
     }
 
-    project.status = 'disputed';
-    project.disputeStatus = 'level1';
-    project.disputeReason = reason || 'No reason provided';
-    await project.save();
+    if (milestone.status !== 'submitted') {
+        return res.status(400).json({ message: 'Milestone is not in submitted state.' });
+    }
 
-    res.json({ message: 'Dispute raised. Status escalated to Level 1.', project });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error.' });
+    // Payout logic
+    const workerId = project.team.worker_ids[0]; // Simplified for now
+    const amount = milestone.amount_credits;
+
+    const worker = await User.findById(workerId).session(session);
+    const client = await User.findById(project.client_id).session(session);
+
+    // Recording Transaction
+    await Transaction.create([{
+      tx_type: 'escrow_release',
+      from_user_id: client._id,
+      to_user_id: worker._id,
+      project_id: project._id,
+      milestone_id: milestone._id,
+      amount,
+      balance_snapshot: {
+        before: worker.credits_wallet.available,
+        after: worker.credits_wallet.available + amount
+      },
+      metadata: { reason: `Payout for milestone: ${milestone.title}` }
+    }], { session });
+
+    // Update Wallets
+    client.credits_wallet.escrow_locked -= amount;
+    worker.credits_wallet.available += amount;
+    worker.credits_wallet.lifetime_earned += amount;
+    await client.save({ session });
+    await worker.save({ session });
+
+    milestone.status = 'paid';
+    await milestone.save({ session });
+
+    // Finalize Project if all milestones are paid
+    const remaining = await Milestone.countDocuments({ project_id: project._id, status: { $ne: 'paid' } }).session(session);
+    if (remaining === 0) {
+      project.status = 'completed';
+      await project.save({ session });
+    }
+
+    await session.commitTransaction();
+    res.json({ message: 'Milestone approved and payout released.', milestone });
+  } catch (err) {
+    await session.abortTransaction();
+    console.error(err);
+    res.status(500).json({ message: 'Error during milestone approval and payout' });
+  } finally {
+    session.endSession();
   }
 };
 
+// Get Projects
+exports.getProjects = async (req, res) => {
+    try {
+        const { type, status } = req.query;
+        let query = {};
+        if (type) query.type = type;
+        if (status) query.status = status;
+        
+        const projects = await Project.find(query).populate('client_id', 'name roles mode_status reputation');
+        res.json(projects);
+    } catch (err) {
+        res.status(500).json({ message: 'Error searching projects' });
+    }
+};
+
+// Get Project and its content (Contracts, Milestones)
+exports.getProjectDetails = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const project = await Project.findById(id).populate('client_id', 'name email').populate('team.worker_ids', 'name email reputation');
+        if (!project) return res.status(404).json({ message: 'Not found' });
+
+        const milestones = await Milestone.find({ project_id: id });
+        const contract = await Contract.findOne({ project_id: id, status: { $ne: 'rejected' } });
+
+        res.json({ project, milestones, contract });
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching project details' });
+    }
+};

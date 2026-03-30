@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Briefcase, User } from 'lucide-react';
 import api from '../api';
+import { useAuth } from '../hooks/useAuth';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -9,6 +11,7 @@ export default function Register() {
   const [role, setRole] = useState('worker');
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const { refreshProfile } = useAuth();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -17,7 +20,7 @@ export default function Register() {
       const res = await api.post('/auth/register', { name, email, password, role });
       alert('Welcome on board! 100 starter credits have been added to your account.');
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data));
+      await refreshProfile();
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Verification failed. Use your official college domain.');
@@ -45,22 +48,32 @@ export default function Register() {
         )}
 
         <form className="space-y-6" onSubmit={handleRegister}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
             <button
                type="button"
                onClick={() => setRole('worker')}
-               className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center justify-center space-y-2 group ${role === 'worker' ? 'border-indigo-600 bg-indigo-50 shadow-md' : 'border-slate-100 hover:border-slate-200 bg-white/40'}`}
+               className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center justify-center space-y-3 group text-center ${role === 'worker' ? 'border-indigo-600 bg-indigo-50 shadow-xl shadow-indigo-600/10' : 'border-slate-100 hover:border-slate-200 bg-white/40'}`}
             >
-               <span className={`text-xl font-bold ${role === 'worker' ? 'text-indigo-700' : 'text-slate-400 group-hover:text-slate-600'}`}>Freelancer</span>
-               <span className="text-xs font-semibold text-slate-400 text-center uppercase tracking-wider">Accept tasks</span>
+               <div className={`p-4 rounded-2xl ${role === 'worker' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'} transition-all`}>
+                 <Briefcase className="w-6 h-6" />
+               </div>
+               <div>
+                 <span className={`block text-lg font-black ${role === 'worker' ? 'text-slate-900' : 'text-slate-500'}`}>I am an Expert</span>
+                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Got skills to offer</span>
+               </div>
             </button>
             <button
                type="button"
                onClick={() => setRole('client')}
-               className={`p-4 rounded-2xl border-2 transition-all flex flex-col items-center justify-center space-y-2 group ${role === 'client' ? 'border-indigo-600 bg-indigo-50 shadow-md' : 'border-slate-100 hover:border-slate-200 bg-white/40'}`}
+               className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center justify-center space-y-3 group text-center ${role === 'client' ? 'border-indigo-600 bg-indigo-50 shadow-xl shadow-indigo-600/10' : 'border-slate-100 hover:border-slate-200 bg-white/40'}`}
             >
-               <span className={`text-xl font-bold ${role === 'client' ? 'text-indigo-700' : 'text-slate-400 group-hover:text-slate-600'}`}>Employer</span>
-               <span className="text-xs font-semibold text-slate-400 text-center uppercase tracking-wider">Post tasks</span>
+               <div className={`p-4 rounded-2xl ${role === 'client' ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-400 group-hover:bg-slate-200'} transition-all`}>
+                 <User className="w-6 h-6" />
+               </div>
+               <div>
+                 <span className={`block text-lg font-black ${role === 'client' ? 'text-slate-900' : 'text-slate-500'}`}>I am a Student</span>
+                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest whitespace-nowrap">Hire peer talent</span>
+               </div>
             </button>
           </div>
 
