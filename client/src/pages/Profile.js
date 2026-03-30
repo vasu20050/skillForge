@@ -31,17 +31,30 @@ export default function Profile() {
         
         <div className="px-8 pb-12 sm:px-16 relative">
           <div className="relative -mt-24 mb-10 flex items-end justify-between flex-wrap gap-6">
-            <div className="relative group">
+            <div className="relative group cursor-pointer" onClick={() => window.location.href = '/settings'}>
               <div className="relative h-48 w-48 rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl bg-slate-900 flex items-center justify-center">
                 <img 
                   src={user.profile?.photoUrl || `https://ui-avatars.com/api/?name=${user.name}&background=random`} 
                   alt={user.name} 
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                 />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-[2.5rem]">
+                   <Camera className="text-white w-10 h-10" />
+                </div>
+              </div>
+              <div className="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-4 rounded-3xl shadow-2xl border-4 border-white group-hover:scale-110 transition-transform">
+                 <Settings className="w-5 h-5 animate-spin-slow" />
               </div>
             </div>
 
             <div className="flex gap-4 mb-4">
+              <button 
+                onClick={() => window.location.href = '/settings'}
+                className="p-5 bg-white/10 hover:bg-white/20 text-white rounded-3xl transition-all shadow-sm border border-white/10 backdrop-blur-md flex items-center gap-3 px-8"
+              >
+                <Settings className="w-5 h-5" />
+                <span className="font-bold text-sm tracking-tight">Access Settings</span>
+              </button>
               <button 
                 onClick={logout}
                 className="p-5 bg-rose-50 text-rose-500 rounded-3xl hover:bg-rose-100 transition-all shadow-sm border border-rose-100"

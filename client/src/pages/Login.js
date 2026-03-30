@@ -9,6 +9,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const { refreshProfile } = useAuth();
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -20,15 +21,20 @@ export default function Login() {
       await refreshProfile();
       navigate('/dashboard');
     } catch (err) {
-      setError(err.response?.data?.message || 'Invalid credentials. Check your email and password.');
+      if (err.response?.status === 401) {
+        setError('Invalid credentials. If you haven\'t registered yet, please join now using your college email.');
+      } else {
+        setError(err.response?.data?.message || 'Login failed. Please check your connection and try again.');
+      }
     } finally {
       setLoading(false);
     }
   };
 
+
   return (
     <div className="flex flex-col items-center justify-center p-4 animate-in fade-in slide-in-from-bottom duration-700">
-      <div className="w-full max-w-md glass-card rounded-3xl p-10 md:p-14 transition-all hover:shadow-2xl shadow-indigo-500/10">
+      <div className="w-full max-w-md glass-card rounded-[3rem] p-10 md:p-14 transition-all hover:shadow-2xl shadow-indigo-500/10">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-100 rounded-2xl text-slate-800 mb-6 font-extrabold text-2xl border border-slate-200">
             S
@@ -75,6 +81,7 @@ export default function Login() {
           >
             {loading ? 'Authenticating...' : 'Sign In'}
           </button>
+
 
           <p className="text-center font-semibold text-slate-500 pt-6">
             New to SkillForge? <Link to="/register" className="text-indigo-600 hover:text-indigo-800 underline decoration-2 underline-offset-4">Join now</Link>

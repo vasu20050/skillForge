@@ -71,6 +71,9 @@ export default function Header() {
                       {user.mode_status === 'learner' ? 'Learner' : 'Verified'}
                   </span>
               </div>
+              <Link to="/settings" className="p-2.5 hover:bg-slate-50 text-slate-400 hover:text-indigo-600 rounded-xl transition-all mr-2">
+                  <Settings className="w-5 h-5 animate-hover-spin" />
+              </Link>
               <Link to="/profile" className="relative group">
                   <img 
                   src={user.profile?.photoUrl || `https://ui-avatars.com/api/?name=${user.name}&background=random`} 
@@ -94,12 +97,16 @@ export default function Header() {
       {isMenuOpen && user && (
         <div className="absolute top-24 left-4 right-4 glass-card rounded-3xl p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 lg:hidden text-center">
             <nav className="flex flex-col space-y-4">
-               {navLinks.map(link => (
-                 <Link key={link.path} to={link.path} onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center space-x-3 p-4 rounded-2xl hover:bg-slate-50 text-slate-700 font-black text-xs uppercase tracking-widest">
-                    <span className="text-indigo-600">{link.icon}</span>
-                    <span>{link.name}</span>
-                 </Link>
-               ))}
+                <Link to="/settings" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center space-x-3 p-4 rounded-2xl hover:bg-slate-50 text-slate-700 font-black text-xs uppercase tracking-widest">
+                    <Settings className="w-4 h-4 text-indigo-600" />
+                    <span>Settings</span>
+                </Link>
+                {navLinks.map(link => (
+                  <Link key={link.path} to={link.path} onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center space-x-3 p-4 rounded-2xl hover:bg-slate-50 text-slate-700 font-black text-xs uppercase tracking-widest">
+                      <span className="text-indigo-600">{link.icon}</span>
+                      <span>{link.name}</span>
+                  </Link>
+                ))}
                <button onClick={logout} className="flex items-center justify-center space-x-3 p-4 rounded-2xl hover:bg-rose-50 text-rose-600 font-black text-xs uppercase tracking-widest w-full">
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>

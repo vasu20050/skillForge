@@ -1,9 +1,9 @@
 # Product Requirements Document: SkillForge
 
 Project: SkillForge  
-Version: 2.0 (Production Blueprint)  
-Status: Architecture Locked  
-Last Updated: March 29, 2026
+Version: 2.1 (Production & Pilot Stage)  
+Status: Implementation Stabilized  
+Last Updated: March 30, 2026
 
 ## 1. Product Definition
 SkillForge is a closed-campus skill economy platform that converts students from beginners into verified earners through one controlled progression:
@@ -13,7 +13,7 @@ Learn -> Prove -> Earn
 The platform is intentionally workflow-first, trust-first, and outcome-first. It is not a social app, not a random gig board, and not an open marketplace.
 
 ## 2. Core Constraints (Non-Negotiable)
-1. Campus-only authentication using college domains and admin verification.
+1. Campus-only authentication using college domains (e.g., .edu, .ac.in, .camp) and admin verification.
 2. Beginners and professionals are not mixed in the same experience stage.
 3. No external paid APIs required for MVP.
 4. No social feed, no vanity engagement loops.
@@ -476,6 +476,11 @@ Phase 6: Product Hardening
 
 ## 20. Out-of-Scope for MVP
 1. Social media feed.
-2. Generic AI chatbot features.
-3. Off-platform direct fiat payment gateways.
-4. Cross-campus expansion before trust metrics stabilize.
+2. Off-platform direct fiat payment gateways.
+3. Cross-campus expansion before trust metrics stabilize.
+
+## 21. Recent Milestones (Update: March 30)
+1. **Pilot Authentication**: Expanded whitelist to include Delhi Technical Campus (`.camp` domains).
+2. **AI Mentorship**: Launched **Sahara**, the premium AI assistant for context-aware mentoring (now in-scope).
+3. **UI/UX Polishing**: Standardized glassmorphism design system across all core modes.
+4. **Auth Stability**: Resolved JWT and navigation bugs in the login workflow.

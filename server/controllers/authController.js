@@ -1,6 +1,6 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs');
+const bcrypt = require('bcrypt');
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'skillforge_secret_2026', { expiresIn: '30d' });
@@ -15,16 +15,16 @@ exports.registerUser = async (req, res) => {
       return res.status(400).json({ message: 'Missing required fields (name, email, password).' });
     }
 
-    // College Email Validation: Must have a known educational suffix or contains "edu" or "ac"
-    const collegeSuffixes = ['.edu', '.ac.in', '.ac.uk', '.edu.ng', '.edu.eg'];
+    // College Email Validation: Must have a known educational suffix or contains "edu", "ac", or campus domain
+    const collegeSuffixes = ['.edu', '.ac.in', '.ac.uk', '.edu.ng', '.edu.eg', '.camp', '.in'];
     const lowerEmail = email.toLowerCase();
     const isValidCollegeEmail = collegeSuffixes.some(suffix => lowerEmail.endsWith(suffix)) || 
-                                (lowerEmail.includes('.edu') || lowerEmail.includes('.ac.'));
+                                (lowerEmail.includes('.edu') || lowerEmail.includes('.ac.') || lowerEmail.includes('delhitechnicalcamp'));
     
     if (!isValidCollegeEmail) {
       return res.status(400).json({ 
         message: 'Registration restricted to verified college email domains.',
-        details: 'Supported: .edu, .ac.in, etc.'
+        details: 'Supported: .edu, .ac.in, .camp, etc.'
       });
     }
 
@@ -103,6 +103,46 @@ exports.getMe = async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found.' });
     res.json(user);
   } catch (error) {
+    console.error('Fetch Me Error:', error);
     res.status(500).json({ message: 'Server error fetching user profile.' });
+  }
+};
+
+// Update Profile
+exports.updateProfile = async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+      user.name = req.body.name || user.name;
+      
+      // Ensure profile sub-document exists
+      if (!user.profile) {
+        user.profile = {};
+      }
+      
+      if (req.body.headline) user.profile.headline = req.body.headline;
+      if (req.body.photoUrl) user.profile.photoUrl = req.body.photoUrl;
+
+      // Handle department/year updates if present in body
+      if (req.body.department) user.profile.department = req.body.department;
+      if (req.body.year) user.profile.year = req.body.year;
+
+      const updatedUser = await user.save();
+      res.json({
+        _id: updatedUser._id,
+        name: updatedUser.name,
+        email: updatedUser.email,
+        roles: updatedUser.roles,
+        mode_status: updatedUser.mode_status,
+        credits_wallet: updatedUser.credits_wallet,
+        profile: updatedUser.profile
+      });
+    } else {
+      res.status(404).json({ message: 'User not found.' });
+    }
+  } catch (error) {
+    console.error('Update Profile Error:', error);
+    res.status(500).json({ message: 'Server error updating profile.' });
   }
 };

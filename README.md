@@ -182,23 +182,23 @@ SkillForge/
 
 ## 📦 MVP Features  
 
-- Campus-only authentication  
+- Campus-only authentication (Pilot: Delhi Technical Campus)
 - Dual role system (Worker / Client)  
 - Escrow-based credit system  
 - Dispute resolution system  
 - Reputation scoring  
 - Verified portfolio  
 - Skill verification tasks  
+- **Sahara AI Mentorship** (Premium AI assistant)
 - Community moderation  
 
 ---
 
 ## 📈 Future Scope  
 
-- AI-based skill matching  
 - Cross-campus collaboration  
 - Real money credit system  
-- Real-time chat  
+- Advanced matching algorithms
 - Leaderboards & streak system  
 
 ---

@@ -1,7 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useLocation } from 'react-router-dom';
 import { Mic, Send, X, Bot, Volume2, Sparkles, MessageSquare } from 'lucide-react';
 
 export default function SaharaBot() {
+  const location = useLocation();
+  const isAuthPage = location.pathname === '/login' || location.pathname === '/register';
+  
   const [isOpen, setIsOpen] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [messages, setMessages] = useState([
@@ -153,6 +157,7 @@ export default function SaharaBot() {
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
+  if (isAuthPage) return null;
 
   return (
     <>
