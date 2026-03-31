@@ -15,25 +15,21 @@ export default function Header() {
 
   const navLinks = [
     { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { name: 'Learn Zone', path: '/learn', icon: <BookOpen className="w-4 h-4" /> },
+    { name: 'Learn', path: '/learn', icon: <BookOpen className="w-4 h-4" /> },
     { name: 'Marketplace', path: '/marketplace', icon: <TrendingUp className="w-4 h-4" /> },
     { name: 'Wallet', path: '/wallet', icon: <Wallet className="w-4 h-4" /> },
   ];
 
-  if (user?.roles.includes('admin')) {
+  // Defensive check for roles
+  if (user?.roles?.includes('admin')) {
     navLinks.push({ name: 'Admin', path: '/admin', icon: <ShieldAlert className="w-4 h-4" /> });
   }
 
   return (
     <header className="sticky top-0 z-50 p-4">
-      <div className="max-w-7xl mx-auto glass-card rounded-2xl px-6 py-3 flex justify-between items-center transition-all duration-300">
+      <div className="max-w-7xl mx-auto bg-white border border-slate-100 shadow-sm rounded-2xl px-6 py-3 flex justify-between items-center transition-all duration-300">
         <div className="flex items-center space-x-8">
           <Link to="/" className="flex items-center space-x-2 mr-4 group">
-            <img 
-              src="/logo.png" 
-              alt="Logo" 
-              className="w-10 h-10 rounded-xl shadow-lg shadow-indigo-600/10 group-hover:scale-105 transition-transform" 
-            />
             <span className="text-xl font-black tracking-tight text-slate-900 uppercase">SkillForge</span>
           </Link>
           
@@ -58,8 +54,8 @@ export default function Header() {
         <div className="flex items-center space-x-3">
           {!user ? (
             <div className="flex items-center space-x-4">
-              <Link to="/login" className="text-slate-600 text-xs font-black uppercase tracking-widest hover:text-indigo-600">Login</Link>
-              <Link to="/register" className="premium-btn text-white px-6 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-indigo-100">
+              <Link to="/login" className="text-slate-600 text-xs font-bold uppercase tracking-widest hover:text-indigo-600">Login</Link>
+              <Link to="/register" className="btn-primary px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm">
                 Join Now
               </Link>
             </div>
@@ -71,14 +67,11 @@ export default function Header() {
                       {user.mode_status === 'learner' ? 'Learner' : 'Verified'}
                   </span>
               </div>
-              <Link to="/settings" className="p-2.5 hover:bg-slate-50 text-slate-400 hover:text-indigo-600 rounded-xl transition-all mr-2">
-                  <Settings className="w-5 h-5 animate-hover-spin" />
-              </Link>
               <Link to="/profile" className="relative group">
                   <img 
-                  src={user.profile?.photoUrl || `https://ui-avatars.com/api/?name=${user.name}&background=random`} 
-                  className="w-10 h-10 rounded-xl ring-2 ring-indigo-50 group-hover:ring-indigo-500 transition-all object-cover shadow-sm bg-slate-100" 
-                  alt="User" 
+                    src={user.profile?.photoUrl || `https://ui-avatars.com/api/?name=${user.name}&background=6366f1&color=fff`} 
+                    className="w-10 h-10 rounded-xl ring-2 ring-indigo-50 group-hover:ring-indigo-500 transition-all object-cover shadow-sm bg-slate-100" 
+                    alt="User" 
                   />
               </Link>
               
@@ -95,19 +88,16 @@ export default function Header() {
 
       {/* Mobile Menu */}
       {isMenuOpen && user && (
-        <div className="absolute top-24 left-4 right-4 glass-card rounded-3xl p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 lg:hidden text-center">
+        <div className="absolute top-24 left-4 right-4 bg-white border border-slate-100 rounded-3xl p-6 shadow-2xl animate-in fade-in zoom-in-95 duration-200 lg:hidden text-center">
             <nav className="flex flex-col space-y-4">
-                <Link to="/settings" onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center space-x-3 p-4 rounded-2xl hover:bg-slate-50 text-slate-700 font-black text-xs uppercase tracking-widest">
-                    <Settings className="w-4 h-4 text-indigo-600" />
-                    <span>Settings</span>
-                </Link>
                 {navLinks.map(link => (
-                  <Link key={link.path} to={link.path} onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center space-x-3 p-4 rounded-2xl hover:bg-slate-50 text-slate-700 font-black text-xs uppercase tracking-widest">
+                  <Link key={link.path} to={link.path} onClick={() => setIsMenuOpen(false)} className="flex items-center justify-center space-x-3 p-4 rounded-2xl hover:bg-slate-50 text-slate-700 font-bold text-xs uppercase tracking-widest">
                       <span className="text-indigo-600">{link.icon}</span>
                       <span>{link.name}</span>
                   </Link>
                 ))}
-               <button onClick={logout} className="flex items-center justify-center space-x-3 p-4 rounded-2xl hover:bg-rose-50 text-rose-600 font-black text-xs uppercase tracking-widest w-full">
+                <div className="h-px bg-slate-100 my-2"></div>
+                <button onClick={logout} className="flex items-center justify-center space-x-3 p-4 rounded-2xl hover:bg-rose-50 text-rose-600 font-bold text-xs uppercase tracking-widest w-full">
                   <LogOut className="w-4 h-4" />
                   <span>Logout</span>
                </button>
