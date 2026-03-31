@@ -42,7 +42,9 @@ export default function Login() {
       await refreshProfile();
       navigate('/dashboard');
     } catch (err) {
-      setError('Could not start guest session. Please try again.');
+      const apiDest = process.env.REACT_APP_API_URL || 'localhost:5000/api';
+      const msg = err.response?.data?.message || err.message || 'Network Error';
+      setError(`Failed connecting to ${apiDest}. Error: ${msg}`);
     } finally {
       setGuestLoading(false);
     }
