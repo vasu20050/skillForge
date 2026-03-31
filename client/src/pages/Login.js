@@ -9,7 +9,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [guestLoading, setGuestLoading] = useState(false);
-  const { setUser } = useAuth();
+  const { setUser } = useAuth(); // Import setUser instead of refreshProfile
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -18,9 +18,9 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await api.post('/auth/login', { email, password });
+      // Set the token BEFORE the user, so the interceptor is ready
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data));
-      setUser(res.data); // Set user directly — eliminates race condition with PrivateRoute
+      setUser(res.data); // Set user state immediately to avoid race with PrivateRoute
       navigate('/dashboard');
     } catch (err) {
       if (err.response?.status === 401) {
@@ -38,10 +38,10 @@ export default function Login() {
     setGuestLoading(true);
     try {
       const res = await api.post('/auth/guest');
+      // Set the token BEFORE the user, so the interceptor is ready
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('isGuest', 'true');
-      localStorage.setItem('user', JSON.stringify(res.data));
-      setUser(res.data); // Set user directly — eliminates race condition with PrivateRoute
+      setUser(res.data); // Set user state immediately to avoid race with PrivateRoute
       navigate('/dashboard');
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Network Error';
@@ -53,7 +53,7 @@ export default function Login() {
 
   return (
     <div className="flex flex-col items-center justify-center p-4 animate-in fade-in slide-in-from-bottom duration-700">
-      <div className="w-full max-w-md glass-card rounded-[3rem] p-10 md:p-14 transition-all hover:shadow-2xl shadow-indigo-500/10">
+      <div className="w-full max-w-md glass-card rounded-[3rem] p-10 md:p-14 transition-all hover:shadow-2xl shadow-indigo-500/10 text-slate-800">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-100 rounded-2xl text-slate-800 mb-6 font-extrabold text-2xl border border-slate-200">
             S
