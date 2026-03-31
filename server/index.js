@@ -29,7 +29,6 @@ const corsOptions = {
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); // handle preflight for all routes
 
 // Rate Limiting
 const limiter = rateLimit({
