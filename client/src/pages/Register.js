@@ -10,26 +10,31 @@ export default function Register() {
   const [password, setPassword] = useState('');
   const [role, setRole] = useState('worker');
   const [error, setError] = useState('');
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { refreshProfile } = useAuth();
+  const { setUser } = useAuth(); // Import setUser instead of refreshProfile
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError('');
+    setLoading(true);
     try {
       const res = await api.post('/auth/register', { name, email, password, role });
-      alert('Welcome on board! 100 starter credits have been added to your account.');
+      // Set the token BEFORE the user, so the interceptor is ready
       localStorage.setItem('token', res.data.token);
-      await refreshProfile();
+      setUser(res.data); // Set user state immediately to avoid race with PrivateRoute
+      alert('Welcome on board! 100 starter credits have been added to your account.');
       navigate('/dashboard');
     } catch (err) {
       setError(err.response?.data?.message || 'Verification failed. Use your official college domain.');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col items-center justify-center p-4 animate-in fade-in slide-in-from-bottom duration-700">
-      <div className="w-full max-w-xl glass-card rounded-3xl p-10 md:p-14 transition-all hover:shadow-2xl shadow-indigo-500/10">
+      <div className="w-full max-w-xl glass-card rounded-3xl p-10 md:p-14 transition-all hover:shadow-2xl shadow-indigo-500/10 text-slate-800">
         <div className="text-center mb-12">
           <div className="inline-flex items-center justify-center w-16 h-16 bg-indigo-50 rounded-2xl text-indigo-600 mb-6 font-extrabold text-2xl border border-indigo-100 shadow-sm">
             S
@@ -51,6 +56,7 @@ export default function Register() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
             <button
                type="button"
+               disabled={loading}
                onClick={() => setRole('worker')}
                className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center justify-center space-y-3 group text-center ${role === 'worker' ? 'border-indigo-600 bg-indigo-50 shadow-xl shadow-indigo-600/10' : 'border-slate-100 hover:border-slate-200 bg-white/40'}`}
             >
@@ -64,6 +70,7 @@ export default function Register() {
             </button>
             <button
                type="button"
+               disabled={loading}
                onClick={() => setRole('client')}
                className={`p-6 rounded-[2rem] border-2 transition-all flex flex-col items-center justify-center space-y-3 group text-center ${role === 'client' ? 'border-indigo-600 bg-indigo-50 shadow-xl shadow-indigo-600/10' : 'border-slate-100 hover:border-slate-200 bg-white/40'}`}
             >
@@ -112,9 +119,10 @@ export default function Register() {
 
           <button
             type="submit"
+            disabled={loading}
             className="w-full premium-btn text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-600/20 hover:shadow-indigo-600/40 transition-shadow mt-4"
           >
-            Create Your Account
+            {loading ? 'Registering...' : 'Create Your Account'}
           </button>
 
           <p className="text-center font-semibold text-slate-500 pt-6">
