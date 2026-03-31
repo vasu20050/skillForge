@@ -1,27 +1,33 @@
 require('dotenv').config(); // Server startup: 2026
 const express = require('express');
 const morgan = require('morgan');
-const cors = require('cors');
-const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const connectDB = require('./config/db');
 
 const app = express();
 
-// Security Middleware
-app.use(helmet({
-  crossOriginResourcePolicy: false,
-}));
+// ── CORS: Manual headers FIRST — before every other middleware ──────────────
+// This ensures cross-origin requests from Vercel always get the right headers
+// even if Render's proxy strips the cors() package headers.
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,PATCH,DELETE,OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type,Authorization');
+  // Short-circuit OPTIONS preflight immediately — no further processing needed
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(204);
+  }
+  next();
+});
+
 app.use(morgan('dev'));
 
-// CORS Configuration — allows any domain (Vercel, Localhost, etc.)
-app.use(cors());
-
-// Rate Limiting
+// Rate Limiting — skip for health & auth to avoid blocking logins
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // Limit each IP to 100 requests per windowMs
-  message: 'Too many requests from this IP, please try again after 15 minutes'
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  message: 'Too many requests from this IP, please try again after 15 minutes',
+  skip: (req) => req.path.startsWith('/api/auth') || req.path === '/api/health',
 });
 app.use('/api', limiter);
 
