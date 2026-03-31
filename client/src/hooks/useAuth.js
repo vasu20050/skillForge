@@ -11,18 +11,20 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (!token) {
       setLoading(false);
-      return;
+      return null;
     }
 
     try {
       const res = await api.get('/auth/me');
       setUser(res.data);
       localStorage.setItem('user', JSON.stringify(res.data));
+      return res.data;
     } catch (err) {
       console.error('Profile fetch failed', err);
       localStorage.removeItem('token');
       localStorage.removeItem('user');
       setUser(null);
+      return null;
     } finally {
       setLoading(false);
     }

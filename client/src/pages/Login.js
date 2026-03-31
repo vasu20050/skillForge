@@ -9,7 +9,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [guestLoading, setGuestLoading] = useState(false);
-  const { refreshProfile } = useAuth();
+  const { setUser } = useAuth();
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -19,7 +19,8 @@ export default function Login() {
     try {
       const res = await api.post('/auth/login', { email, password });
       localStorage.setItem('token', res.data.token);
-      await refreshProfile();
+      localStorage.setItem('user', JSON.stringify(res.data));
+      setUser(res.data); // Set user directly — eliminates race condition with PrivateRoute
       navigate('/dashboard');
     } catch (err) {
       if (err.response?.status === 401) {
@@ -39,12 +40,12 @@ export default function Login() {
       const res = await api.post('/auth/guest');
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('isGuest', 'true');
-      await refreshProfile();
+      localStorage.setItem('user', JSON.stringify(res.data));
+      setUser(res.data); // Set user directly — eliminates race condition with PrivateRoute
       navigate('/dashboard');
     } catch (err) {
-      const apiDest = process.env.REACT_APP_API_URL || 'localhost:5000/api';
       const msg = err.response?.data?.message || err.message || 'Network Error';
-      setError(`Failed connecting to ${apiDest}. Error: ${msg}`);
+      setError(`Could not connect to server. Error: ${msg}`);
     } finally {
       setGuestLoading(false);
     }
@@ -100,14 +101,12 @@ export default function Login() {
             {loading ? 'Authenticating...' : 'Sign In'}
           </button>
 
-          {/* Divider */}
           <div className="flex items-center gap-4 my-2">
             <div className="flex-1 h-px bg-slate-200"></div>
             <span className="text-slate-400 text-sm font-semibold">or</span>
             <div className="flex-1 h-px bg-slate-200"></div>
           </div>
 
-          {/* Guest Button */}
           <button
             type="button"
             onClick={handleGuest}
@@ -127,4 +126,3 @@ export default function Login() {
     </div>
   );
 }
-
