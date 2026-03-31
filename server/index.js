@@ -9,21 +9,13 @@ const connectDB = require('./config/db');
 const app = express();
 
 // Security Middleware
-app.use(helmet());
+app.use(helmet({
+  crossOriginResourcePolicy: false,
+}));
 app.use(morgan('dev'));
 
-// CORS Configuration — supports localhost + deployed Vercel URL
-const allowedOrigins = [
-  'http://localhost:3000',
-  ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(o => o.trim()) : [])
-];
-
-const corsOptions = {
-  origin: true, // Echo origin back to bypass blocks completely
-  credentials: true,
-  optionsSuccessStatus: 200
-};
-app.use(cors(corsOptions));
+// CORS Configuration — allows any domain (Vercel, Localhost, etc.)
+app.use(cors());
 
 // Rate Limiting
 const limiter = rateLimit({
