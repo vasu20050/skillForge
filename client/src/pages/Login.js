@@ -9,7 +9,9 @@ export default function Login() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [guestLoading, setGuestLoading] = useState(false);
-  const { setUser } = useAuth(); // Import setUser instead of refreshProfile
+  
+  // FIXED AUTH INJECTION (REMOVED REFRESHPROFILE RACE)
+  const { setUser } = useAuth(); 
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
@@ -18,15 +20,18 @@ export default function Login() {
     setLoading(true);
     try {
       const res = await api.post('/auth/login', { email, password });
-      // Set the token BEFORE the user, so the interceptor is ready
+      
+      // ORDER MATTERS: Token then User then Navigate
       localStorage.setItem('token', res.data.token);
-      setUser(res.data); // Set user state immediately to avoid race with PrivateRoute
+      setUser(res.data); // Update global state immediately
+      
       navigate('/dashboard');
     } catch (err) {
       if (err.response?.status === 401) {
-        setError("Invalid credentials. If you haven't registered yet, please join now using your college email.");
+        setError("Invalid credentials. Please join SkillForge using your college email.");
       } else {
-        setError(err.response?.data?.message || 'Login failed. Please check your connection and try again.');
+        const msg = err.response?.data?.message || err.message || 'Network Error';
+        setError(`Connection Failed: ${msg}. Check if backend is awake.`);
       }
     } finally {
       setLoading(false);
@@ -38,32 +43,34 @@ export default function Login() {
     setGuestLoading(true);
     try {
       const res = await api.post('/auth/guest');
-      // Set the token BEFORE the user, so the interceptor is ready
+      
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('isGuest', 'true');
-      setUser(res.data); // Set user state immediately to avoid race with PrivateRoute
+      setUser(res.data); // Update global state immediately
+      
       navigate('/dashboard');
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Network Error';
-      setError(`Could not connect to server. Error: ${msg}`);
+      setError(`Guest access failed: ${msg}. Try again in a few seconds.`);
     } finally {
       setGuestLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 animate-in fade-in slide-in-from-bottom duration-700">
-      <div className="w-full max-w-md glass-card rounded-[3rem] p-10 md:p-14 transition-all hover:shadow-2xl shadow-indigo-500/10 text-slate-800">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-slate-100 rounded-2xl text-slate-800 mb-6 font-extrabold text-2xl border border-slate-200">
+    <div className="flex flex-col items-center justify-center p-4 animate-in-slide">
+      {/* SHADOW CARD - RESTORED PREVIOUS UI */}
+      <div className="w-full max-w-md shadow-card p-10 mt-12 bg-white text-slate-800">
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-50 rounded-xl text-indigo-600 mb-6 font-black text-2xl border border-indigo-100 shadow-sm">
             S
           </div>
-          <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">Welcome Back</h2>
-          <p className="mt-4 text-slate-500 font-medium text-lg leading-relaxed">Sign in to your SkillForge account.</p>
+          <h2 className="text-3xl font-bold text-slate-900">Welcome Back</h2>
+          <p className="mt-2 text-slate-500 font-medium tracking-tight">Sign in to your SkillForge account.</p>
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-2xl border border-red-100 text-sm font-semibold mb-8 flex items-center space-x-3">
+          <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm font-semibold mb-6 flex items-center space-x-2">
              <span className="w-1.5 h-1.5 rounded-full bg-red-600"></span>
              <span>{error}</span>
           </div>
@@ -71,39 +78,35 @@ export default function Login() {
 
         <form className="space-y-6" onSubmit={handleLogin}>
           <div className="space-y-4">
-            <div className="relative group">
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-sans"
-                placeholder="College Email"
-              />
-            </div>
-            <div className="relative group">
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                className="w-full bg-slate-50 border border-slate-200 rounded-2xl px-5 py-4 text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-sans"
-                placeholder="Password"
-              />
-            </div>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-sans"
+              placeholder="College Email"
+            />
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all font-sans"
+              placeholder="Password"
+            />
           </div>
 
           <button
             type="submit"
             disabled={loading || guestLoading}
-            className="w-full premium-btn text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-600/20 hover:shadow-indigo-600/40 transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
+            className="w-full btn-primary text-lg shadow-lg shadow-indigo-600/20 disabled:opacity-50"
           >
-            {loading ? 'Authenticating...' : 'Sign In'}
+            {loading ? 'Entering...' : 'Sign In'}
           </button>
 
-          <div className="flex items-center gap-4 my-2">
+          <div className="flex items-center gap-4 my-2 text-[#94a3b8]">
             <div className="flex-1 h-px bg-slate-200"></div>
-            <span className="text-slate-400 text-sm font-semibold">or</span>
+            <span className="text-xs font-bold uppercase tracking-wider">OR</span>
             <div className="flex-1 h-px bg-slate-200"></div>
           </div>
 
@@ -111,18 +114,21 @@ export default function Login() {
             type="button"
             onClick={handleGuest}
             disabled={loading || guestLoading}
-            className="w-full flex items-center justify-center gap-3 bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-300 hover:border-indigo-400 text-slate-700 hover:text-indigo-700 py-4 rounded-2xl font-bold text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+            className="w-full flex items-center justify-center gap-3 bg-white hover:bg-slate-50 border-2 border-dashed border-slate-200 hover:border-indigo-400 text-slate-600 hover:text-indigo-600 py-3 rounded-xl font-bold transition-all disabled:opacity-50"
           >
-            <span className="text-xl group-hover:scale-110 transition-transform">👤</span>
-            {guestLoading ? 'Starting session...' : 'Continue as Guest'}
+            👤 {guestLoading ? 'Starting...' : 'Continue as Guest'}
           </button>
-          <p className="text-center text-xs text-slate-400 -mt-3">No account needed · Read-only demo access</p>
 
-          <p className="text-center font-semibold text-slate-500 pt-2">
-            New to SkillForge? <Link to="/register" className="text-indigo-600 hover:text-indigo-800 underline decoration-2 underline-offset-4">Join now</Link>
-          </p>
+          <div className="text-center pt-2">
+             <p className="text-sm font-semibold text-slate-500">
+               New to SkillForge? <Link to="/register" className="link-indigo">Join now</Link>
+             </p>
+          </div>
         </form>
       </div>
+      <p className="text-center text-xs text-[#cbd5e1] mt-8 font-bold uppercase tracking-widest">
+        Built for the Campus Economy
+      </p>
     </div>
   );
 }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-import { Camera, Mail, Award, Clock, Settings, LogOut, ChevronRight, Zap, Target, FolderKanban, ShieldCheck } from 'lucide-react';
+import { Camera, Mail, Award, Clock, LogOut, ShieldCheck, Target, FolderKanban } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 export default function Profile() {
@@ -19,129 +19,131 @@ export default function Profile() {
     if (user) fetchPortfolio();
   }, [user]);
 
-  if (loading || !user) return <div className="p-20 text-center font-bold">Inscribing Identity...</div>;
+  if (loading || !user) return (
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="flex flex-col items-center space-y-4">
+        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
+        <p className="font-bold text-slate-400 uppercase tracking-widest text-xs">Syncing Profile...</p>
+      </div>
+    </div>
+  );
+
+  // Defensive values
+  const reputation = user.reputation || { score: 0, completion_rate: 0, on_time_rate: 0, repeat_collab_rate: 0 };
+  const wallet = user.credits_wallet || { available: 0, lifetime_earned: 0 };
+  const verification = user.verification || { completed_learn_projects: 0 };
+  const profile = user.profile || { photoUrl: '', headline: 'Campus Member' };
 
   return (
-    <div className="space-y-12 page-transition pb-20">
-      <div className="glass-card rounded-[3.5rem] overflow-hidden shadow-2xl shadow-indigo-500/10 border-none relative bg-white/40 backdrop-blur-3xl">
+    <div className="space-y-12 animate-in-slide pb-20">
+      <div className="bg-white rounded-3xl overflow-hidden shadow-sm border border-slate-100 relative">
         {/* Cover Section */}
-        <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-indigo-900 h-56 relative overflow-hidden">
-          <div className="absolute inset-0 opacity-30 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+        <div className="bg-slate-900 h-40 relative">
+          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
         </div>
         
-        <div className="px-8 pb-12 sm:px-16 relative">
-          <div className="relative -mt-24 mb-10 flex items-end justify-between flex-wrap gap-6">
-            <div className="relative group cursor-pointer" onClick={() => window.location.href = '/settings'}>
-              <div className="relative h-48 w-48 rounded-[3rem] overflow-hidden border-[10px] border-white shadow-2xl bg-slate-900 flex items-center justify-center">
+        <div className="px-6 pb-12 sm:px-12 relative">
+          <div className="relative -mt-16 mb-10 flex items-end justify-between flex-wrap gap-6">
+            <div className="relative group">
+              <div className="h-40 w-40 rounded-2xl overflow-hidden border-8 border-white shadow-xl bg-slate-100 flex items-center justify-center">
                 <img 
-                  src={user.profile?.photoUrl || `https://ui-avatars.com/api/?name=${user.name}&background=random`} 
+                  src={profile.photoUrl || `https://ui-avatars.com/api/?name=${user.name}&background=6366f1&color=fff`} 
                   alt={user.name} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                  className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 flex items-center justify-center transition-opacity rounded-[2.5rem]">
-                   <Camera className="text-white w-10 h-10" />
-                </div>
-              </div>
-              <div className="absolute -bottom-2 -right-2 bg-indigo-600 text-white p-4 rounded-3xl shadow-2xl border-4 border-white group-hover:scale-110 transition-transform">
-                 <Settings className="w-5 h-5 animate-spin-slow" />
               </div>
             </div>
 
-            <div className="flex gap-4 mb-4">
-              <button 
-                onClick={() => window.location.href = '/settings'}
-                className="p-5 bg-white/10 hover:bg-white/20 text-white rounded-3xl transition-all shadow-sm border border-white/10 backdrop-blur-md flex items-center gap-3 px-8"
-              >
-                <Settings className="w-5 h-5" />
-                <span className="font-bold text-sm tracking-tight">Access Settings</span>
-              </button>
+            <div className="flex gap-3 mb-2">
               <button 
                 onClick={logout}
-                className="p-5 bg-rose-50 text-rose-500 rounded-3xl hover:bg-rose-100 transition-all shadow-sm border border-rose-100"
+                className="p-4 bg-rose-50 text-rose-500 rounded-xl hover:bg-rose-100 transition-all border border-rose-100"
+                title="Logout"
               >
-                <LogOut className="w-6 h-6" />
+                <LogOut className="w-5 h-5" />
               </button>
             </div>
           </div>
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-16">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
             <div className="lg:col-span-2 space-y-12">
               <div className="space-y-4">
                 <div className="flex items-center gap-4 flex-wrap">
-                  <h1 className="text-6xl font-black text-slate-900 tracking-tighter text-gradient">{user.name}</h1>
-                  <div className="px-5 py-2 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-2xl shadow-lg shadow-indigo-200">
+                  <h1 className="text-5xl font-black text-slate-900 tracking-tight">{user.name}</h1>
+                  <div className="px-4 py-1.5 bg-indigo-600 text-white text-[10px] font-black uppercase tracking-widest rounded-lg shadow-lg shadow-indigo-100">
                     {user.mode_status === 'learner' ? 'Apprentice' : 'Verified Expert'}
                   </div>
                 </div>
-                <div className="flex flex-wrap items-center gap-8 text-slate-500 font-bold uppercase tracking-widest text-[10px]">
-                  <span className="flex items-center gap-2.5"><Mail className="w-4 h-4 text-indigo-400" /> {user.email}</span>
-                  <span className="flex items-center gap-2.5 text-indigo-600"><ShieldCheck className="w-4 h-4" /> REPUTATION {user.reputation.score}/100</span>
+                <div className="flex flex-wrap items-center gap-6 text-slate-500 font-bold uppercase tracking-widest text-[10px]">
+                  <span className="flex items-center gap-2"><Mail className="w-4 h-4 text-slate-400" /> {user.email}</span>
+                  <span className="flex items-center gap-2 text-indigo-600"><ShieldCheck className="w-4 h-4" /> REPUTATION {reputation.score}/100</span>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                <div className="p-8 rounded-[2.5rem] bg-indigo-50 border border-white transition-all shadow-sm group">
-                  <Target className="w-8 h-8 text-indigo-600 mb-4" />
-                  <div className="text-3xl font-black text-slate-900">{user.reputation.score.toFixed(1)}</div>
+                <div className="p-8 rounded-2xl bg-indigo-50/50 border border-indigo-100 transition-all shadow-sm">
+                  <Target className="w-7 h-7 text-indigo-600 mb-4" />
+                  <div className="text-3xl font-black text-slate-900">{Number(reputation.score || 0).toFixed(1)}</div>
                   <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Reputation Score</div>
                 </div>
-                <div className="p-8 rounded-[2.5rem] bg-emerald-50 border border-white transition-all shadow-sm group">
-                  <Award className="w-8 h-8 text-emerald-600 mb-4" />
-                  <div className="text-3xl font-black text-slate-900">{user.credits_wallet.lifetime_earned}</div>
-                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Total Lifetime CR</div>
+                <div className="p-8 rounded-2xl bg-emerald-50/50 border border-emerald-100 transition-all shadow-sm">
+                  <Award className="w-7 h-7 text-emerald-600 mb-4" />
+                  <div className="text-3xl font-black text-slate-900">{wallet.lifetime_earned}</div>
+                  <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Lifetime Credits</div>
                 </div>
-                <div className="p-8 rounded-[2.5rem] bg-rose-50 border border-white transition-all shadow-sm group">
-                   <Clock className="w-8 h-8 text-rose-600 mb-4" />
-                   <div className="text-3xl font-black text-slate-900">{user.verification.completed_learn_projects}</div>
+                <div className="p-8 rounded-2xl bg-slate-50 border border-slate-200 transition-all shadow-sm">
+                   <Clock className="w-7 h-7 text-slate-600 mb-4" />
+                   <div className="text-3xl font-black text-slate-900">{verification.completed_learn_projects}</div>
                    <div className="text-[10px] font-black uppercase tracking-widest text-slate-400 mt-1">Learn Projects</div>
                 </div>
               </div>
 
               {/* Portfolio */}
               <div className="space-y-8">
-                <h2 className="text-3xl font-black text-slate-900 tracking-tight">Verified Portfolio</h2>
+                <h2 className="text-2xl font-black text-slate-900 tracking-tight flex items-center">
+                  <FolderKanban className="w-6 h-6 mr-3 text-slate-400" />
+                  Verified Portfolio
+                </h2>
                 <div className="grid grid-cols-1 gap-6">
                   {projects.map(p => (
-                    <div key={p._id} className="glass-card p-10 rounded-[3rem] group border-indigo-50 border-2 hover:border-indigo-600 transition-all flex flex-col md:flex-row justify-between items-center bg-white">
-                        <div className="space-y-4 text-center md:text-left">
-                            <h4 className="text-2xl font-black text-slate-800">{p.title}</h4>
-                            <p className="text-slate-500 font-medium">{p.category} • {new Date(p.createdAt).toLocaleDateString()}</p>
+                    <div key={p._id} className="bg-white p-8 rounded-2xl border border-slate-100 shadow-sm flex flex-col md:flex-row justify-between items-center hover:shadow-md transition-shadow">
+                        <div className="space-y-3 text-center md:text-left">
+                            <h4 className="text-xl font-black text-slate-800">{p.title}</h4>
+                            <p className="text-slate-500 font-bold text-xs uppercase tracking-widest">{p.category} • {new Date(p.createdAt).toLocaleDateString()}</p>
                             <div className="text-[10px] font-black text-emerald-600 uppercase tracking-widest bg-emerald-50 px-3 py-1 rounded-full inline-block">
-                                Outcome: Completed +{p.credits_total} CR
+                                Completed +{p.credits_total} CR
                             </div>
                         </div>
-                        <a href={`/projects/${p._id}`} className="mt-8 md:mt-0 premium-btn text-white px-8 py-5 rounded-2xl font-black text-[10px] uppercase tracking-widest">
-                            View Proof & Feedback
-                        </a>
+                        <Link to={`/projects/${p._id}`} className="mt-6 md:mt-0 btn-primary px-6 py-3 text-[10px] uppercase tracking-widest">
+                            View Proof
+                        </Link>
                     </div>
                   ))}
                   {projects.length === 0 && (
-                    <div className="text-center py-24 glass-card rounded-[3rem] border-2 border-dashed border-slate-200 bg-slate-50/50">
-                      <FolderKanban size={40} className="mx-auto mb-4 text-slate-200" />
-                      <p className="text-slate-400 font-bold">No verified projects yet. Start earning today!</p>
+                    <div className="text-center py-20 bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                      <p className="text-slate-400 font-bold italic text-sm">No verified projects in portfolio yet.</p>
                     </div>
                   )}
                 </div>
               </div>
             </div>
 
-            <div className="space-y-10">
-               {/* Modes Breakdown */}
-               <div className="p-10 glass-card rounded-[3rem] bg-slate-900 text-white shadow-2xl relative overflow-hidden">
-                  <h3 className="text-2xl font-black mb-10 tracking-tight">Technical Radar</h3>
-                  <div className="space-y-8">
+            <div className="space-y-8">
+               <div className="p-8 bg-slate-900 rounded-3xl text-white shadow-xl">
+                  <h3 className="text-xl font-black mb-10 uppercase tracking-widest text-slate-400">Technical Radar</h3>
+                  <div className="space-y-10">
                      {[
-                       { label: 'Completion Rate', val: user.reputation.completion_rate * 100, color: 'bg-emerald-500' },
-                       { label: 'On-Time Performance', val: user.reputation.on_time_rate * 100, color: 'bg-indigo-500' },
-                       { label: 'Team Reliability', val: user.reputation.repeat_collab_rate * 100, color: 'bg-amber-500' }
+                       { label: 'Completion Rate', val: (reputation.completion_rate || 0) * 100, color: 'bg-emerald-500' },
+                       { label: 'On-Time Perf', val: (reputation.on_time_rate || 0) * 100, color: 'bg-indigo-500' },
+                       { label: 'Team Reliability', val: (reputation.repeat_collab_rate || 0) * 100, color: 'bg-amber-500' }
                      ].map((radar, i) => (
                         <div key={i} className="space-y-2">
-                           <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
-                              <span>{radar.label}</span>
-                              <span className="text-white">{radar.val || 0}%</span>
+                           <div className="flex justify-between text-[9px] font-black uppercase tracking-widest text-slate-500">
+                               <span>{radar.label}</span>
+                               <span className="text-white">{radar.val}%</span>
                            </div>
-                           <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                              <div className={`h-full ${radar.color} transition-all duration-1000`} style={{ width: `${radar.val || 0}%` }}></div>
+                           <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
+                              <div className={`h-full ${radar.color} transition-all duration-1000`} style={{ width: `${radar.val}%` }}></div>
                            </div>
                         </div>
                      ))}
