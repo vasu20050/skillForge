@@ -38,7 +38,7 @@ exports.guestLogin = async (req, res) => {
     });
   } catch (error) {
     console.error('Guest Login Error:', error);
-    res.status(500).json({ message: 'Could not create guest session.' });
+    res.status(500).json({ message: 'Error: ' + (error.message || error.toString()) });
   }
 };
 
