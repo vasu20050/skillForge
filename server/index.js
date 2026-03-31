@@ -12,13 +12,24 @@ const app = express();
 app.use(helmet());
 app.use(morgan('dev'));
 
-// CORS Configuration (Restricted Origin)
+// CORS Configuration — supports localhost + deployed Vercel URL
+const allowedOrigins = [
+  'http://localhost:3000',
+  ...(process.env.CLIENT_URL ? process.env.CLIENT_URL.split(',').map(o => o.trim()) : [])
+];
+
 const corsOptions = {
-  origin: process.env.CLIENT_URL || 'http://localhost:3000',
+  origin: (origin, callback) => {
+    // allow requests with no origin (mobile apps, curl, Postman)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) return callback(null, true);
+    return callback(new Error(`CORS policy: Origin ${origin} not allowed`));
+  },
   credentials: true,
   optionsSuccessStatus: 200
 };
 app.use(cors(corsOptions));
+app.options('*', cors(corsOptions)); // handle preflight for all routes
 
 // Rate Limiting
 const limiter = rateLimit({
