@@ -15,6 +15,28 @@ Unlike traditional platforms, SkillForge focuses on **verified proof of work, re
 
 ---
 
+## 🌐 Live Links
+
+- **Frontend (UI):** [https://skill-forge-chi.vercel.app](https://skill-forge-chi.vercel.app)
+- **Backend (API):** [https://skillforge-ct63.onrender.com/api](https://skillforge-ct63.onrender.com/api)
+
+---
+
+## 🛠 Production Setup
+
+### Environment Variables
+To run SkillForge locally or deploy your own instance, you **must** configure these variables:
+
+#### Backend (`server/.env`)
+- `PORT`: Server port (e.g., 5000)
+- `MONGO_URI`: MongoDB Atlas connection string
+- `JWT_SECRET`: Secure string for signing tokens
+
+#### Frontend (`client/.env`)
+- `REACT_APP_API_URL`: Your backend URL (e.g. `https://your-app.onrender.com/api`)
+
+---
+
 ## 🎯 Vision  
 
 SkillForge aims to build a **high-trust campus economy** where students can:
