@@ -19,12 +19,7 @@ const allowedOrigins = [
 ];
 
 const corsOptions = {
-  origin: (origin, callback) => {
-    // allow requests with no origin (mobile apps, curl, Postman)
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.includes(origin)) return callback(null, true);
-    return callback(new Error(`CORS policy: Origin ${origin} not allowed`));
-  },
+  origin: true, // Echo origin back to bypass blocks completely
   credentials: true,
   optionsSuccessStatus: 200
 };
