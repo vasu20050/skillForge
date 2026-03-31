@@ -6,6 +6,42 @@ const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'skillforge_secret_2026', { expiresIn: '30d' });
 };
 
+// Guest Login — creates / reuses a shared read-only demo account
+exports.guestLogin = async (req, res) => {
+  try {
+    const GUEST_EMAIL = 'guest@skillforge.demo';
+    let guest = await User.findOne({ email: GUEST_EMAIL });
+
+    if (!guest) {
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash('guestpass_2026', salt);
+      guest = await User.create({
+        name: 'Guest User',
+        email: GUEST_EMAIL,
+        password: hashedPassword,
+        roles: ['student'],
+        mode_status: 'learner',
+        credits_wallet: { available: 250, escrow_locked: 0, lifetime_earned: 0, lifetime_spent: 0 }
+      });
+    }
+
+    res.json({
+      _id: guest._id,
+      name: guest.name,
+      email: guest.email,
+      roles: guest.roles,
+      mode_status: guest.mode_status,
+      credits_wallet: guest.credits_wallet,
+      profile: guest.profile,
+      isGuest: true,
+      token: generateToken(guest._id)
+    });
+  } catch (error) {
+    console.error('Guest Login Error:', error);
+    res.status(500).json({ message: 'Could not create guest session.' });
+  }
+};
+
 // Register
 exports.registerUser = async (req, res) => {
   try {

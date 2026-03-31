@@ -8,6 +8,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [guestLoading, setGuestLoading] = useState(false);
   const { refreshProfile } = useAuth();
   const navigate = useNavigate();
 
@@ -22,7 +23,7 @@ export default function Login() {
       navigate('/dashboard');
     } catch (err) {
       if (err.response?.status === 401) {
-        setError('Invalid credentials. If you haven\'t registered yet, please join now using your college email.');
+        setError("Invalid credentials. If you haven't registered yet, please join now using your college email.");
       } else {
         setError(err.response?.data?.message || 'Login failed. Please check your connection and try again.');
       }
@@ -31,6 +32,21 @@ export default function Login() {
     }
   };
 
+  const handleGuest = async () => {
+    setError('');
+    setGuestLoading(true);
+    try {
+      const res = await api.post('/auth/guest');
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('isGuest', 'true');
+      await refreshProfile();
+      navigate('/dashboard');
+    } catch (err) {
+      setError('Could not start guest session. Please try again.');
+    } finally {
+      setGuestLoading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col items-center justify-center p-4 animate-in fade-in slide-in-from-bottom duration-700">
@@ -76,14 +92,32 @@ export default function Login() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || guestLoading}
             className="w-full premium-btn text-white py-4 rounded-2xl font-bold text-lg shadow-xl shadow-indigo-600/20 hover:shadow-indigo-600/40 transition-shadow disabled:opacity-50 disabled:cursor-not-allowed"
           >
             {loading ? 'Authenticating...' : 'Sign In'}
           </button>
 
+          {/* Divider */}
+          <div className="flex items-center gap-4 my-2">
+            <div className="flex-1 h-px bg-slate-200"></div>
+            <span className="text-slate-400 text-sm font-semibold">or</span>
+            <div className="flex-1 h-px bg-slate-200"></div>
+          </div>
 
-          <p className="text-center font-semibold text-slate-500 pt-6">
+          {/* Guest Button */}
+          <button
+            type="button"
+            onClick={handleGuest}
+            disabled={loading || guestLoading}
+            className="w-full flex items-center justify-center gap-3 bg-slate-50 hover:bg-slate-100 border-2 border-dashed border-slate-300 hover:border-indigo-400 text-slate-700 hover:text-indigo-700 py-4 rounded-2xl font-bold text-base transition-all disabled:opacity-50 disabled:cursor-not-allowed group"
+          >
+            <span className="text-xl group-hover:scale-110 transition-transform">👤</span>
+            {guestLoading ? 'Starting session...' : 'Continue as Guest'}
+          </button>
+          <p className="text-center text-xs text-slate-400 -mt-3">No account needed · Read-only demo access</p>
+
+          <p className="text-center font-semibold text-slate-500 pt-2">
             New to SkillForge? <Link to="/register" className="text-indigo-600 hover:text-indigo-800 underline decoration-2 underline-offset-4">Join now</Link>
           </p>
         </form>
@@ -91,3 +125,4 @@ export default function Login() {
     </div>
   );
 }
+
