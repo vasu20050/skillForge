@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkillForge | Built for the Campus Economy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #4338ca;
+            --secondary: #9333ea;
+            --accent: #f43f5e;
+            --slate-50: #f8fafc;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8fafc;
+            color: #0f172a;
+            overflow-x: hidden;
+        }
+        .text-gradient {
+            background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .premium-btn {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            box-shadow: 0 10px 25px -5px rgba(67, 56, 202, 0.4);
+        }
+        .premium-btn:hover { transform: translateY(-2px) scale(1.02); }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.05);
+        }
+        
+        .nav-item { transition: all 0.3s; cursor: pointer; }
+        .nav-active { background: #eef2ff !important; color: #4338ca !important; }
+        
+        .page-content { display: none; }
+        .page-active { display: block; animation: fadeIn 0.5s ease-out forwards; }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-float { animation: float 4s ease-in-out infinite; }
+    </style>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+</head>
+<body class="antialiased">
+    <!-- Background Glows -->
+    <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none">
+        <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-indigo-500/10 blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-500/10 blur-[120px] animate-pulse"></div>
+    </div>
+
+    <!-- Navigation -->
+    <header class="sticky top-0 z-50 p-4">
+        <div class="max-w-7xl mx-auto bg-white border border-slate-100 shadow-sm rounded-2xl px-6 py-3 flex justify-between items-center">
+            <div class="flex items-center space-x-8">
+                <div onclick="showPage('home')" class="flex items-center space-x-2 mr-4 cursor-pointer">
+                    <span class="text-xl font-black tracking-tight text-slate-900 uppercase font-heading">SkillForge</span>
+                </div>
+                <nav id="main-nav" class="hidden lg:flex items-center space-x-1">
+                    <div onclick="showPage('dashboard')" class="nav-item text-slate-400 hover:text-indigo-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest" data-page="dashboard">Dashboard</div>
+                    <div onclick="showPage('learn')" class="nav-item text-slate-400 hover:text-indigo-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest" data-page="learn">Learn</div>
+                    <div onclick="showPage('marketplace')" class="nav-item text-slate-400 hover:text-indigo-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest" data-page="marketplace">Marketplace</div>
+                    <div onclick="showPage('wallet')" class="nav-item text-slate-400 hover:text-indigo-600 px-4 py-2 rounded-xl text-xs font-black uppercase tracking-widest" data-page="wallet">Wallet</div>
+                </nav>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div onclick="showPage('login')" class="text-slate-600 text-xs font-black uppercase tracking-widest hover:text-indigo-600 cursor-pointer">Login</div>
+                <button onclick="showPage('login')" class="premium-btn text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest">Join Now</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 py-10">
+        
+        <!-- HOME / LANDING PAGE -->
+        <div id="page-home" class="page-content page-active text-center pt-10">
+            <div class="mb-14 flex justify-center relative">
+                <div class="relative group">
+                    <div class="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 rounded-[3rem] blur opacity-10"></div>
+                    <div class="relative px-10 py-4 bg-white border border-slate-100 rounded-3xl shadow-xl animate-float">
+                        <span class="text-4xl md:text-5xl font-black tracking-tight text-slate-900 uppercase font-heading">SkillForge</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="inline-flex items-center space-x-2 bg-indigo-50 px-5 py-2 rounded-full border border-indigo-100 mb-8 shadow-sm">
+               <i data-lucide="shield-check" class="w-4 h-4 text-indigo-600"></i>
+               <span class="text-[10px] font-black text-indigo-600 uppercase tracking-widest leading-none">The Trusted Campus Economy</span>
+            </div>
+            
+            <h1 class="text-6xl md:text-9xl font-black text-slate-900 tracking-tighter mb-8 leading-[0.85] uppercase font-heading">
+              Build. <span class="text-gradient">Prove.</span> Earn.
+            </h1>
+            
+            <p class="text-xl md:text-2xl text-slate-500 font-medium mb-12 max-w-3xl mx-auto leading-relaxed">
+              The first closed-campus skill marketplace where your portfolio is your currency. Transform from a student to a verified earner.
+            </p>
+
+            <div class="flex flex-col sm:flex-row justify-center gap-6 mt-12 px-4 mb-32">
+                <button onclick="showPage('login')" class="premium-btn text-white font-black py-6 px-14 rounded-[2rem] text-sm uppercase tracking-widest transition-all">
+                    Join SkillForge
+                </button>
+                <button onclick="showPage('login')" class="bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 font-black py-6 px-14 rounded-[2rem] shadow-xl transition-all text-sm uppercase tracking-widest">
+                    Sign In
+                </button>
+            </div>
+        </div>
+
+        <!-- DASHBOARD PAGE -->
+        <div id="page-dashboard" class="page-content space-y-10">
+            <div class="flex justify-between items-end border-b border-slate-100 pb-10">
+                <div class="space-y-1">
+                    <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-widest border border-indigo-100">
+                        <i data-lucide="shield-check" class="w-3 h-3"></i>
+                        <span>Level: Verified Expert</span>
+                    </div>
+                    <h2 class="text-5xl font-black text-slate-900 tracking-tight">Welcome, <span class="text-indigo-600">Vaibhav!</span></h2>
+                </div>
+                <div class="flex gap-4">
+                    <div class="bg-white p-6 rounded-2xl border border-slate-100 shadow-sm flex flex-col items-center min-w-[150px]">
+                        <span class="text-2xl font-black">2,450 <span class="text-xs text-slate-400">CR</span></span>
+                        <span class="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Available</span>
+                    </div>
+                </div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="glass-card p-10 rounded-[3rem] hover:border-indigo-500 transition-all cursor-pointer" onclick="showPage('learn')">
+                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6">
+                        <i data-lucide="book-open" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-black mb-2">Learn Zone</h3>
+                    <p class="text-slate-500 font-medium text-sm">Build your campus technical reputation.</p>
+                </div>
+                <div class="bg-slate-900 text-white p-10 rounded-[3rem] hover:shadow-2xl transition-all cursor-pointer" onclick="showPage('marketplace')">
+                    <div class="w-14 h-14 bg-emerald-500 text-black rounded-2xl flex items-center justify-center mb-6">
+                        <i data-lucide="trending-up" class="w-7 h-7"></i>
+                    </div>
+                    <h3 class="text-2xl font-black mb-2">Earn Marketplace</h3>
+                    <p class="text-slate-400 font-medium text-sm">Real tasks for real rewards.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- LEARN PAGE -->
+        <div id="page-learn" class="page-content space-y-10">
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight">Learn Mode</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="glass-card p-8 rounded-[2.5rem] border-indigo-50">
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6"><i data-lucide="target"></i></div>
+                    <h4 class="text-xl font-black mb-2">Frontend React Hub</h4>
+                    <p class="text-slate-500 text-sm mb-6">Build a component library for the DTC portal.</p>
+                    <button class="w-full py-4 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase tracking-widest">Start Track</button>
+                </div>
+                <div class="glass-card p-8 rounded-[2.5rem] border-indigo-50">
+                    <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-6"><i data-lucide="target"></i></div>
+                    <h4 class="text-xl font-black mb-2">Backend Essentials</h4>
+                    <p class="text-slate-500 text-sm mb-6">Implement a secure Node.js Auth Module.</p>
+                    <button class="w-full py-4 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase tracking-widest">Start Track</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- MARKETPLACE PAGE -->
+        <div id="page-marketplace" class="page-content space-y-10">
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight">Earn Marketplace</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <div class="bg-slate-950 text-white p-10 rounded-[3rem] relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-10">
+                        <div class="w-14 h-14 bg-emerald-500/20 rounded-2xl flex items-center justify-center text-emerald-400 font-bold">$</div>
+                        <div class="text-[10px] font-black uppercase tracking-widest bg-white/5 px-3 py-1 rounded-full">Frontend</div>
+                    </div>
+                    <h4 class="text-2xl font-black mb-4">Startup Landing Page</h4>
+                    <p class="text-slate-400 text-sm mb-10">Design and build a responsive site for CampusEats.</p>
+                    <div class="flex justify-between items-center bg-white/5 rounded-2xl p-4 mb-10">
+                        <span class="text-[10px] uppercase font-black opacity-40">Bounty</span>
+                        <span class="text-xl font-black text-emerald-400">800 CR</span>
+                    </div>
+                    <button class="w-full py-5 bg-emerald-500 text-black rounded-2xl font-black text-xs uppercase tracking-widest">Apply Now</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- WALLET PAGE -->
+        <div id="page-wallet" class="page-content space-y-10">
+            <h2 class="text-4xl font-black text-slate-900 tracking-tight">Wallet & History</h2>
+            <div class="glass-card p-10 rounded-[3rem]">
+                <div class="flex items-center space-x-6 mb-10">
+                   <div class="w-16 h-16 bg-indigo-600 text-white rounded-3xl flex items-center justify-center"><i data-lucide="wallet" class="w-8 h-8"></i></div>
+                   <div>
+                       <div class="text-4xl font-black">2,450 <span class="text-indigo-600">Credits</span></div>
+                       <div class="text-xs font-black text-slate-400 uppercase tracking-widest">Lifetime Earnings</div>
+                   </div>
+                </div>
+                <div class="space-y-4">
+                    <div class="p-6 bg-slate-50 rounded-2xl flex justify-between items-center">
+                        <div class="font-bold">Project: DTC Attendance App</div>
+                        <div class="text-emerald-600 font-black">+450 CR</div>
+                    </div>
+                    <div class="p-6 bg-slate-50 rounded-2xl flex justify-between items-center">
+                        <div class="font-bold">Project: Library Cleanup</div>
+                        <div class="text-emerald-600 font-black">+200 CR</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LOGIN PAGE -->
+        <div id="page-login" class="page-content py-20">
+            <div class="max-w-md mx-auto bg-white p-12 rounded-[3rem] shadow-2xl space-y-8 text-center border border-slate-100">
+                <div class="w-16 h-16 bg-indigo-600 text-white rounded-2xl flex items-center justify-center font-black text-2xl mx-auto shadow-lg">S</div>
+                <div>
+                    <h2 class="text-3xl font-black mb-2">Welcome Back</h2>
+                    <p class="text-slate-400 font-bold text-sm">Enter the campus economy.</p>
+                </div>
+                <div class="space-y-4">
+                    <input type="email" placeholder="College Email" class="w-full p-5 bg-slate-50 border border-slate-100 rounded-2xl font-bold">
+                    <input type="password" placeholder="Password" class="w-full p-5 bg-slate-50 border border-slate-100 rounded-2xl font-bold">
+                </div>
+                <button onclick="showPage('dashboard')" class="w-full premium-btn text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-xl">Sign In</button>
+                <div class="text-xs font-bold text-slate-400 uppercase tracking-widest">OR</div>
+                <button onclick="showPage('dashboard')" class="w-full border-2 border-dashed border-slate-200 text-slate-500 py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:border-indigo-400 hover:text-indigo-600 transition-all">Continue as Guest</button>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="max-w-7xl mx-auto px-4 py-20 border-t border-slate-100 mt-20 text-center md:text-left flex flex-col md:flex-row justify-between items-center gap-8">
+        <div>
+            <span class="text-sm font-black text-slate-400 uppercase tracking-widest font-heading">SkillForge</span>
+            <p class="text-xs font-bold text-slate-300 uppercase tracking-widest mt-2">&copy; 2024 Built for the Campus Economy</p>
+        </div>
+        <div class="flex space-x-8">
+            <div onclick="showPage('home')" class="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors uppercase tracking-widest cursor-pointer">Home</div>
+            <a href="#" class="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors uppercase tracking-widest">Live: Vercel</a>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+        
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page-content').forEach(p => p.classList.remove('page-active'));
+            // Hide all nav highlights
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('nav-active'));
+            
+            // Show target page
+            const target = document.getElementById('page-' + pageId);
+            if (target) {
+                target.classList.add('page-active');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+            
+            // Highlight nav link
+            const navLink = document.querySelector(`[data-page="${pageId}"]`);
+            if (navLink) {
+                navLink.classList.add('nav-active');
+            }
+
+            // Close menu if open (for mobile)
+            // setIsMenuOpen(false); 
+        }
+
+        // Initialize with hash if present
+        window.addEventListener('load', () => {
+             const hash = window.location.hash.substring(1);
+             if (hash) showPage(hash);
+        });
+    </script>
+</body>
+</html>

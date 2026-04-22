@@ -6,14 +6,14 @@ module.exports = {
     extend: {
       colors: {
         primary: {
-          DEFAULT: '#3f42f7',
-          glow: 'rgba(99, 102, 241, 0.5)',
+          DEFAULT: '#4338ca', /* Indigo-700 */
+          glow: 'rgba(67, 56, 202, 0.4)',
         },
         secondary: {
-          DEFAULT: '#a855f7',
+          DEFAULT: '#9333ea', /* Purple-600 */
         },
         accent: {
-          DEFAULT: '#fa3e5d',
+          DEFAULT: '#f43f5e',
         },
         glass: {
           DEFAULT: 'rgba(255, 255, 255, 0.7)',
