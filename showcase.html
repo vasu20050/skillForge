@@ -9,39 +9,51 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         :root {
-            --primary: #4338ca;
-            --secondary: #9333ea;
-            --accent: #f43f5e;
+            --primary: #10b981; /* Emerald/Green */
+            --secondary: #059669;
+            --accent: #34d399;
+            --bg-dark: #05070a;
+            --card-dark: #0f1219;
             --slate-50: #f8fafc;
         }
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8fafc;
-            color: #0f172a;
+            background-color: var(--bg-dark);
+            color: #ffffff;
             overflow-x: hidden;
         }
         .text-gradient {
-            background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
+            background: linear-gradient(to right, var(--primary), var(--accent));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
         .premium-btn {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
-            box-shadow: 0 10px 25px -5px rgba(67, 56, 202, 0.4);
+            background: var(--primary);
+            color: #000000;
+            transition: all 0.3s;
         }
-        .premium-btn:hover { transform: translateY(-2px) scale(1.02); }
+        .premium-btn:hover { transform: translateY(-2px); filter: brightness(1.1); }
         
         .glass-card {
-            background: rgba(255, 255, 255, 0.85);
-            -webkit-backdrop-filter: blur(12px);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.05);
+            background: var(--card-dark);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
         }
         
         .nav-item { transition: all 0.3s; cursor: pointer; }
-        .nav-active { background: #eef2ff !important; color: #4338ca !important; }
+        .nav-active { color: var(--primary) !important; position: relative; }
+        .nav-active::after {
+            content: '';
+            position: absolute;
+            bottom: -4px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: full;
+        }
         
         .page-content { display: none; }
         .page-active { display: block; animation: fadeIn 0.5s ease-out forwards; }
@@ -64,6 +76,15 @@
                         sans: ['Inter', 'sans-serif'],
                         heading: ['Outfit', 'sans-serif'],
                     },
+                    colors: {
+                        dark: {
+                            bg: '#05070a',
+                            card: '#0f1219',
+                        },
+                        brand: {
+                            green: '#10b981',
+                        }
+                    }
                 }
             }
         }
@@ -72,8 +93,8 @@
 <body class="antialiased">
     <!-- Background Glows -->
     <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none">
-        <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-indigo-500/10 blur-[120px] animate-pulse"></div>
-        <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-purple-500/10 blur-[120px] animate-pulse"></div>
+        <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-emerald-500/5 blur-[120px] animate-pulse"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[50vw] h-[50vw] rounded-full bg-emerald-500/5 blur-[120px] animate-pulse"></div>
     </div>
 
     <!-- Navigation -->
