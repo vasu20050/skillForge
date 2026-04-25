@@ -776,6 +776,7 @@
         async function openCamera() {
             const modal = document.getElementById('camera-modal');
             const video = document.getElementById('webcam');
+            video.setAttribute('playsinline', '');
             modal.style.display = 'flex';
             try {
                 stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'user' } });
