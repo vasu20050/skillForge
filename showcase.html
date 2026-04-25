@@ -139,7 +139,8 @@
             width: 100%;
             overflow: hidden;
             background: rgba(0, 193, 142, 0.05);
-            backdrop-blur: 10px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
             border-top: 1px solid rgba(0, 193, 142, 0.1);
             height: 30px;
             z-index: 40;
@@ -155,7 +156,11 @@
         .ticker-item {
             display: inline-block;
             padding: 0 2rem;
-            font-[10px] font-black uppercase tracking-widest text-emerald-400/50;
+            font-size: 10px;
+            font-weight: 900;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: rgba(52, 211, 153, 0.5);
         }
         @keyframes ticker {
             0% { transform: translate3d(0, 0, 0); }
@@ -189,7 +194,7 @@
         <div class="camera-container text-center space-y-6">
             <h3 class="text-xl font-black text-white uppercase tracking-widest">Update Profile Picture</h3>
             <div class="relative">
-                <video id="webcam" autoplay playsinline></video>
+                <video id="webcam" autoplay playsinline muted></video>
                 <canvas id="photo-canvas" class="hidden"></canvas>
             </div>
             <div class="flex justify-center space-x-4">
