@@ -81,6 +81,31 @@
             border-radius: 9999px;
             z-index: 100;
         }
+        /* Toast Notification Styles */
+        #toast-container {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .toast {
+            background: #0f1219;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 16px 24px;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideIn {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
     </style>
     <script>
         tailwind.config = {
@@ -102,6 +127,7 @@
 </head>
 <body class="antialiased">
     <div class="top-dot"></div>
+    <div id="toast-container"></div>
     <!-- Background Glows -->
     <div class="fixed top-0 left-0 w-full h-full -z-10 pointer-events-none">
         <div class="absolute top-[-10%] left-[-10%] w-[50vw] h-[50vw] rounded-full bg-emerald-500/5 blur-[120px] animate-pulse"></div>
@@ -179,7 +205,7 @@
                 </div>
                 <div class="flex gap-4">
                     <div class="bg-dark-card p-6 rounded-2xl border border-white/5 shadow-sm flex flex-col items-center min-w-[150px]">
-                        <span class="text-2xl font-black text-white">2,450 <span class="text-xs text-slate-500">CR</span></span>
+                        <span class="text-2xl font-black text-white"><span class="balance-display">2,450</span> <span class="text-xs text-slate-500">CR</span></span>
                         <span class="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Available</span>
                     </div>
                 </div>
@@ -321,12 +347,21 @@
 
         <!-- MARKETPLACE PAGE -->
         <div id="page-marketplace" class="page-content space-y-10">
-            <div class="flex justify-between items-end">
-                <h2 class="text-4xl font-black text-white tracking-tight">Earn Marketplace</h2>
-                <div class="flex space-x-2">
-                    <button class="px-4 py-2 bg-emerald-500 text-black rounded-full text-[10px] font-black uppercase tracking-widest">All Bounties</button>
-                    <button class="px-4 py-2 bg-white/5 text-slate-400 rounded-full text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Development</button>
-                    <button class="px-4 py-2 bg-white/5 text-slate-400 rounded-full text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Design</button>
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+                <div>
+                    <h2 class="text-4xl font-black text-white tracking-tight">Earn Marketplace</h2>
+                    <p class="text-slate-500 text-xs font-black uppercase tracking-widest mt-2">Active Bounties: 24</p>
+                </div>
+                <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
+                    <div class="relative flex-1 sm:w-64">
+                        <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
+                        <input type="text" placeholder="Search Bounties..." class="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/5 rounded-xl text-xs font-bold text-white outline-none focus:border-emerald-500/50 transition-all">
+                    </div>
+                    <div class="flex space-x-2">
+                        <button class="px-4 py-3 bg-emerald-500 text-black rounded-xl text-[10px] font-black uppercase tracking-widest">All</button>
+                        <button class="px-4 py-3 bg-white/5 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Dev</button>
+                        <button class="px-4 py-3 bg-white/5 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Design</button>
+                    </div>
                 </div>
             </div>
             
@@ -349,7 +384,7 @@
                             </div>
                             <i data-lucide="arrow-up-right" class="text-slate-700"></i>
                         </div>
-                        <button onclick="alert('Application Sent!')" class="w-full py-5 bg-[#00C18E] text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-[#00C18E]/20">Apply Now</button>
+                        <button onclick="applyBounty(this)" class="w-full py-5 bg-[#00C18E] text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-[#00C18E]/20">Apply Now</button>
                     </div>
                 </div>
 
@@ -371,7 +406,7 @@
                             </div>
                             <i data-lucide="arrow-up-right" class="text-slate-700"></i>
                         </div>
-                        <button onclick="alert('Application Sent!')" class="w-full py-5 bg-[#00C18E] text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-[#00C18E]/20">Apply Now</button>
+                        <button onclick="applyBounty(this)" class="w-full py-5 bg-[#00C18E] text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-[#00C18E]/20">Apply Now</button>
                     </div>
                 </div>
 
@@ -393,7 +428,7 @@
                             </div>
                             <i data-lucide="arrow-up-right" class="text-slate-700"></i>
                         </div>
-                        <button onclick="alert('Application Sent!')" class="w-full py-5 bg-[#00C18E] text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-[#00C18E]/20">Apply Now</button>
+                        <button onclick="applyBounty(this)" class="w-full py-5 bg-[#00C18E] text-black rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg shadow-[#00C18E]/20">Apply Now</button>
                     </div>
                 </div>
             </div>
@@ -408,7 +443,7 @@
                         <div class="flex items-center space-x-6">
                             <div class="w-16 h-16 bg-emerald-500 text-black rounded-3xl flex items-center justify-center shadow-lg shadow-emerald-500/20"><i data-lucide="wallet" class="w-8 h-8"></i></div>
                             <div>
-                                <div class="text-4xl font-black text-white">2,450 <span class="text-emerald-400">Credits</span></div>
+                                <div class="text-4xl font-black text-white"><span class="balance-display">2,450</span> <span class="text-emerald-400">Credits</span></div>
                                 <div class="text-xs font-black text-slate-500 uppercase tracking-widest">Available to Spend</div>
                             </div>
                         </div>
@@ -451,7 +486,7 @@
                 <div class="glass-card p-10 rounded-[3rem] space-y-8">
                     <h3 class="text-2xl font-black text-white">Redeem</h3>
                     <div class="space-y-4">
-                        <div class="p-6 bg-white/5 rounded-2xl border border-white/5 group hover:bg-emerald-500/10 transition-all cursor-pointer">
+                        <div onclick="redeemReward('Free Coffee', 150)" class="p-6 bg-white/5 rounded-2xl border border-white/5 group hover:bg-emerald-500/10 transition-all cursor-pointer">
                             <div class="flex justify-between items-center mb-4">
                                 <i data-lucide="coffee" class="text-slate-500 group-hover:text-emerald-400"></i>
                                 <span class="text-xs font-black text-emerald-400">150 CR</span>
@@ -459,7 +494,7 @@
                             <h5 class="font-bold text-white text-sm">Free Coffee</h5>
                             <p class="text-[10px] text-slate-500 mt-1 uppercase font-black">Valid at Nescafe</p>
                         </div>
-                        <div class="p-6 bg-white/5 rounded-2xl border border-white/5 group hover:bg-emerald-500/10 transition-all cursor-pointer">
+                        <div onclick="redeemReward('10 Free Prints', 50)" class="p-6 bg-white/5 rounded-2xl border border-white/5 group hover:bg-emerald-500/10 transition-all cursor-pointer">
                             <div class="flex justify-between items-center mb-4">
                                 <i data-lucide="printer" class="text-slate-500 group-hover:text-emerald-400"></i>
                                 <span class="text-xs font-black text-emerald-400">50 CR</span>
@@ -650,6 +685,50 @@
             }
             const navLink = document.querySelector(`[data-page="${pageId}"]`);
             if (navLink) navLink.classList.add('nav-active');
+            window.location.hash = pageId;
+        }
+
+        function showToast(message, type = 'success') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            const icon = type === 'success' ? 'check-circle' : 'info';
+            const color = type === 'success' ? 'text-emerald-400' : 'text-blue-400';
+            
+            toast.innerHTML = `
+                <i data-lucide="${icon}" class="${color} w-5 h-5"></i>
+                <span class="text-xs font-black text-white uppercase tracking-widest">${message}</span>
+            `;
+            container.appendChild(toast);
+            lucide.createIcons();
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(20px)';
+                toast.style.transition = 'all 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        }
+
+        function applyBounty(btn) {
+            btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin mx-auto"></i>';
+            lucide.createIcons();
+            setTimeout(() => {
+                btn.innerHTML = 'Applied';
+                btn.className = 'w-full py-5 bg-white/5 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-widest cursor-not-allowed border border-white/5';
+                showToast('Application Submitted Successfully!');
+            }, 1000);
+        }
+
+        let balance = 2450;
+        function redeemReward(name, cost) {
+            if (balance >= cost) {
+                balance -= cost;
+                document.querySelectorAll('.balance-display').forEach(el => el.innerText = balance.toLocaleString());
+                showToast(`Redeemed ${name}! Check your email.`);
+            } else {
+                showToast('Insufficient Balance!', 'error');
+            }
         }
 
         document.addEventListener('DOMContentLoaded', () => {
