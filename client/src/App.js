@@ -16,6 +16,7 @@ import ProjectDetails from './pages/ProjectDetails';
 import WalletPage from './pages/WalletPage';
 import AdminPanel from './pages/AdminPanel';
 import { AuthProvider, useAuth } from './hooks/useAuth';
+import { AppProvider } from './context/AppContext';
 
 // Protected Route Component
 const PrivateRoute = ({ children }) => {
@@ -26,50 +27,52 @@ const PrivateRoute = ({ children }) => {
 
 function App() {
   return (
-    <AuthProvider>
-      <Router>
-        <div className="App min-h-screen bg-[#f8fafc] font-sans text-slate-900 antialiased">
-          <Header />
-          <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            <Routes>
-              {/* Public Routes */}
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/explore" element={<Explore />} />
+    <AppProvider>
+      <AuthProvider>
+        <Router>
+          <div className="App min-h-screen bg-transparent font-sans text-slate-900 antialiased transition-colors duration-300">
+            <Header />
+            <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              <Routes>
+                {/* Public Routes */}
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/explore" element={<Explore />} />
 
-              {/* Protected Routes */}
-              <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
-              <Route path="/learn" element={<PrivateRoute><LearnMode /></PrivateRoute>} />
-              <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
-              <Route path="/projects/:id" element={<PrivateRoute><ProjectDetails /></PrivateRoute>} />
-              <Route path="/projects/new" element={<PrivateRoute><NewProject /></PrivateRoute>} />
-              <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
-              <Route path="/wallet" element={<PrivateRoute><WalletPage /></PrivateRoute>} />
-              <Route path="/admin" element={<PrivateRoute><AdminPanel /></PrivateRoute>} />
-              
-              {/* Fallback */}
-              <Route path="*" element={<Navigate to="/dashboard" />} />
-            </Routes>
-          </main>
-          
-          <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-t border-slate-100 mt-20">
-            <div className="flex flex-col md:flex-row justify-between items-center gap-6">
-              <div className="flex items-center space-x-3">
-                <span className="text-sm font-black text-slate-400 uppercase tracking-widest">SkillForge</span>
+                {/* Protected Routes */}
+                <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+                <Route path="/learn" element={<PrivateRoute><LearnMode /></PrivateRoute>} />
+                <Route path="/marketplace" element={<PrivateRoute><Marketplace /></PrivateRoute>} />
+                <Route path="/projects/:id" element={<PrivateRoute><ProjectDetails /></PrivateRoute>} />
+                <Route path="/projects/new" element={<PrivateRoute><NewProject /></PrivateRoute>} />
+                <Route path="/profile" element={<PrivateRoute><Profile /></PrivateRoute>} />
+                <Route path="/wallet" element={<PrivateRoute><WalletPage /></PrivateRoute>} />
+                <Route path="/admin" element={<PrivateRoute><AdminPanel /></PrivateRoute>} />
+                
+                {/* Fallback */}
+                <Route path="*" element={<Navigate to="/dashboard" />} />
+              </Routes>
+            </main>
+            
+            <footer className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 border-t border-slate-100/10 mt-20">
+              <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="flex items-center space-x-3">
+                  <span className="text-sm font-black text-slate-400 uppercase tracking-widest">SkillForge</span>
+                </div>
+                <div className="flex space-x-8">
+                  <a href="#" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Privacy</a>
+                  <a href="#" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Terms</a>
+                </div>
+                <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">© 2024 Built for the Campus Economy</p>
               </div>
-              <div className="flex space-x-8">
-                <a href="#" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Privacy</a>
-                <a href="#" className="text-xs font-bold text-slate-400 hover:text-indigo-600 transition-colors">Terms</a>
-              </div>
-              <p className="text-[10px] font-bold text-slate-300 uppercase tracking-widest">© 2024 Built for the Campus Economy</p>
-            </div>
-          </footer>
-        </div>
-      </Router>
-    </AuthProvider>
+            </footer>
+          </div>
+        </Router>
+      </AuthProvider>
+    </AppProvider>
   );
 }
 
