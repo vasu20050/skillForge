@@ -42,16 +42,18 @@ export default function Login() {
     setError('');
     setGuestLoading(true);
     try {
+      // Hyper-speed transition: The backend is now cached, so this is near-instant
       const res = await api.post('/auth/guest');
       
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('isGuest', 'true');
-      setUser(res.data); // Update global state immediately
       
-      navigate('/dashboard');
+      // Update global state and navigate immediately
+      setUser(res.data); 
+      navigate('/dashboard', { replace: true });
     } catch (err) {
       const msg = err.response?.data?.message || err.message || 'Network Error';
-      setError(`Guest access failed: ${msg}. Try again in a few seconds.`);
+      setError(`Instant access unavailable: ${msg}. Try regular login.`);
     } finally {
       setGuestLoading(false);
     }
