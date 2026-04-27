@@ -6,10 +6,21 @@ const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET || 'skillforge_secret_2026', { expiresIn: '30d' });
 };
 
+let cachedGuest = null;
+
 // Guest Login — creates / reuses a shared read-only demo account
 exports.guestLogin = async (req, res) => {
   try {
     const GUEST_EMAIL = 'guest@skillforge.demo';
+    
+    // Fast path: Return cached guest if available
+    if (cachedGuest) {
+      return res.json({
+        ...cachedGuest,
+        token: generateToken(cachedGuest._id) // New token for each session
+      });
+    }
+
     let guest = await User.findOne({ email: GUEST_EMAIL });
 
     if (!guest) {
@@ -25,7 +36,8 @@ exports.guestLogin = async (req, res) => {
       });
     }
 
-    res.json({
+    // Update cache
+    cachedGuest = {
       _id: guest._id,
       name: guest.name,
       email: guest.email,
@@ -33,7 +45,11 @@ exports.guestLogin = async (req, res) => {
       mode_status: guest.mode_status,
       credits_wallet: guest.credits_wallet,
       profile: guest.profile,
-      isGuest: true,
+      isGuest: true
+    };
+
+    res.json({
+      ...cachedGuest,
       token: generateToken(guest._id)
     });
   } catch (error) {
