@@ -5,8 +5,12 @@ const Transaction = require('../models/Transaction');
 exports.getWallet = async (req, res) => {
   try {
     const user = await User.findById(req.user._id).select('credits_wallet');
+    if (!user || !user.credits_wallet) {
+      return res.json({ available: 0, escrow_locked: 0, lifetime_earned: 0, lifetime_spent: 0 });
+    }
     res.json(user.credits_wallet);
   } catch (err) {
+    console.error('Wallet Fetch Error:', err);
     res.status(500).json({ message: 'Error fetching wallet' });
   }
 };
