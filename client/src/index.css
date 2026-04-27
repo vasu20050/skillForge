@@ -3,8 +3,8 @@
 @tailwind utilities;
 
 :root {
-  --primary: #4338ca; /* Indigo-700 - Real Vercel Primary */
-  --secondary: #9333ea; /* Purple-600 - Real Vercel Secondary */
+  --primary: #10b981; /* Emerald-500 - Matches current screenshot */
+  --secondary: #059669; /* Emerald-600 */
   --accent: #f43f5e;
   --success: #10b981;
   --warning: #f59e0b;
@@ -12,10 +12,24 @@
   --font-inter: 'Inter', system-ui, -apple-system, sans-serif;
   --font-outfit: 'Outfit', sans-serif;
   
-  /* Glassmorphism Tokens - Refined for Vercel Vibe */
+  /* Dark Mode (Default) */
+  --bg-color: #030712; /* Gray-950 */
+  --text-color: #f8fafc;
+  --card-bg: rgba(17, 24, 39, 0.7);
+  --glass-bg: rgba(17, 24, 39, 0.75);
+  --glass-border: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+  --nav-bg: #030712;
+}
+
+.light-mode {
+  --bg-color: #f8fafc;
+  --text-color: #0f172a;
+  --card-bg: #ffffff;
   --glass-bg: rgba(255, 255, 255, 0.85);
-  --glass-border: rgba(255, 255, 255, 0.3);
+  --glass-border: rgba(0, 0, 0, 0.08);
   --glass-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.1);
+  --nav-bg: #ffffff;
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap');
@@ -29,12 +43,13 @@
 body {
   margin: 0;
   font-family: var(--font-inter);
-  background: #f8fafc;
+  background: var(--bg-color);
   min-height: 100vh;
-  color: #0f172a;
+  color: var(--text-color);
   overflow-x: hidden;
   position: relative;
   line-height: 1.5;
+  transition: background 0.3s ease, color 0.3s ease;
 }
 
 body::before {
@@ -65,8 +80,9 @@ body::after {
 
 /* Backwards-compatibility for previous UI classes */
 .shadow-card {
-  background: white;
+  background: var(--card-bg);
   border-radius: 1.5rem;
+  color: var(--text-color);
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06), 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
