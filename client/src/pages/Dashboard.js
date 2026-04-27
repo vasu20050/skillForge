@@ -2,9 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { Play, BookOpen, Trophy, CheckCircle2, ChevronRight, TrendingUp, ShieldCheck, Wallet } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useAppContext } from '../context/AppContext';
 
 export default function Dashboard() {
   const { user, loading } = useAuth();
+  const { t } = useAppContext();
 
   // Safely handle loading or missing user
   if (loading || !user) return (
@@ -33,17 +35,17 @@ export default function Dashboard() {
             <ShieldCheck className="w-3 h-3" />
             <span>{user.mode_status === 'learner' ? 'Level: Apprentice' : 'Level: Verified Expert'}</span>
           </div>
-          <h1 className="text-5xl font-black text-slate-900 tracking-tight leading-none">
-            Welcome, <br /><span className="text-indigo-600">{firstName}!</span>
+          <h1 className="text-5xl font-black tracking-tight leading-none">
+            {t('welcome')}, <br /><span className="text-emerald-500">{firstName}!</span>
           </h1>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm min-w-[180px] flex flex-col items-center">
-            <span className="text-2xl font-black text-slate-900 leading-none mb-1">
-              {wallet.available} <span className="text-sm font-medium text-slate-400">CR</span>
+          <div className="glass-card p-5 rounded-2xl border border-slate-200/10 shadow-sm min-w-[180px] flex flex-col items-center">
+            <span className="text-2xl font-black leading-none mb-1">
+              {wallet.available} <span className="text-sm font-medium opacity-40">CR</span>
             </span>
-            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Available Credits</span>
+            <span className="text-[10px] font-bold opacity-40 uppercase tracking-widest">{t('available')} {t('credits')}</span>
           </div>
           {wallet.escrow_locked > 0 && (
             <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100 min-w-[180px] flex flex-col items-center">
@@ -94,7 +96,7 @@ export default function Dashboard() {
            <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 mb-8">
             <BookOpen className="w-7 h-7" />
           </div>
-          <h3 className="text-2xl font-black text-slate-900 mb-3">Learn Zone</h3>
+          <h3 className="text-2xl font-black mb-3">{t('learn')} Zone</h3>
           <p className="text-slate-500 mb-8 leading-relaxed font-medium">Practice with risk-free projects and build your campus reputation.</p>
           <Link to="/learn" className="btn-primary px-8 py-4 text-sm uppercase tracking-widest inline-flex items-center">
             Browse Learn <ChevronRight className="w-4 h-4 ml-2" />
@@ -105,7 +107,7 @@ export default function Dashboard() {
            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${isEarner ? 'bg-emerald-500 text-black' : 'bg-slate-200 text-slate-400'}`}>
             <TrendingUp className="w-7 h-7" />
           </div>
-          <h3 className={`text-2xl font-black mb-3 ${isEarner ? 'text-white' : 'text-slate-400'}`}>Earn Marketplace</h3>
+          <h3 className={`text-2xl font-black mb-3 ${isEarner ? 'text-white' : 'opacity-40'}`}>{t('marketplace')}</h3>
           <p className={`mb-8 leading-relaxed font-medium ${isEarner ? 'text-slate-400' : 'text-slate-300'}`}>
             {isEarner ? 'Real tasks for real credits. Help campus startups grow.' : 'Locked: Complete verification to access paid opportunities.'}
           </p>
