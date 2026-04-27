@@ -4,22 +4,25 @@ import { Wallet, History, Gift, Award, Heart, CheckCircle2, TrendingUp, AlertCir
 import { useAuth } from '../hooks/useAuth';
 
 export default function WalletPage() {
-  const [wallet, setWallet] = useState(null);
+  const [wallet, setWallet] = useState({ available: 0, escrow_locked: 0 });
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const { user } = useAuth();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
+        setLoading(true);
         const [walletRes, transRes] = await Promise.all([
           api.get('/wallet/balance'),
           api.get('/wallet/history')
         ]);
-        setWallet(walletRes.data);
-        setTransactions(transRes.data);
+        if (walletRes.data) setWallet(walletRes.data);
+        if (transRes.data) setTransactions(transRes.data);
       } catch (err) {
         console.error('Wallet fetch failed', err);
+        setError('Failed to sync with secure ledger. Please try again.');
       } finally {
         setLoading(false);
       }
@@ -27,7 +30,23 @@ export default function WalletPage() {
     fetchData();
   }, []);
 
-  if (loading) return <div className="p-20 text-center font-bold">Initializing Secure Ledger...</div>;
+  if (loading) return (
+      <div className="flex flex-col items-center justify-center p-20 min-h-[60vh]">
+          <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <p className="font-black text-slate-400 uppercase tracking-widest text-xs">Initializing Secure Ledger...</p>
+      </div>
+  );
+
+  if (error) return (
+      <div className="flex flex-col items-center justify-center p-20 text-center glass-card max-w-xl mx-auto my-20">
+          <AlertCircle className="w-12 h-12 text-rose-500 mb-4" />
+          <h3 className="text-xl font-black text-slate-900 mb-2">Ledger Sync Error</h3>
+          <p className="text-slate-500 font-medium mb-8">{error}</p>
+          <button onClick={() => window.location.reload()} className="premium-btn text-white px-8 py-3 rounded-xl font-black text-xs uppercase tracking-widest">
+              Retry Connection
+          </button>
+      </div>
+  );
 
   const rewards = [
     { id: 'intern_pass', title: 'Internship Priority Pass', cost: 500, icon: <Award className="w-8 h-8" /> },
@@ -38,15 +57,17 @@ export default function WalletPage() {
 
   const handleRedeem = async (reward) => {
     if (wallet.available < reward.cost) {
-      alert('Insufficient credits');
+      alert('Insufficient credits in your available wallet.');
       return;
     }
     try {
-      await api.post('/wallet/redeem', { rewardId: reward.id, cost: reward.cost });
-      alert('Success! Your reward has been recorded.');
-      window.location.reload();
+      const res = await api.post('/wallet/redeem', { rewardId: reward.id, cost: reward.cost });
+      setWallet(res.data.wallet);
+      setTransactions([res.data.tx, ...transactions]);
+      alert(`Success! Redeemed: ${reward.title}. Check your history.`);
     } catch (err) {
-      alert('Redemption failed');
+      const msg = err.response?.data?.message || 'Redemption failed';
+      alert(`Error: ${msg}`);
     }
   };
 
@@ -112,20 +133,20 @@ export default function WalletPage() {
                   {transactions.map(tx => (
                       <div key={tx._id} className="glass-card p-6 rounded-[2rem] flex items-center justify-between group hover:border-indigo-100 transition-all">
                           <div className="flex items-center space-x-5">
-                              <div className={`w-12 h-12 rounded-2.5xl flex items-center justify-center font-black text-xl shadow-lg ${
-                                  tx.tx_type === 'earn_payout' ? 'bg-emerald-500 text-white' : 
+                               <div className={`w-12 h-12 rounded-2.5xl flex items-center justify-center font-black text-xl shadow-lg ${
+                                  ['earn_payout', 'escrow_release', 'bonus', 'initial_seed'].includes(tx.tx_type) ? 'bg-emerald-500 text-white' : 
                                   tx.tx_type === 'escrow_lock' ? 'bg-amber-500 text-white' : 
                                   'bg-slate-950 text-white'
                               }`}>
-                                  {tx.tx_type === 'earn_payout' ? '+' : '-'}
+                                  {['earn_payout', 'escrow_release', 'bonus', 'initial_seed'].includes(tx.tx_type) ? '+' : '-'}
                               </div>
                               <div>
-                                  <h4 className="font-black text-slate-800 text-sm">{tx.tx_type.replace('_', ' ').toUpperCase()}</h4>
+                                  <h4 className="font-black text-slate-800 text-sm">{tx.tx_type.replace(/_/g, ' ').toUpperCase()}</h4>
                                   <p className="text-[10px] font-bold text-slate-400">{new Date(tx.createdAt).toLocaleString()}</p>
                               </div>
                           </div>
                           <div className="text-right">
-                              <div className={`text-lg font-black ${tx.tx_type === 'earn_payout' || tx.tx_type === 'bonus' ? 'text-emerald-500' : 'text-slate-900'}`}>
+                              <div className={`text-lg font-black ${['earn_payout', 'escrow_release', 'bonus', 'initial_seed'].includes(tx.tx_type) ? 'text-emerald-500' : 'text-slate-900'}`}>
                                   {tx.amount} CR
                               </div>
                               <div className="text-[10px] font-black uppercase tracking-widest text-slate-400">Confirmed</div>
