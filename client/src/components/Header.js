@@ -3,31 +3,32 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   Menu, X, Bell, Compass, 
   BookOpen, Users, Trophy, Settings, LogOut,
-  LayoutDashboard, Wallet, ShieldAlert, TrendingUp
+  LayoutDashboard, Wallet, ShieldAlert, TrendingUp, Sun, Moon, Globe
 } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
+import { useAppContext } from '../context/AppContext';
 
 export default function Header() {
   const navigate = useNavigate();
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { user, logout } = useAuth();
+  const { t, theme, toggleTheme, language, setLanguage } = useAppContext();
 
   const navLinks = [
-    { name: 'Dashboard', path: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
-    { name: 'Learn', path: '/learn', icon: <BookOpen className="w-4 h-4" /> },
-    { name: 'Marketplace', path: '/marketplace', icon: <TrendingUp className="w-4 h-4" /> },
-    { name: 'Wallet', path: '/wallet', icon: <Wallet className="w-4 h-4" /> },
+    { name: t('dashboard'), path: '/dashboard', icon: <LayoutDashboard className="w-4 h-4" /> },
+    { name: t('learn'), path: '/learn', icon: <BookOpen className="w-4 h-4" /> },
+    { name: t('marketplace'), path: '/marketplace', icon: <TrendingUp className="w-4 h-4" /> },
+    { name: t('wallet'), path: '/wallet', icon: <Wallet className="w-4 h-4" /> },
   ];
 
-  // Defensive check for roles
   if (user?.roles?.includes('admin')) {
     navLinks.push({ name: 'Admin', path: '/admin', icon: <ShieldAlert className="w-4 h-4" /> });
   }
 
   return (
     <header className="sticky top-0 z-50 p-4">
-      <div className="max-w-7xl mx-auto bg-white border border-slate-100 shadow-sm rounded-2xl px-6 py-3 flex justify-between items-center transition-all duration-300">
+      <div className="max-w-7xl mx-auto bg-white/5 backdrop-blur-md border border-white/10 shadow-sm rounded-2xl px-6 py-3 flex justify-between items-center transition-all duration-300">
         <div className="flex items-center space-x-8">
           <Link to="/" className="flex items-center space-x-2 mr-4 group">
             <span className="text-xl font-black tracking-tight text-slate-900 uppercase">SkillForge</span>
@@ -52,11 +53,32 @@ export default function Header() {
         </div>
         
         <div className="flex items-center space-x-3">
+          {/* Theme & Language Toggles */}
+          <div className="flex items-center bg-slate-900/50 rounded-xl p-1 mr-4 border border-white/5">
+            <button 
+              onClick={toggleTheme}
+              className="p-2 text-slate-400 hover:text-emerald-400 transition-colors"
+              title="Toggle Theme"
+            >
+              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </button>
+            <div className="w-px h-4 bg-white/10 mx-1"></div>
+            <select 
+              value={language} 
+              onChange={(e) => setLanguage(e.target.value)}
+              className="bg-transparent text-[10px] font-black uppercase tracking-tighter text-slate-400 outline-none cursor-pointer pr-2"
+            >
+              <option value="en" className="bg-slate-900">EN</option>
+              <option value="hi" className="bg-slate-900">HI</option>
+              <option value="es" className="bg-slate-900">ES</option>
+            </select>
+          </div>
+
           {!user ? (
             <div className="flex items-center space-x-4">
-              <Link to="/login" className="text-slate-600 text-xs font-bold uppercase tracking-widest hover:text-indigo-600">Login</Link>
-              <Link to="/register" className="btn-primary px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm">
-                Join Now
+              <Link to="/login" className="text-slate-400 text-xs font-bold uppercase tracking-widest hover:text-emerald-400">{t('login')}</Link>
+              <Link to="/register" className="premium-btn text-white px-6 py-2 rounded-xl text-[10px] font-black uppercase tracking-widest shadow-sm">
+                {t('joinNow')}
               </Link>
             </div>
           ) : (
