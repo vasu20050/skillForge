@@ -60,7 +60,6 @@ Post → Accept → Credit Lock (Escrow)
    → Request Revision → Loop
    → Raise Dispute → Escalation
 ```
-
 ---
 
 ## ⚖️ Dispute Resolution System  
