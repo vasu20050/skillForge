@@ -21,7 +21,12 @@ import { AppProvider } from './context/AppContext';
 // Protected Route Component
 const PrivateRoute = ({ children }) => {
   const { user, loading } = useAuth();
-  if (loading) return <div className="flex items-center justify-center min-h-screen font-bold text-indigo-600">Loading SkillForge...</div>;
+  if (loading) return (
+    <div className="flex flex-col items-center justify-center min-h-screen" style={{ background: '#030712' }}>
+      <div className="w-12 h-12 border-4 border-emerald-500 border-t-transparent rounded-full animate-spin mb-4"></div>
+      <p className="text-slate-400 text-xs font-black uppercase tracking-widest">Loading SkillForge...</p>
+    </div>
+  );
   return user ? children : <Navigate to="/login" />;
 };
 
