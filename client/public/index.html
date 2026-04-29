@@ -175,21 +175,35 @@
   <body>
     <noscript>You need to enable JavaScript to run SkillForge.</noscript>
     
-    <div id="root">
-      <!-- Premium Splash Screen -->
-      <div id="splash-screen">
-        <div class="loader-visuals">
-          <div class="loader-ring"></div>
-          <div class="loader-orbit"></div>
-          <div class="loader-logo">S</div>
-        </div>
-        <div class="brand-container">
-          <h1 class="brand-title">Skill<span>Forge</span></h1>
-          <div class="brand-divider"></div>
-          <p class="brand-tagline">Initializing Campus Economy</p>
-        </div>
+    <div id="root"></div>
+    
+    <!-- Premium Splash Screen -->
+    <div id="splash-screen">
+      <div class="loader-visuals">
+        <div class="loader-ring"></div>
+        <div class="loader-orbit"></div>
+        <div class="loader-logo">S</div>
+      </div>
+      <div class="brand-container">
+        <h1 class="brand-title">Skill<span>Forge</span></h1>
+        <div class="brand-divider"></div>
+        <p class="brand-tagline">Initializing Campus Economy</p>
       </div>
     </div>
+
+    <script>
+      window.addEventListener('load', () => {
+        setTimeout(() => {
+          const splashScreen = document.getElementById('splash-screen');
+          if (splashScreen) {
+            splashScreen.style.opacity = '0';
+            setTimeout(() => {
+              splashScreen.style.display = 'none';
+            }, 500); // Matches the 0.5s transition
+          }
+        }, 1500); // Show splash for 1.5s
+      });
+    </script>
   </body>
 </html>
 
