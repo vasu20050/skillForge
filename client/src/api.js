@@ -1,7 +1,8 @@
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:5000/api',
+  // Fallback to production backend — REACT_APP_API_URL overrides this for local dev
+  baseURL: process.env.REACT_APP_API_URL || 'https://skillforge-ct63.onrender.com/api',
 });
 
 // add token interceptor
