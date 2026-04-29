@@ -37,10 +37,11 @@
 
     <style>
       :root {
-        --sf-primary: #4F46E5;
-        --sf-bg: #ffffff;
-        --sf-text: #1e293b;
-        --sf-subtext: #64748b;
+        --sf-primary: #00C18E;
+        --sf-bg: #05070a;
+        --sf-card: #0f1219;
+        --sf-text: #ffffff;
+        --sf-subtext: #94a3b8;
       }
 
       * {
@@ -81,9 +82,11 @@
         position: absolute;
         width: 100px;
         height: 100px;
-        border: 2px solid #f1f5f9;
+        border: 2px solid rgba(255, 255, 255, 0.05);
+        background: var(--sf-card);
         border-radius: 32px;
         transform: rotate(45deg);
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
       }
 
       .loader-orbit {
@@ -93,7 +96,7 @@
         border: 4px solid var(--sf-primary);
         border-radius: 32px;
         animation: loader-spin 2.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
-        box-shadow: 0 0 20px rgba(79, 70, 229, 0.15);
+        box-shadow: 0 0 20px rgba(0, 193, 142, 0.15);
       }
 
       .loader-logo {
@@ -102,6 +105,12 @@
         height: 48px;
         z-index: 10;
         animation: pulse 2s ease-in-out infinite;
+        font-size: 32px;
+        font-weight: 900;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
       }
 
       .brand-container {
@@ -125,7 +134,7 @@
       .brand-divider {
         height: 4px;
         width: 60px;
-        background: linear-gradient(to right, var(--sf-primary), #818cf8);
+        background: linear-gradient(to right, var(--sf-primary), #34d399);
         border-radius: 2px;
         margin: 16px auto;
       }
@@ -171,7 +180,7 @@
         <div class="loader-visuals">
           <div class="loader-ring"></div>
           <div class="loader-orbit"></div>
-          <img src="%PUBLIC_URL%/logo.png" alt="S" class="loader-logo" />
+          <div class="loader-logo" style="font-family: 'Inter', sans-serif;">S</div>
         </div>
         <div class="brand-container">
           <h1 class="brand-title">Skill<span>Forge</span></h1>
