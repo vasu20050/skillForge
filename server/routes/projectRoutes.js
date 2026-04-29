@@ -7,7 +7,9 @@ const {
   applyForProject,
   acceptContract,
   submitMilestone,
-  approveMilestone
+  approveMilestone,
+  getEscrowStatus,
+  getRecommendedPath
 } = require('../controllers/projectController');
 const { protect } = require('../middleware/authMiddleware');
 const { isVerifiedEarner, roleMiddleware } = require('../middleware/roleMiddleware');
@@ -26,5 +28,9 @@ router.post('/:id/apply', protect, applyForProject); // Only verified earners fo
 router.post('/contract/:id/accept', protect, acceptContract);
 router.post('/milestones/:id/submit', protect, submitMilestone);
 router.post('/milestones/:id/approve', protect, approveMilestone);
+
+// Neural Path and Escrow
+router.get('/neural/path', protect, getRecommendedPath);
+router.get('/:id/escrow', protect, getEscrowStatus);
 
 module.exports = router;

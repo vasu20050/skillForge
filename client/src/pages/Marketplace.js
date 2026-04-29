@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import api from '../api';
-import { TrendingUp, Target, DollarSign, ChevronRight, Search, ShieldCheck } from 'lucide-react';
+import { TrendingUp, Target, DollarSign, ChevronRight, Search, ShieldCheck, Zap } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 
 export default function Marketplace() {
@@ -67,8 +67,15 @@ export default function Marketplace() {
                     <div className="w-16 h-16 bg-emerald-500/20 rounded-3xl flex items-center justify-center text-emerald-400 font-black text-xl">
                         $
                     </div>
-                    <div className="text-[10px] font-black uppercase tracking-widest text-white/40 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
-                        {project.category}
+                    <div className="flex flex-col items-end gap-2">
+                        <div className="text-[10px] font-black uppercase tracking-widest text-white/40 bg-white/5 border border-white/10 px-4 py-2 rounded-full">
+                            {project.category}
+                        </div>
+                        {project.is_fast_track && (
+                            <div className="text-[8px] font-black uppercase tracking-tighter text-amber-400 bg-amber-400/10 border border-amber-400/20 px-3 py-1.5 rounded-lg flex items-center">
+                                <Zap className="w-3 h-3 mr-1.5" /> Fast-Track Internship
+                            </div>
+                        )}
                     </div>
                 </div>
                 

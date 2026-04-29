@@ -54,6 +54,21 @@ const userSchema = new mongoose.Schema({
     completed_learn_projects: { type: Number, default: 0 },
     average_learn_rating: { type: Number, default: 0 },
     verified_at: Date
+  },
+  rank: {
+    type: String,
+    enum: ['Bronze', 'Silver', 'Gold', 'Platinum', 'Diamond'],
+    default: 'Bronze'
+  },
+  skill_path: {
+    type: Map,
+    of: Number,
+    default: {}
+  },
+  neural_nodes_unlocked: [String],
+  fast_track_eligible: {
+    type: Boolean,
+    default: false
   }
 }, {
   timestamps: true

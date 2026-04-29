@@ -4,6 +4,8 @@ const Milestone = require('../models/Milestone');
 const Contract = require('../models/Contract');
 const Transaction = require('../models/Transaction');
 const mongoose = require('mongoose');
+const aiAuditService = require('../services/aiAuditService');
+const skillService = require('../services/skillService');
 
 // Create a Project (Earn Real)
 exports.createProject = async (req, res) => {
@@ -163,7 +165,10 @@ exports.submitMilestone = async (req, res) => {
     milestone.submission_proof = { github_url, demo_url, notes, submitted_at: new Date() };
     await milestone.save();
 
-    res.json({ message: 'Milestone submitted for review.', milestone });
+    // Trigger Sahara AI Audit
+    aiAuditService.performAudit(milestone._id);
+
+    res.json({ message: 'Milestone submitted. Sahara AI Audit initiated.', milestone });
   } catch (err) {
     res.status(500).json({ message: 'Error submitting milestone' });
   }
@@ -224,6 +229,9 @@ exports.approveMilestone = async (req, res) => {
     if (remaining === 0) {
       project.status = 'completed';
       await project.save({ session });
+      
+      // Update User Skills and Neural Path
+      await skillService.updateSkillsFromProject(workerId, project._id);
     }
 
     await session.commitTransaction();
@@ -265,5 +273,38 @@ exports.getProjectDetails = async (req, res) => {
         res.json({ project, milestones, contract });
     } catch (err) {
         res.status(500).json({ message: 'Error fetching project details' });
+    }
+};
+// Get Escrow Status for a Project
+exports.getEscrowStatus = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const project = await Project.findById(id);
+        const transactions = await Transaction.find({ project_id: id });
+        
+        const totalLocked = project.credits_total;
+        const totalReleased = transactions
+            .filter(t => t.tx_type === 'escrow_release')
+            .reduce((sum, t) => sum + t.amount, 0);
+            
+        res.json({
+            project_title: project.title,
+            total_escrow: totalLocked,
+            released: totalReleased,
+            remaining: totalLocked - totalReleased,
+            transactions
+        });
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching escrow status' });
+    }
+};
+
+// Get Recommended Path for User
+exports.getRecommendedPath = async (req, res) => {
+    try {
+        const recommendations = await skillService.getRecommendedPath(req.user._id);
+        res.json(recommendations);
+    } catch (err) {
+        res.status(500).json({ message: 'Error fetching recommended path' });
     }
 };

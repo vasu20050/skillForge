@@ -39,8 +39,19 @@ const milestoneSchema = new mongoose.Schema({
     github_url: String,
     demo_url: String,
     file_url: String,
+    video_url: String,
     notes: String,
     submitted_at: Date
+  },
+  ai_audit: {
+    status: {
+      type: String,
+      enum: ['none', 'pending', 'passed', 'flagged', 'failed'],
+      default: 'none'
+    },
+    score: Number,
+    feedback: String,
+    audited_at: Date
   }
 }, {
   timestamps: true

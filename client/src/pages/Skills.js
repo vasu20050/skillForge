@@ -3,7 +3,7 @@ import {
   Search, Code, Palette, Megaphone, BarChart, 
   HardHat, GraduationCap, Clock,  
   ArrowRight, BookOpen, CheckCircle2, PlayCircle, ChevronLeft, Plus, X, PlusCircle,
-  Calendar, Camera, Mic2, Share2, Component, Download, Play
+  Calendar, Camera, Mic2, Share2, Component, Download, Play, Zap, Network, Lock, Unlock
 } from 'lucide-react';
 
 const INITIAL_SKILLS = [
@@ -173,6 +173,76 @@ const INITIAL_SKILLS = [
   }
 ];
 
+const NeuralMap = () => {
+  const nodes = [
+    { id: 'start', label: 'Beginner', x: 50, y: 50, status: 'unlocked', icon: <Zap className="w-4 h-4" /> },
+    { id: 'frontend', label: 'Frontend Master', x: 250, y: -50, status: 'unlocked', icon: <Code className="w-4 h-4" /> },
+    { id: 'backend', label: 'Backend Architect', x: 250, y: 150, status: 'locked', icon: <Lock className="w-4 h-4" /> },
+    { id: 'design', label: 'Design Sensei', x: 450, y: 50, status: 'locked', icon: <Palette className="w-4 h-4" /> },
+    { id: 'diamond', label: 'Fullstack Diamond', x: 700, y: 50, status: 'locked', icon: <Award className="w-4 h-4" /> },
+  ];
+
+  return (
+    <div className="relative w-full h-[300px] bg-slate-900 rounded-[3rem] overflow-hidden mb-12 border border-white/5 shadow-2xl group">
+      {/* Background Grid */}
+      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+      
+      <div className="absolute top-8 left-10 z-10">
+        <h2 className="text-white text-xl font-black flex items-center tracking-tight">
+          <Network className="w-6 h-6 mr-3 text-indigo-400 animate-pulse" />
+          Neural Pathfinding
+        </h2>
+        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">AI-Powered Career Progression</p>
+      </div>
+
+      <div className="absolute inset-0 flex items-center justify-center translate-x-[-150px]">
+        <svg className="absolute inset-0 w-full h-full">
+          {/* Connections */}
+          <line x1="120" y1="150" x2="320" y2="50" stroke="rgba(129, 140, 248, 0.3)" strokeWidth="2" strokeDasharray="4" />
+          <line x1="120" y1="150" x2="320" y2="250" stroke="rgba(129, 140, 248, 0.1)" strokeWidth="2" />
+          <line x1="320" y1="50" x2="520" y2="150" stroke="rgba(129, 140, 248, 0.1)" strokeWidth="2" />
+          <line x1="320" y1="250" x2="520" y2="150" stroke="rgba(129, 140, 248, 0.1)" strokeWidth="2" />
+        </svg>
+
+        {nodes.map(node => (
+          <div 
+            key={node.id}
+            className="absolute transition-all duration-700 hover:scale-110 cursor-pointer"
+            style={{ left: node.x + 70, top: node.y + 100 }}
+          >
+            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md border ${
+              node.status === 'unlocked' 
+              ? 'bg-indigo-600/20 border-indigo-400 text-indigo-400 shadow-indigo-500/20' 
+              : 'bg-white/5 border-white/10 text-slate-600'
+            }`}>
+              {node.status === 'unlocked' ? node.icon : <Lock className="w-4 h-4" />}
+            </div>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 whitespace-nowrap">
+              <span className={`text-[10px] font-black uppercase tracking-tighter ${node.status === 'unlocked' ? 'text-indigo-400' : 'text-slate-600'}`}>
+                {node.label}
+              </span>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Stats Overlay */}
+      <div className="absolute bottom-8 right-10 bg-black/40 backdrop-blur-xl p-6 rounded-[2rem] border border-white/10 hidden md:block">
+        <div className="flex gap-8">
+          <div>
+            <div className="text-indigo-400 text-xl font-black">2/12</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Nodes Unlocked</div>
+          </div>
+          <div>
+            <div className="text-white text-xl font-black">84%</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Next Node: Backend</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function Skills() {
   const [skills, setSkills] = useState(INITIAL_SKILLS);
   const [searchTerm, setSearchTerm] = useState('');
@@ -276,6 +346,7 @@ export default function Skills() {
         </div>
       ) : (
         <>
+          <NeuralMap />
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <h1 className="text-4xl font-black text-slate-900 tracking-tight">Skills Catalog</h1>

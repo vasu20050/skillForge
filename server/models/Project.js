@@ -51,11 +51,21 @@ const projectSchema = new mongoose.Schema({
     type: Boolean,
     default: false
   },
-  proof_requirements: {
+    proof_requirements: {
     type: [String],
-    enum: ['github_url', 'demo_url', 'file_submission'],
+    enum: ['github_url', 'demo_url', 'file_submission', 'video_proof'],
     default: ['github_url']
-  }
+  },
+  required_skills: [String],
+  video_proof_required: {
+    type: Boolean,
+    default: false
+  },
+  is_fast_track: {
+    type: Boolean,
+    default: false
+  },
+  fast_track_partner: String
 }, {
   timestamps: true
 });

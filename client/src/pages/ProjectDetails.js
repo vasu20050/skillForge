@@ -10,7 +10,7 @@ export default function ProjectDetails() {
   const { user } = useAuth();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [submission, setSubmission] = useState({ github_url: '', notes: '' });
+  const [submission, setSubmission] = useState({ github_url: '', video_url: '', notes: '' });
 
   const fetchData = async () => {
     try {
@@ -127,6 +127,40 @@ export default function ProjectDetails() {
           </div>
       </div>
 
+      {/* Escrow Shield Tracker */}
+      <div className="glass-card p-10 rounded-[3rem] bg-slate-900 text-white relative overflow-hidden shadow-2xl">
+          <div className="absolute inset-0 opacity-10 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')]"></div>
+          <div className="relative z-10">
+              <div className="flex justify-between items-center mb-8">
+                  <div className="flex items-center">
+                      <div className="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center mr-4 shadow-lg shadow-indigo-600/40">
+                          <Target className="w-6 h-6 text-white" />
+                      </div>
+                      <div>
+                          <h3 className="text-xl font-black tracking-tight">Shield Escrow Tracker</h3>
+                          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Real-time Credit Security</p>
+                      </div>
+                  </div>
+                  <div className="text-right">
+                      <div className="text-2xl font-black text-indigo-400">{project.credits_total} CR</div>
+                      <div className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Total Vault</div>
+                  </div>
+              </div>
+
+              <div className="relative h-4 bg-white/5 rounded-full overflow-hidden mb-4">
+                  <div 
+                    className="absolute top-0 left-0 h-full bg-gradient-to-r from-indigo-500 to-emerald-500 transition-all duration-1000"
+                    style={{ width: `${(milestones.filter(m => m.status === 'paid').length / milestones.length) * 100}%` }}
+                  ></div>
+              </div>
+
+              <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
+                  <span>Locked: {milestones.filter(m => m.status !== 'paid').reduce((sum, m) => sum + m.amount_credits, 0)} CR</span>
+                  <span>Released: {milestones.filter(m => m.status === 'paid').reduce((sum, m) => sum + m.amount_credits, 0)} CR</span>
+              </div>
+          </div>
+      </div>
+
       {/* Contract & Milestones Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 pt-10 border-t border-slate-100">
           
@@ -208,24 +242,55 @@ export default function ProjectDetails() {
                               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Due {new Date(m.due_date).toLocaleDateString()}</div>
                           </div>
 
+                          {/* AI Audit Feedback */}
+                          {m.ai_audit && m.ai_audit.status !== 'none' && (
+                              <div className={`mb-6 p-5 rounded-2xl border ${
+                                m.ai_audit.status === 'passed' ? 'bg-emerald-50/50 border-emerald-100' : 
+                                m.ai_audit.status === 'flagged' ? 'bg-amber-50/50 border-amber-100' : 'bg-slate-50 border-slate-100'
+                              }`}>
+                                  <div className="flex justify-between items-center mb-3">
+                                      <div className="flex items-center">
+                                          <Zap className={`w-4 h-4 mr-2 ${m.ai_audit.status === 'passed' ? 'text-emerald-500' : 'text-amber-500'}`} />
+                                          <span className="text-[10px] font-black uppercase tracking-widest text-slate-900">Sahara AI Review</span>
+                                      </div>
+                                      <span className="text-[10px] font-black text-slate-400">{m.ai_audit.score}% Logic Score</span>
+                                  </div>
+                                  <p className="text-xs font-medium text-slate-600 leading-relaxed italic">
+                                      "{m.ai_audit.feedback}"
+                                  </p>
+                              </div>
+                          )}
+
                           {/* Submission Interface for Workers */}
                           {isWorker && m.status === 'pending' && project.status === 'active' && (
                               <div className="space-y-4 pt-4 border-t border-slate-100">
-                                  <div className="flex bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-indigo-500 transition-colors">
-                                      <div className="p-4 bg-slate-50 text-slate-400 border-r border-slate-200"><Github className="w-4 h-4" /></div>
-                                      <input 
-                                        type="text" 
-                                        placeholder="Proof Link (GitHub / Demo)" 
-                                        className="w-full px-5 py-4 font-bold text-sm focus:outline-none"
-                                        value={m._id === submission.targetId ? submission.github_url : ''}
-                                        onChange={(e) => setSubmission({ ...submission, github_url: e.target.value, targetId: m._id })}
-                                      />
+                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      <div className="flex bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-indigo-500 transition-colors">
+                                          <div className="p-4 bg-slate-50 text-slate-400 border-r border-slate-200"><Github className="w-4 h-4" /></div>
+                                          <input 
+                                            type="text" 
+                                            placeholder="GitHub / Demo URL" 
+                                            className="w-full px-5 py-4 font-bold text-sm focus:outline-none"
+                                            value={m._id === submission.targetId ? submission.github_url : ''}
+                                            onChange={(e) => setSubmission({ ...submission, github_url: e.target.value, targetId: m._id })}
+                                          />
+                                      </div>
+                                      <div className="flex bg-white border border-slate-200 rounded-xl overflow-hidden focus-within:border-indigo-500 transition-colors">
+                                          <div className="p-4 bg-slate-50 text-slate-400 border-r border-slate-200"><Send className="w-4 h-4" /></div>
+                                          <input 
+                                            type="text" 
+                                            placeholder="Video Proof (Loom/Reel)" 
+                                            className="w-full px-5 py-4 font-bold text-sm focus:outline-none"
+                                            value={m._id === submission.targetId ? submission.video_url : ''}
+                                            onChange={(e) => setSubmission({ ...submission, video_url: e.target.value, targetId: m._id })}
+                                          />
+                                      </div>
                                   </div>
                                   <button 
                                     onClick={() => handleSubmitMilestone(m._id)}
-                                    className="w-full bg-indigo-600 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center hover:bg-indigo-700 transition-colors"
+                                    className="w-full bg-indigo-600 text-white py-4 rounded-xl font-black text-xs uppercase tracking-widest flex items-center justify-center hover:bg-indigo-700 transition-colors shadow-lg shadow-indigo-600/10"
                                   >
-                                      Submit Proof <Send className="w-3 h-3 ml-2" />
+                                      Submit Phase Proof <Send className="w-3 h-3 ml-2" />
                                   </button>
                               </div>
                           )}
