@@ -53,6 +53,7 @@ SkillForge aims to build a **high-trust campus economy** where students can:
 ### 🔁 Project Lifecycle  
 
 ```
+
 Post → Accept → Credit Lock (Escrow)
 → Work Submission
 → Review Window (48 hrs)
