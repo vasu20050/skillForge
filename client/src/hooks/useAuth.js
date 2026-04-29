@@ -4,8 +4,12 @@ import api from '../api';
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
-  const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  // Optimistically load user from cache to prevent blank screen flash
+  const cachedUser = (() => {
+    try { return JSON.parse(localStorage.getItem('user')); } catch { return null; }
+  })();
+  const [user, setUser] = useState(cachedUser);
+  const [loading, setLoading] = useState(!cachedUser); // skip loading if we have cache
 
   const fetchProfile = async () => {
     const token = localStorage.getItem('token');
@@ -20,9 +24,12 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('user', JSON.stringify(res.data));
     } catch (err) {
       console.error('Profile fetch failed', err);
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-      setUser(null);
+      // Only clear session on 401 (invalid/expired token), not on network errors
+      if (err.response?.status === 401) {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        setUser(null);
+      }
     } finally {
       setLoading(false);
     }
@@ -39,8 +46,14 @@ export const AuthProvider = ({ children }) => {
     window.location.href = '/login';
   };
 
+  const login = (userData) => {
+    setUser(userData);
+    setLoading(false);
+    localStorage.setItem('user', JSON.stringify(userData));
+  };
+
   return (
-    <AuthContext.Provider value={{ user, setUser, loading, logout, refreshProfile: fetchProfile }}>
+    <AuthContext.Provider value={{ user, setUser: login, loading, logout, refreshProfile: fetchProfile }}>
       {children}
     </AuthContext.Provider>
   );
