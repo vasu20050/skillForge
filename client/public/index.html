@@ -507,6 +507,25 @@
     </div>
   </div>
 
+  <!-- Message Modal -->
+  <div id="message-modal" class="hidden fixed inset-0 bg-black/90 backdrop-blur-sm z-[2000] items-center justify-center p-4">
+      <div id="message-modal-content" class="bg-[#0f1219] w-full max-w-md border border-white/10 rounded-[2.5rem] shadow-2xl overflow-hidden flex flex-col transition-all duration-300 transform scale-95 opacity-0">
+          <div class="p-6 border-b border-white/5 flex justify-between items-center bg-black/20">
+              <h3 class="text-lg font-black text-white uppercase tracking-widest">Message <span id="message-target-name" class="text-emerald-400">Student</span></h3>
+              <button onclick="closeMessageModal()" class="text-slate-500 hover:text-white transition-colors"><i data-lucide="x" class="w-5 h-5"></i></button>
+          </div>
+          <div class="p-6">
+              <textarea id="message-input" rows="4" placeholder="Type your message here..." class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors resize-none"></textarea>
+          </div>
+          <div class="p-6 border-t border-white/5 bg-black/20 flex justify-end gap-3">
+              <button onclick="closeMessageModal()" class="px-6 py-3 bg-white/5 hover:bg-white/10 text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-colors">Cancel</button>
+              <button onclick="submitMessage(this)" class="px-8 py-3 bg-emerald-500 text-black rounded-xl text-[10px] font-black uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2">
+                  <i data-lucide="send" class="w-4 h-4"></i> Send
+              </button>
+          </div>
+      </div>
+  </div>
+
   <!-- Camera Modal -->
   <div id="camera-modal">
     <div class="camera-container text-center space-y-6">
@@ -638,6 +657,26 @@
           </div>
         </div>
       </div>
+      <!-- Dashboard Stats -->
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-2">
+          <div class="glass-card p-6 rounded-3xl flex flex-col items-center justify-center text-center">
+              <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-2">Total Earned</p>
+              <p class="text-2xl font-black text-emerald-400">14,200 <span class="text-[10px]">CR</span></p>
+          </div>
+          <div class="glass-card p-6 rounded-3xl flex flex-col items-center justify-center text-center">
+              <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-2">Tasks Done</p>
+              <p class="text-2xl font-black text-white">3</p>
+          </div>
+          <div class="glass-card p-6 rounded-3xl flex flex-col items-center justify-center text-center">
+              <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-2">Reputation</p>
+              <p class="text-2xl font-black text-white">4.9<span class="text-[10px] text-slate-500">/5.0</span></p>
+          </div>
+          <div class="glass-card p-6 rounded-3xl flex flex-col items-center justify-center text-center">
+              <p class="text-[10px] text-slate-500 font-black uppercase tracking-widest mb-2">Global Rank</p>
+              <p class="text-2xl font-black text-emerald-400">#14</p>
+          </div>
+      </div>
+
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <div class="glass-card p-10 rounded-[3rem] hover:border-emerald-500 transition-all cursor-pointer"
           onclick="showPage('learn')">
@@ -1010,7 +1049,7 @@
             </tr>
           </thead>
           <tbody class="divide-y divide-white/5">
-            <tr class="hover:bg-white/[0.02] transition-colors">
+            <tr class="hover:bg-white/[0.02] transition-colors cursor-pointer" onclick="openMessageModal('Student')">
               <td class="px-8 py-6 font-black text-emerald-400 text-xl">#1</td>
               <td class="px-8 py-6">
                 <div class="flex items-center space-x-4">
@@ -1027,7 +1066,7 @@
               <td class="px-8 py-6 font-black text-white">12,450 <span class="text-[10px] text-slate-500">CR</span></td>
               <td class="px-8 py-6 text-slate-400 font-bold">24 Done</td>
             </tr>
-            <tr class="hover:bg-white/[0.02] transition-colors">
+            <tr class="hover:bg-white/[0.02] transition-colors cursor-pointer" onclick="openMessageModal('Student')">
               <td class="px-8 py-6 font-black text-slate-400 text-xl">#2</td>
               <td class="px-8 py-6">
                 <div class="flex items-center space-x-4">
@@ -1328,6 +1367,41 @@
         btn.innerHTML = 'Applied';
         btn.className = 'w-full py-5 bg-white/5 text-slate-500 rounded-2xl font-black text-xs uppercase tracking-widest cursor-not-allowed border border-white/5';
         showToast('Application Submitted Successfully!');
+      }, 1000);
+    }
+
+    function openMessageModal(name) {
+      document.getElementById('message-target-name').innerText = name;
+      const modal = document.getElementById('message-modal');
+      const content = document.getElementById('message-modal-content');
+      modal.classList.remove('hidden');
+      modal.style.display = 'flex';
+      setTimeout(() => {
+          content.classList.remove('scale-95', 'opacity-0');
+          content.classList.add('scale-100', 'opacity-100');
+      }, 10);
+    }
+
+    function closeMessageModal() {
+      const modal = document.getElementById('message-modal');
+      const content = document.getElementById('message-modal-content');
+      content.classList.remove('scale-100', 'opacity-100');
+      content.classList.add('scale-95', 'opacity-0');
+      setTimeout(() => {
+          modal.classList.add('hidden');
+          modal.style.display = '';
+      }, 300);
+    }
+
+    function submitMessage(btn) {
+      const originalContent = btn.innerHTML;
+      btn.innerHTML = '<i data-lucide="loader-2" class="w-4 h-4 animate-spin mr-2"></i> Sending...';
+      lucide.createIcons();
+      setTimeout(() => {
+          btn.innerHTML = originalContent;
+          closeMessageModal();
+          showToast('Message Sent Successfully!');
+          document.getElementById('message-input').value = '';
       }, 1000);
     }
 
