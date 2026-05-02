@@ -842,24 +842,24 @@
         <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
           <div class="relative flex-1 sm:w-64">
             <i data-lucide="search" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500"></i>
-            <input type="text" placeholder="Search Bounties..."
+            <input type="text" id="bounty-search" oninput="filterBounties()" placeholder="Search Bounties..."
               class="w-full pl-12 pr-4 py-3 bg-white/5 border border-white/5 rounded-xl text-xs font-bold text-white outline-none focus:border-emerald-500/50 transition-all">
           </div>
-          <div class="flex space-x-2">
-            <button
-              class="px-4 py-3 bg-emerald-500 text-black rounded-xl text-[10px] font-black uppercase tracking-widest">All</button>
-            <button
-              class="px-4 py-3 bg-white/5 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Dev</button>
-            <button
-              class="px-4 py-3 bg-white/5 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Design</button>
+          <div class="flex space-x-2" id="bounty-filters">
+            <button onclick="filterBounties('all')" data-filter="all"
+              class="filter-btn px-4 py-3 bg-emerald-500 text-black rounded-xl text-[10px] font-black uppercase tracking-widest">All</button>
+            <button onclick="filterBounties('dev')" data-filter="dev"
+              class="filter-btn px-4 py-3 bg-white/5 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Dev</button>
+            <button onclick="filterBounties('design')" data-filter="design"
+              class="filter-btn px-4 py-3 bg-white/5 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors">Design</button>
           </div>
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         <!-- Startup Landing Page Card -->
-        <div
-          class="bg-[#0f1219] text-white p-8 rounded-[2.5rem] relative overflow-hidden border border-white/5 shadow-2xl flex flex-col justify-between">
+        <div data-category="dev" data-title="startup landing page frontend"
+          class="bounty-card bg-[#0f1219] text-white p-8 rounded-[2.5rem] relative overflow-hidden border border-white/5 shadow-2xl flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-start mb-8">
               <div
@@ -888,8 +888,8 @@
         </div>
 
         <!-- API Integration Bounty -->
-        <div
-          class="bg-[#0f1219] text-white p-8 rounded-[2.5rem] relative overflow-hidden border border-white/5 shadow-2xl flex flex-col justify-between">
+        <div data-category="dev" data-title="payment gateway backend razorpay api"
+          class="bounty-card bg-[#0f1219] text-white p-8 rounded-[2.5rem] relative overflow-hidden border border-white/5 shadow-2xl flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-start mb-8">
               <div
@@ -918,8 +918,8 @@
         </div>
 
         <!-- Branding Bounty -->
-        <div
-          class="bg-[#0f1219] text-white p-8 rounded-[2.5rem] relative overflow-hidden border border-white/5 shadow-2xl flex flex-col justify-between">
+        <div data-category="design" data-title="society rebranding design photography club visual identity"
+          class="bounty-card bg-[#0f1219] text-white p-8 rounded-[2.5rem] relative overflow-hidden border border-white/5 shadow-2xl flex flex-col justify-between">
           <div>
             <div class="flex justify-between items-start mb-8">
               <div
@@ -1416,6 +1416,34 @@
       }
     }
 
+    let currentFilter = 'all';
+    function filterBounties(category) {
+      if (category !== undefined) {
+          currentFilter = category;
+          // Update active button styles
+          document.querySelectorAll('.filter-btn').forEach(btn => {
+              if (btn.dataset.filter === category) {
+                  btn.className = "filter-btn px-4 py-3 bg-emerald-500 text-black rounded-xl text-[10px] font-black uppercase tracking-widest";
+              } else {
+                  btn.className = "filter-btn px-4 py-3 bg-white/5 text-slate-400 rounded-xl text-[10px] font-black uppercase tracking-widest hover:text-white transition-colors";
+              }
+          });
+      }
+      
+      const searchQuery = document.getElementById('bounty-search').value.toLowerCase();
+      const cards = document.querySelectorAll('.bounty-card');
+      
+      cards.forEach(card => {
+          const matchesCategory = currentFilter === 'all' || card.dataset.category === currentFilter;
+          const matchesSearch = card.dataset.title.includes(searchQuery);
+          
+          if (matchesCategory && matchesSearch) {
+              card.style.display = 'flex';
+          } else {
+              card.style.display = 'none';
+          }
+      });
+    }
 
     window.addEventListener('load', () => {
       setTimeout(() => {
