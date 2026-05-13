@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Sparkles, Compass, Search, Filter, Zap, Clock, Bookmark, X, Briefcase } from 'lucide-react';
-
 export default function Explore() {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
