@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Briefcase, User } from 'lucide-react';
+import { Briefcase, User, Sparkles, Mail, Lock, UserCircle, ArrowRight, ShieldCheck, AlertCircle, Zap } from 'lucide-react';
 import api from '../api';
 import { useAuth } from '../hooks/useAuth';
 
@@ -12,7 +12,7 @@ export default function Register() {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { setUser } = useAuth(); // REPLACED REFRESHPROFILE RACE
+  const { setUser } = useAuth();
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -20,11 +20,8 @@ export default function Register() {
     setLoading(true);
     try {
       const res = await api.post('/auth/register', { name, email, password, role });
-      
-      // ORDER MATTERS: Token then User then Navigate
       localStorage.setItem('token', res.data.token);
-      setUser(res.data); // Update global state immediately
-      
+      setUser(res.data);
       alert('Welcome aboard! 100 starter credits added to your account.');
       navigate('/dashboard');
     } catch (err) {
@@ -35,84 +32,120 @@ export default function Register() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 animate-in-slide">
-      {/* SHADOW CARD - RESTORED PREVIOUS UI */}
-      <div className="w-full max-w-xl shadow-card p-10 md:p-14 mt-12 bg-white text-slate-800">
-        <div className="text-center mb-10">
-          <div className="inline-flex items-center justify-center w-14 h-14 bg-indigo-50 rounded-xl text-indigo-600 mb-6 font-black text-2xl border border-indigo-100 shadow-sm">
-            S
+    <div className="min-h-[80vh] flex flex-col items-center justify-center p-6 animate-in fade-in duration-1000 relative">
+      
+      {/* Background Decor */}
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[45rem] h-[45rem] bg-emerald-500/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+
+      <div className="w-full max-w-xl bg-[#0f1219] p-12 md:p-16 rounded-[4rem] border border-white/5 shadow-2xl relative overflow-hidden group">
+        <div className="absolute inset-0 bg-emerald-500 opacity-0 group-hover:opacity-[0.01] transition-opacity duration-1000"></div>
+        
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-emerald-500 rounded-[2rem] text-black mb-8 shadow-2xl shadow-emerald-500/20 group-hover:rotate-6 transition-transform duration-500">
+            <Sparkles className="w-10 h-10" />
           </div>
-          <h2 className="text-3xl font-bold text-slate-900">Join the Campus Economy</h2>
-          <p className="mt-2 text-slate-500 font-medium tracking-tight">Connect and grow with fellow students.</p>
+          <h2 className="text-4xl font-black text-white uppercase tracking-tighter">Initialise Identity</h2>
+          <p className="mt-3 text-slate-500 font-medium tracking-tight">Join the decentralized campus economy today.</p>
         </div>
 
         {error && (
-          <div className="bg-red-50 text-red-600 p-4 rounded-xl border border-red-100 text-sm font-semibold mb-8 flex items-center space-x-3">
-             <span className="w-1.5 h-1.5 rounded-full bg-red-600"></span>
+          <div className="bg-rose-500/10 text-rose-400 p-6 rounded-3xl border border-rose-500/20 text-xs font-black uppercase tracking-widest mb-10 flex items-start space-x-4">
+             <AlertCircle className="w-5 h-5 flex-shrink-0 mt-0.5" />
              <span>{error}</span>
           </div>
         )}
 
-        <form className="space-y-6" onSubmit={handleRegister}>
-          <div className="grid grid-cols-2 gap-4 mb-8">
+        <form className="space-y-10" onSubmit={handleRegister}>
+          <div className="grid grid-cols-2 gap-6">
             <button
                type="button"
                onClick={() => setRole('worker')}
-               className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center justify-center space-y-2 group text-center ${role === 'worker' ? 'border-primary bg-indigo-50/30' : 'border-slate-100 bg-white'}`}
+               className={`p-6 rounded-[2rem] border transition-all flex flex-col items-center justify-center space-y-3 group/chip relative overflow-hidden ${role === 'worker' ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400' : 'border-white/5 bg-white/5 text-slate-500'}`}
             >
-               <Briefcase className={`w-5 h-5 ${role === 'worker' ? 'text-primary' : 'text-slate-400'}`} />
-               <span className={`block text-sm font-bold ${role === 'worker' ? 'text-slate-900' : 'text-slate-500'}`}>I am an Expert</span>
+               <Briefcase className={`w-6 h-6 transition-transform group-hover/chip:scale-110 ${role === 'worker' ? 'text-emerald-400' : 'text-slate-600'}`} />
+               <span className="block text-[10px] font-black uppercase tracking-widest">Technician</span>
+               {role === 'worker' && <div className="absolute top-2 right-4 w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>}
             </button>
             <button
                type="button"
                onClick={() => setRole('client')}
-               className={`p-4 rounded-xl border-2 transition-all flex flex-col items-center justify-center space-y-2 group text-center ${role === 'client' ? 'border-primary bg-indigo-50/30' : 'border-slate-100 bg-white'}`}
+               className={`p-6 rounded-[2rem] border transition-all flex flex-col items-center justify-center space-y-3 group/chip relative overflow-hidden ${role === 'client' ? 'border-emerald-500/50 bg-emerald-500/10 text-emerald-400' : 'border-white/5 bg-white/5 text-slate-500'}`}
             >
-               <User className={`w-5 h-5 ${role === 'client' ? 'text-primary' : 'text-slate-400'}`} />
-               <span className={`block text-sm font-bold ${role === 'client' ? 'text-slate-900' : 'text-slate-500'}`}>I am a Student</span>
+               <User className={`w-6 h-6 transition-transform group-hover/chip:scale-110 ${role === 'client' ? 'text-emerald-400' : 'text-slate-600'}`} />
+               <span className="block text-[10px] font-black uppercase tracking-widest">Solutionist</span>
+               {role === 'client' && <div className="absolute top-2 right-4 w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></div>}
             </button>
           </div>
 
-          <div className="space-y-4">
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
-              placeholder="Full Name"
-            />
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
-              placeholder="College Email"
-            />
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl px-5 py-4 text-slate-900 font-medium placeholder-slate-400 focus:outline-none focus:ring-4 focus:ring-indigo-500/10 focus:border-indigo-500 transition-all"
-              placeholder="Password"
-            />
+          <div className="space-y-5">
+            <div className="relative group/input">
+              <UserCircle className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within/input:text-emerald-500 transition-colors" />
+              <input
+                type="text"
+                required
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="w-full bg-white/5 border border-white/5 rounded-[1.75rem] pl-16 pr-8 py-5 text-white font-medium placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 focus:bg-emerald-500/5 transition-all text-sm"
+                placeholder="Operational Alias (Full Name)"
+              />
+            </div>
+            <div className="relative group/input">
+              <Mail className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within/input:text-emerald-500 transition-colors" />
+              <input
+                type="email"
+                required
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full bg-white/5 border border-white/5 rounded-[1.75rem] pl-16 pr-8 py-5 text-white font-medium placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 focus:bg-emerald-500/5 transition-all text-sm"
+                placeholder="College Email Protocol"
+              />
+            </div>
+            <div className="relative group/input">
+              <Lock className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-600 group-focus-within/input:text-emerald-500 transition-colors" />
+              <input
+                type="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                className="w-full bg-white/5 border border-white/5 rounded-[1.75rem] pl-16 pr-8 py-5 text-white font-medium placeholder-slate-600 focus:outline-none focus:border-emerald-500/50 focus:bg-emerald-500/5 transition-all text-sm"
+                placeholder="Secure Access Key"
+              />
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between p-6 bg-emerald-500/5 border border-emerald-500/10 rounded-[2rem]">
+             <div className="flex items-center space-x-4">
+                <div className="w-10 h-10 bg-emerald-500 text-black rounded-xl flex items-center justify-center">
+                   <Zap className="w-5 h-5" />
+                </div>
+                <div>
+                   <p className="text-[10px] font-black text-white uppercase tracking-widest">Starter Credit Allocation</p>
+                   <p className="text-[9px] font-medium text-emerald-500/60 uppercase tracking-widest">100.00 CR Ready for Claim</p>
+                </div>
+             </div>
+             <div className="text-xl font-black text-emerald-500">+100</div>
           </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-primary text-lg shadow-lg shadow-indigo-600/20 disabled:opacity-50 mt-4"
+            className="w-full btn-primary disabled:opacity-50 group/btn mt-4"
           >
-            {loading ? 'Creating Account...' : 'Join SkillForge'}
+            {loading ? 'Processing Identity...' : 'Join the Forge'}
+            <ArrowRight className="ml-3 w-5 h-5 group-hover/btn:translate-x-1 transition-transform" />
           </button>
 
-          <p className="text-center font-semibold text-slate-500 pt-6">
-            Already a member? <Link to="/login" className="link-indigo">Sign in here</Link>
+          <p className="text-center text-[10px] font-black text-slate-500 uppercase tracking-widest pt-4">
+            Already verified? <Link to="/login" className="text-emerald-500 hover:text-emerald-400 transition-colors ml-2">Authenticate Identity</Link>
           </p>
         </form>
+      </div>
+
+      <div className="mt-12 flex items-center space-x-4 opacity-40 group hover:opacity-100 transition-opacity">
+        <ShieldCheck className="w-5 h-5 text-emerald-500" />
+        <p className="text-[10px] font-black text-slate-500 uppercase tracking-[0.4em]">Campus Compliance Verified: ISO-9001</p>
       </div>
     </div>
   );
 }
+
