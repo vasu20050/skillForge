@@ -3,7 +3,7 @@ import {
   Search, Code, Palette, Megaphone, BarChart, 
   HardHat, GraduationCap, Clock,  
   ArrowRight, BookOpen, CheckCircle2, PlayCircle, ChevronLeft, Plus, X, PlusCircle,
-  Calendar, Camera, Mic2, Share2, Component, Download, Play, Zap, Network, Lock, Unlock
+  Calendar, Camera, Mic2, Share2, Component, Download, Play, Zap, Network, Lock, Unlock, Medal
 } from 'lucide-react';
 
 const INITIAL_SKILLS = [
@@ -13,7 +13,7 @@ const INITIAL_SKILLS = [
     category: 'Tech', 
     count: 4, 
     icon: <Code className="w-5 h-5" />, 
-    color: 'bg-blue-100 text-blue-600',
+    color: 'bg-emerald-500/10 text-emerald-400',
     description: 'Master the art of building modern, responsive websites from scratch.',
     lessons: [
       { id: 'w1', title: 'HTML5 & Semantic Structure', duration: '1.5h', difficulty: 'Beginner', modules: 12 },
@@ -28,7 +28,7 @@ const INITIAL_SKILLS = [
     category: 'Design', 
     count: 4, 
     icon: <Palette className="w-5 h-5" />, 
-    color: 'bg-purple-100 text-purple-600',
+    color: 'bg-emerald-500/10 text-emerald-400',
     description: 'Design intuitive digital experiences that users love.',
     lessons: [
       { id: 'u1', title: 'Introduction to Design Thinking', duration: '2.0h', difficulty: 'Beginner', modules: 8 },
@@ -43,7 +43,7 @@ const INITIAL_SKILLS = [
     category: 'Business', 
     count: 4, 
     icon: <Megaphone className="w-5 h-5" />, 
-    color: 'bg-orange-100 text-orange-600',
+    color: 'bg-emerald-500/10 text-emerald-400',
     description: 'Learn the strategies to grow brands and reach millions online.',
     lessons: [
       { id: 'm1', title: 'SEO: Search Engine Optimization', duration: '3.5h', difficulty: 'Intermediate', modules: 14 },
@@ -58,7 +58,7 @@ const INITIAL_SKILLS = [
     category: 'Tech', 
     count: 4, 
     icon: <BarChart className="w-5 h-5" />, 
-    color: 'bg-emerald-100 text-emerald-600',
+    color: 'bg-emerald-500/10 text-emerald-400',
     description: 'Extract insights from data and build predictive models.',
     lessons: [
       { id: 'd1', title: 'Python for Data Analysis (Pandas)', duration: '4.5h', difficulty: 'Beginner', modules: 16 },
@@ -67,110 +67,6 @@ const INITIAL_SKILLS = [
       { id: 'd4', title: 'Deep Learning & Neural Networks', duration: '12.0h', difficulty: 'Advanced', modules: 45 }
     ]
   },
-  { 
-    id: 5, 
-    name: 'Project Management', 
-    category: 'Business', 
-    count: 4, 
-    icon: <HardHat className="w-5 h-5" />, 
-    color: 'bg-slate-100 text-slate-600',
-    description: 'Lead teams effectively and deliver complex projects on time.',
-    lessons: [
-      { id: 'p1', title: 'Agile & Scrum Methodologies', duration: '3.0h', difficulty: 'Beginner', modules: 10 },
-      { id: 'p2', title: 'Project Planning & Risk Mitigation', duration: '4.5h', difficulty: 'Intermediate', modules: 14 },
-      { id: 'p3', title: 'Stakeholder Management', duration: '2.5h', difficulty: 'Beginner', modules: 8 }
-    ]
-  },
-  { 
-    id: 6, 
-    name: 'Artificial Intelligence', 
-    category: 'Tech', 
-    count: 5, 
-    icon: <BarChart className="w-5 h-5" />, 
-    color: 'bg-purple-100 text-purple-600',
-    description: 'Explore the world of neural networks and generative AI models.',
-    lessons: [
-      { id: 'ai1', title: 'Generative AI & LLM Prompting', duration: '3.5h', difficulty: 'Beginner', modules: 10 },
-      { id: 'ai2', title: 'Natural Language Processing', duration: '5.5h', difficulty: 'Advanced', modules: 18 }
-    ]
-  },
-  { 
-    id: 7, 
-    name: 'Cyber Security', 
-    category: 'Tech', 
-    count: 5, 
-    icon: <CheckCircle2 className="w-5 h-5" />, 
-    color: 'bg-rose-100 text-rose-600',
-    description: 'Protect digital assets and learn ethical hacking techniques.',
-    lessons: [
-      { id: 'cs1', title: 'Network Security Basics', duration: '3.0h', difficulty: 'Beginner', modules: 10 },
-      { id: 'cs2', title: 'Ethical Hacking 101', duration: '7.5h', difficulty: 'Advanced', modules: 25 }
-    ]
-  },
-  { 
-    id: 10, 
-    name: 'Event Management', 
-    category: 'College', 
-    count: 4, 
-    icon: <Calendar className="w-5 h-5" />, 
-    color: 'bg-indigo-100 text-indigo-600',
-    description: 'Learn to organize, coordinate, and execute large-scale campus events and fests.',
-    lessons: [
-      { id: 'ev1', title: 'Budgeting & Sponsorship', duration: '3.0h', difficulty: 'Beginner', modules: 8 },
-      { id: 'ev2', title: 'Logistics & Vendor Management', duration: '4.5h', difficulty: 'Intermediate', modules: 12 }
-    ]
-  },
-  { 
-    id: 11, 
-    name: 'Photography & Cinematography', 
-    category: 'Media', 
-    count: 5, 
-    icon: <Camera className="w-5 h-5" />, 
-    color: 'bg-rose-100 text-rose-600',
-    description: 'Capture campus moments with professional techniques.',
-    lessons: [
-      { id: 'ph1', title: 'Manual Mode Mastery', duration: '2.5h', difficulty: 'Beginner', modules: 10 },
-      { id: 'ph2', title: 'Video Editing for Reels', duration: '6.0h', difficulty: 'Advanced', modules: 20 }
-    ]
-  },
-  { 
-    id: 12, 
-    name: 'Public Speaking & Debate', 
-    category: 'Soft Skills', 
-    count: 3, 
-    icon: <Mic2 className="w-5 h-5" />, 
-    color: 'bg-amber-100 text-amber-600',
-    description: 'Master the art of persuasion and rhetoric.',
-    lessons: [
-      { id: 'ps1', title: 'Overcoming Stage Fright', duration: '1.5h', difficulty: 'Beginner', modules: 5 },
-      { id: 'ps2', title: 'Structuring a Winning Argument', duration: '3.5h', difficulty: 'Intermediate', modules: 10 }
-    ]
-  },
-  { 
-    id: 13, 
-    name: 'Social Media Growth', 
-    category: 'Marketing', 
-    count: 4, 
-    icon: <Share2 className="w-5 h-5" />, 
-    color: 'bg-blue-100 text-blue-600',
-    description: 'Manage campus club handles and grow organic reach.',
-    lessons: [
-      { id: 'sg1', title: 'Algorithm Secrets (IG & LinkedIn)', duration: '2.5h', difficulty: 'Beginner', modules: 9 },
-      { id: 'sg2', title: 'Creating Viral Content', duration: '4.0h', difficulty: 'Intermediate', modules: 14 }
-    ]
-  },
-  { 
-    id: 14, 
-    name: 'Poster & Flyer Design', 
-    category: 'Design', 
-    count: 3, 
-    icon: <Palette className="w-5 h-5" />, 
-    color: 'bg-emerald-100 text-emerald-600',
-    description: 'Create eye-catching visuals for campus fests.',
-    lessons: [
-      { id: 'pd1', title: 'Canva vs Illustrator for Posters', duration: '2.0h', difficulty: 'Beginner', modules: 8 }
-    ]
-  }
 ];
 
 const NeuralMap = () => {
@@ -183,25 +79,25 @@ const NeuralMap = () => {
   ];
 
   return (
-    <div className="relative w-full h-[300px] bg-slate-900 rounded-[3rem] overflow-hidden mb-12 border border-white/5 shadow-2xl group">
+    <div className="relative w-full h-[350px] bg-[#0f1219] rounded-[3rem] overflow-hidden mb-12 border border-white/5 shadow-2xl group">
       {/* Background Grid */}
-      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#fff 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
+      <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(#10b981 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
       
-      <div className="absolute top-8 left-10 z-10">
-        <h2 className="text-white text-xl font-black flex items-center tracking-tight">
-          <Network className="w-6 h-6 mr-3 text-indigo-400 animate-pulse" />
+      <div className="absolute top-10 left-10 z-10">
+        <h2 className="text-white text-2xl font-black flex items-center tracking-tight uppercase">
+          <Network className="w-7 h-7 mr-3 text-emerald-400 animate-pulse" />
           Neural Pathfinding
         </h2>
-        <p className="text-slate-400 text-xs font-bold uppercase tracking-widest mt-1">AI-Powered Career Progression</p>
+        <p className="text-slate-500 text-[10px] font-black uppercase tracking-widest mt-1">AI-Powered Skill Progression</p>
       </div>
 
       <div className="absolute inset-0 flex items-center justify-center translate-x-[-150px]">
         <svg className="absolute inset-0 w-full h-full">
           {/* Connections */}
-          <line x1="120" y1="150" x2="320" y2="50" stroke="rgba(129, 140, 248, 0.3)" strokeWidth="2" strokeDasharray="4" />
-          <line x1="120" y1="150" x2="320" y2="250" stroke="rgba(129, 140, 248, 0.1)" strokeWidth="2" />
-          <line x1="320" y1="50" x2="520" y2="150" stroke="rgba(129, 140, 248, 0.1)" strokeWidth="2" />
-          <line x1="320" y1="250" x2="520" y2="150" stroke="rgba(129, 140, 248, 0.1)" strokeWidth="2" />
+          <line x1="120" y1="150" x2="320" y2="50" stroke="rgba(16, 185, 129, 0.2)" strokeWidth="2" strokeDasharray="4" />
+          <line x1="120" y1="150" x2="320" y2="250" stroke="rgba(16, 185, 129, 0.05)" strokeWidth="2" />
+          <line x1="320" y1="50" x2="520" y2="150" stroke="rgba(16, 185, 129, 0.05)" strokeWidth="2" />
+          <line x1="320" y1="250" x2="520" y2="150" stroke="rgba(16, 185, 129, 0.05)" strokeWidth="2" />
         </svg>
 
         {nodes.map(node => (
@@ -210,15 +106,15 @@ const NeuralMap = () => {
             className="absolute transition-all duration-700 hover:scale-110 cursor-pointer"
             style={{ left: node.x + 70, top: node.y + 100 }}
           >
-            <div className={`w-14 h-14 rounded-2xl flex items-center justify-center shadow-lg backdrop-blur-md border ${
+            <div className={`w-16 h-16 rounded-2xl flex items-center justify-center shadow-2xl backdrop-blur-md border ${
               node.status === 'unlocked' 
-              ? 'bg-indigo-600/20 border-indigo-400 text-indigo-400 shadow-indigo-500/20' 
-              : 'bg-white/5 border-white/10 text-slate-600'
+              ? 'bg-emerald-500/20 border-emerald-400/50 text-emerald-400 shadow-emerald-500/20' 
+              : 'bg-white/5 border-white/10 text-slate-700'
             }`}>
-              {node.status === 'unlocked' ? node.icon : <Lock className="w-4 h-4" />}
+              {node.status === 'unlocked' ? node.icon : <Lock className="w-5 h-5" />}
             </div>
-            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 whitespace-nowrap">
-              <span className={`text-[10px] font-black uppercase tracking-tighter ${node.status === 'unlocked' ? 'text-indigo-400' : 'text-slate-600'}`}>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-4 whitespace-nowrap">
+              <span className={`text-[10px] font-black uppercase tracking-widest ${node.status === 'unlocked' ? 'text-emerald-400' : 'text-slate-700'}`}>
                 {node.label}
               </span>
             </div>
@@ -227,15 +123,16 @@ const NeuralMap = () => {
       </div>
 
       {/* Stats Overlay */}
-      <div className="absolute bottom-8 right-10 bg-black/40 backdrop-blur-xl p-6 rounded-[2rem] border border-white/10 hidden md:block">
-        <div className="flex gap-8">
+      <div className="absolute bottom-10 right-10 bg-black/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/10 hidden md:block">
+        <div className="flex gap-10">
           <div>
-            <div className="text-indigo-400 text-xl font-black">2/12</div>
-            <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Nodes Unlocked</div>
+            <div className="text-emerald-400 text-2xl font-black tabular-nums">2/12</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Unlocked</div>
           </div>
+          <div className="w-px bg-white/5"></div>
           <div>
-            <div className="text-white text-xl font-black">84%</div>
-            <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Next Node: Backend</div>
+            <div className="text-white text-2xl font-black">84%</div>
+            <div className="text-[10px] font-black uppercase tracking-widest text-slate-500">Next: Backend</div>
           </div>
         </div>
       </div>
@@ -263,18 +160,12 @@ export default function Skills() {
   const handleCreateSkill = (e) => {
     e.preventDefault();
     const id = skills.length + 1;
-    const colors = [
-      'bg-indigo-100 text-indigo-600',
-      'bg-rose-100 text-rose-600',
-      'bg-cyan-100 text-cyan-600',
-      'bg-amber-100 text-amber-600'
-    ];
     const skillToAdd = {
       ...newSkill,
       id,
       count: 0,
       icon: <CheckCircle2 className="w-5 h-5" />,
-      color: colors[id % colors.length],
+      color: 'bg-emerald-500/10 text-emerald-400',
       lessons: [
         { id: `${id}-1`, title: 'Introduction to ' + newSkill.name, duration: '1.0h', difficulty: 'Beginner', modules: 5 }
       ]
@@ -285,57 +176,61 @@ export default function Skills() {
   };
 
   return (
-    <div className="space-y-8 animate-in fade-in duration-700 pb-20 relative">
+    <div className="space-y-12 animate-in fade-in duration-700 pb-20 relative">
       
       {selectedSkill ? (
-        <div className="space-y-8 animate-in fade-in duration-500">
+        <div className="space-y-10 animate-in fade-in duration-500">
           <button 
             onClick={() => setSelectedSkill(null)}
-            className="flex items-center text-slate-500 hover:text-indigo-600 font-bold transition-colors group"
+            className="flex items-center text-slate-500 hover:text-emerald-400 text-[10px] font-black uppercase tracking-widest transition-all group"
           >
-            <ChevronLeft className="w-5 h-5 mr-1 group-hover:-translate-x-1 transition-transform" />
+            <ChevronLeft className="w-4 h-4 mr-2 group-hover:-translate-x-1 transition-transform" />
             Back to Catalog
           </button>
 
-          <div className="glass-card rounded-[2.5rem] p-8 md:p-12 relative overflow-hidden">
-            <div className="relative z-10 flex flex-col md:flex-row gap-8 items-start">
-              <div className={`p-6 rounded-3xl ${selectedSkill.color} shadow-lg shadow-indigo-500/10`}>
-                {selectedSkill.icon}
+          <div className="bg-[#0f1219] rounded-[3.5rem] p-12 md:p-16 border border-white/5 relative overflow-hidden shadow-2xl">
+            <div className="absolute inset-0 opacity-10 pointer-events-none">
+              <div className="absolute top-0 left-0 w-64 h-64 bg-emerald-500 rounded-full blur-[100px]"></div>
+            </div>
+            <div className="relative z-10 flex flex-col md:flex-row gap-10 items-start">
+              <div className={`p-8 rounded-[2rem] ${selectedSkill.color} border border-emerald-500/20 shadow-2xl shadow-emerald-500/10`}>
+                {React.cloneElement(selectedSkill.icon, { className: 'w-10 h-10' })}
               </div>
-              <div className="space-y-4 max-w-2xl">
-                <h1 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight">{selectedSkill.name}</h1>
-                <p className="text-slate-500 text-lg font-medium leading-relaxed">{selectedSkill.description}</p>
+              <div className="space-y-6 max-w-2xl">
+                <h1 className="text-5xl font-black text-white tracking-tight uppercase font-heading">{selectedSkill.name}</h1>
+                <p className="text-slate-400 text-lg font-medium leading-relaxed">{selectedSkill.description}</p>
               </div>
             </div>
           </div>
 
-          <div className="space-y-6">
-            <h2 className="text-2xl font-bold text-slate-800 flex items-center">
-              <BookOpen className="w-6 h-6 mr-3 text-indigo-600" />
-              Course Curriculum
+          <div className="space-y-8">
+            <h2 className="text-xl font-black text-white flex items-center uppercase tracking-widest">
+              <BookOpen className="w-6 h-6 mr-3 text-emerald-400" />
+              Curriculum
             </h2>
             <div className="grid grid-cols-1 gap-4">
               {selectedSkill.lessons.map((lesson, idx) => (
-                <div key={lesson.id} className="glass-card p-6 rounded-[2rem] border border-transparent hover:border-indigo-100 transition-all group flex flex-col md:flex-row md:items-center justify-between gap-6">
-                  <div className="flex items-start gap-5">
-                    <div className="w-12 h-12 rounded-2xl bg-slate-50 flex items-center justify-center text-slate-400 font-bold group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
+                <div key={lesson.id} className="bg-[#0f1219] p-8 rounded-[2.5rem] border border-white/5 hover:border-emerald-500/30 transition-all group flex flex-col md:flex-row md:items-center justify-between gap-8">
+                  <div className="flex items-center gap-8">
+                    <div className="w-14 h-14 rounded-2xl bg-white/5 flex items-center justify-center text-slate-500 font-black text-lg group-hover:bg-emerald-500 group-hover:text-black transition-all duration-500">
                       0{idx + 1}
                     </div>
                     <div>
-                      <h3 className="text-lg font-bold text-slate-800 group-hover:text-indigo-600 transition-colors mb-2">{lesson.title}</h3>
-                      <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">
-                        {lesson.duration} &bull; {lesson.difficulty}
+                      <h3 className="text-xl font-black text-white group-hover:text-emerald-400 transition-colors mb-2 uppercase tracking-tight">{lesson.title}</h3>
+                      <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest flex items-center gap-4">
+                        <span className="flex items-center"><Clock className="w-3 h-3 mr-1.5" /> {lesson.duration}</span>
+                        <span className="flex items-center"><Medal className="w-3 h-3 mr-1.5" /> {lesson.difficulty}</span>
                       </div>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div className="flex items-center gap-4 opacity-0 group-hover:opacity-100 transition-opacity">
                     <button 
                       onClick={() => setActiveVideo({ ...lesson, skillName: selectedSkill.name })}
-                      className="premium-btn text-white px-6 py-3 rounded-xl font-bold text-sm shadow-lg shadow-indigo-500/10"
+                      className="px-8 py-3 bg-emerald-500 text-black rounded-xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:scale-105 transition-transform"
                     >
                       Watch Lesson
                     </button>
-                    <button className="p-3 bg-slate-50 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-xl transition-all border border-slate-100">
+                    <button className="p-3 bg-white/5 text-slate-500 hover:text-white rounded-xl transition-all border border-white/5">
                       <Download className="w-5 h-5" />
                     </button>
                   </div>
@@ -347,25 +242,25 @@ export default function Skills() {
       ) : (
         <>
           <NeuralMap />
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div>
-              <h1 className="text-4xl font-black text-slate-900 tracking-tight">Skills Catalog</h1>
-              <p className="text-slate-500 mt-1 text-lg font-medium">Master new technologies and professional crafts.</p>
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+            <div className="space-y-2">
+              <h1 className="text-5xl font-black text-white tracking-tight uppercase font-heading">Skill <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">Catalog</span>.</h1>
+              <p className="text-slate-400 text-lg font-medium">Master new technologies and professional crafts.</p>
             </div>
             <div className="flex items-center gap-4 w-full md:w-auto">
-              <div className="relative group max-w-sm w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
+              <div className="relative group flex-1 md:w-64">
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
                 <input 
                   type="text" 
                   placeholder="Search skills..." 
-                  className="w-full pl-12 pr-4 py-3.5 glass-card rounded-2xl border-none outline-none font-medium"
+                  className="w-full bg-[#0f1219] border border-white/10 rounded-2xl pl-12 pr-4 py-4 text-sm text-white focus:outline-none focus:border-emerald-500/50 transition-colors"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <button 
                 onClick={() => setShowCreateModal(true)}
-                className="premium-btn text-white px-6 py-3.5 rounded-2xl font-bold flex items-center gap-2"
+                className="px-6 py-4 bg-emerald-500 text-black rounded-2xl font-black text-[10px] uppercase tracking-widest shadow-lg shadow-emerald-500/20 flex items-center gap-2 hover:scale-105 transition-transform"
               >
                 <Plus className="w-5 h-5" />
                 <span>Create Skill</span>
@@ -378,78 +273,87 @@ export default function Skills() {
               <div 
                 key={skill.id} 
                 onClick={() => setSelectedSkill(skill)}
-                className="glass-card p-8 rounded-[2.5rem] hover:scale-[1.03] transition-all duration-500 cursor-pointer group border-b-4 border-b-transparent hover:border-b-indigo-500"
+                className="bg-[#0f1219] p-10 rounded-[3rem] border border-white/10 hover:border-emerald-500/30 transition-all duration-500 cursor-pointer group shadow-2xl relative overflow-hidden"
               >
-                <div className={`p-4 rounded-2xl w-fit ${skill.color} mb-6 transition-transform group-hover:rotate-12`}>
+                <div className={`p-5 rounded-2xl w-fit ${skill.color} border border-emerald-500/20 mb-8 transition-transform group-hover:rotate-12`}>
                   {skill.icon}
                 </div>
-                <h3 className="text-2xl font-black text-slate-800 mb-2 group-hover:text-indigo-600 transition-colors">{skill.name}</h3>
-                <p className="text-slate-400 text-sm font-medium line-clamp-2 mb-6">{skill.description}</p>
-                <div className="flex items-center justify-between pt-6 border-t border-slate-50">
-                  <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 bg-slate-50 text-slate-500 rounded-lg">
+                <h3 className="text-2xl font-black text-white mb-3 group-hover:text-emerald-400 transition-colors uppercase tracking-tight">{skill.name}</h3>
+                <p className="text-slate-500 text-sm font-medium line-clamp-2 mb-8 leading-relaxed">{skill.description}</p>
+                <div className="flex items-center justify-between pt-8 border-t border-white/5">
+                  <span className="text-[10px] font-black uppercase tracking-widest px-3 py-1 bg-white/5 text-slate-500 rounded-lg">
                     {skill.category}
                   </span>
-                  <span className="flex items-center text-xs font-bold text-slate-400 group-hover:text-indigo-600">
-                    Learn More <ArrowRight className="w-3 h-3 ml-1.5" />
+                  <span className="flex items-center text-[10px] font-black uppercase tracking-widest text-slate-500 group-hover:text-emerald-400 transition-colors">
+                    Explore <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="glass-card rounded-[3rem] p-12 bg-gradient-to-br from-indigo-600 to-violet-800 text-white relative overflow-hidden shadow-2xl">
-            <h2 className="text-3xl font-black mb-4">Can't find it?</h2>
-            <p className="text-indigo-100/80 mb-8 font-medium">Request a custom training path or suggest a category.</p>
-            <button 
-              onClick={() => setShowCreateModal(true)}
-              className="bg-white text-indigo-600 px-8 py-3.5 rounded-2xl font-black text-sm uppercase shadow-xl hover:scale-105 active:scale-95 transition-all"
-            >
-              Suggest a Skill
-            </button>
+          <div className="bg-gradient-to-br from-emerald-500 to-teal-700 rounded-[3.5rem] p-16 text-black relative overflow-hidden shadow-2xl">
+            <div className="relative z-10">
+              <h2 className="text-4xl font-black mb-4 uppercase tracking-tighter">Can't find your craft?</h2>
+              <p className="text-black/60 mb-10 text-lg font-bold max-w-md">Request a custom training path or suggest a new category to our mentors.</p>
+              <button 
+                onClick={() => setShowCreateModal(true)}
+                className="bg-black text-white px-10 py-4 rounded-[1.5rem] font-black text-xs uppercase tracking-widest shadow-2xl hover:scale-105 active:scale-95 transition-all"
+              >
+                Suggest a Skill
+              </button>
+            </div>
+            <Network className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 text-black/10" />
           </div>
         </>
       )}
 
       {/* MODALS */}
       {showCreateModal && (
-        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xl animate-in fade-in duration-300">
-          <div className="glass-card w-full max-w-lg rounded-[2.5rem] p-8 md:p-10 shadow-2xl animate-in zoom-in-95 duration-300">
-            <div className="flex justify-between items-center mb-8">
-              <h2 className="text-2xl font-black text-slate-900">Create Skill</h2>
-              <button onClick={() => setShowCreateModal(false)} className="text-slate-400 hover:text-slate-600"><X /></button>
+        <div className="fixed inset-0 z-[2000] flex items-center justify-center p-4 bg-black/90 backdrop-blur-xl animate-in fade-in duration-300">
+          <div className="bg-[#0f1219] w-full max-w-lg rounded-[3rem] p-10 border border-white/10 shadow-2xl animate-in zoom-in-95 duration-300">
+            <div className="flex justify-between items-center mb-10">
+              <h2 className="text-2xl font-black text-white uppercase tracking-tight">Create Skill</h2>
+              <button onClick={() => setShowCreateModal(false)} className="text-slate-500 hover:text-white transition-colors"><X /></button>
             </div>
             <form onSubmit={handleCreateSkill} className="space-y-6">
-              <input required placeholder="Skill Name" className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4" value={newSkill.name} onChange={(e) => setNewSkill({...newSkill, name: e.target.value})} />
-              <textarea required placeholder="Brief Description" className="w-full bg-slate-50 border border-slate-100 rounded-2xl px-5 py-4 h-24" value={newSkill.description} onChange={(e) => setNewSkill({...newSkill, description: e.target.value})} />
-              <button type="submit" className="w-full premium-btn text-white py-4 rounded-2xl font-bold">Create Skill</button>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Skill Title</label>
+                <input required placeholder="e.g., Advanced Solidity" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-emerald-500/50 transition-colors" value={newSkill.name} onChange={(e) => setNewSkill({...newSkill, name: e.target.value})} />
+              </div>
+              <div className="space-y-2">
+                <label className="text-[10px] font-black text-slate-500 uppercase tracking-widest">Description</label>
+                <textarea required placeholder="What will students learn?" className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-white focus:outline-none focus:border-emerald-500/50 transition-colors h-32 resize-none" value={newSkill.description} onChange={(e) => setNewSkill({...newSkill, description: e.target.value})} />
+              </div>
+              <button type="submit" className="w-full py-5 bg-emerald-500 text-black rounded-2xl font-black text-xs uppercase tracking-widest shadow-lg shadow-emerald-500/20 hover:scale-[1.02] active:scale-[0.98] transition-all">Create Skill</button>
             </form>
           </div>
         </div>
       )}
 
       {activeVideo && (
-        <div className="fixed inset-0 z-[300] flex items-center justify-center p-4 md:p-12 bg-slate-900/80 backdrop-blur-2xl animate-in fade-in duration-500">
-          <div className="glass-card w-full max-w-6xl rounded-[3rem] overflow-hidden shadow-2xl animate-in zoom-in-95 duration-500 bg-black flex flex-col md:flex-row h-full max-h-[85vh]">
-            <div className="flex-grow bg-black relative">
-              <video key={activeVideo.id} controls autoPlay className="w-full h-full object-contain">
+        <div className="fixed inset-0 z-[3000] flex items-center justify-center p-4 md:p-12 bg-black/95 backdrop-blur-3xl animate-in fade-in duration-500">
+          <div className="w-full max-w-6xl rounded-[3rem] overflow-hidden shadow-2xl bg-black border border-white/10 flex flex-col md:flex-row h-full max-h-[85vh]">
+            <div className="flex-grow bg-black relative flex items-center justify-center">
+              <video key={activeVideo.id} controls autoPlay className="w-full h-full object-contain shadow-2xl">
                 <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4" />
               </video>
-              <div className="absolute top-6 left-6">
-                <div className="bg-black/60 backdrop-blur-md px-4 py-2 rounded-xl border border-white/10 text-white font-bold text-sm">
+              <div className="absolute top-8 left-8">
+                <div className="bg-black/60 backdrop-blur-md px-6 py-3 rounded-2xl border border-white/10 text-white font-black text-xs uppercase tracking-widest">
                   {activeVideo.title}
                 </div>
               </div>
             </div>
-            <div className="w-full md:w-80 bg-slate-900/90 p-8 border-l border-white/5 overflow-y-auto">
-               <div className="flex justify-between items-center mb-8">
-                  <h3 className="text-white font-bold text-lg">Curriculum</h3>
-                  <button onClick={() => setActiveVideo(null)} className="p-2 bg-white/5 hover:bg-white/10 rounded-xl text-white"><X className="w-5 h-5" /></button>
+            <div className="w-full md:w-96 bg-[#0f1219] p-10 border-l border-white/10 overflow-y-auto">
+               <div className="flex justify-between items-center mb-10">
+                  <h3 className="text-white font-black text-xl uppercase tracking-tight">Curriculum</h3>
+                  <button onClick={() => setActiveVideo(null)} className="p-3 bg-white/5 hover:bg-white/10 rounded-2xl text-white transition-all"><X className="w-6 h-6" /></button>
                </div>
                <div className="space-y-4">
-                 {[1,2,3,4].map(i => (
-                   <div key={i} className={`p-4 rounded-2xl border transition-all ${i === 1 ? 'bg-indigo-600 text-white' : 'bg-white/5 text-slate-400 hover:bg-white/10'}`}>
-                      <div className="text-[10px] font-black uppercase tracking-widest opacity-60">Module 0{i}</div>
-                      <div className="text-sm font-bold line-clamp-1">{i === 1 ? activeVideo.title : `Advanced Lesson ${i}`}</div>
+                 {[1,2,3,4,5,6].map(i => (
+                   <div key={i} className={`p-5 rounded-2xl border transition-all cursor-pointer group ${i === 1 ? 'bg-emerald-500 border-emerald-500 text-black' : 'bg-white/5 border-white/5 text-slate-400 hover:bg-white/10'}`}>
+                      <div className={`text-[8px] font-black uppercase tracking-widest mb-1 ${i === 1 ? 'text-black/60' : 'text-slate-600'}`}>Module 0{i}</div>
+                      <div className="text-sm font-black uppercase tracking-tight line-clamp-1">{i === 1 ? activeVideo.title : `Advanced Concept ${i}`}</div>
                    </div>
                  ))}
                </div>
