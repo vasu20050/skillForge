@@ -1,80 +1,96 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Target, TrendingUp, ShieldCheck, ChevronRight } from 'lucide-react';
+import { BookOpen, Target, TrendingUp, ShieldCheck, ChevronRight, Zap, Sparkles, Globe, Cpu } from 'lucide-react';
 
 export default function Home() {
   return (
-    <div className="flex flex-col items-center justify-center py-20 page-transition">
-      <div className="max-w-5xl text-center">
-        <div className="mb-14 flex justify-center relative">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500/10 rounded-full blur-[120px] pointer-events-none animate-pulse"></div>
-          
-          <div className="relative group">
-            <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500 via-purple-500 to-rose-500 rounded-[3rem] blur opacity-30 group-hover:opacity-50 transition duration-1000 group-hover:duration-300"></div>
-            <img 
-              src="/logo.png" 
-              alt="SkillForge Logo" 
-              className="relative w-36 h-36 md:w-44 md:h-44 rounded-[3rem] shadow-2xl transition-all duration-700 group-hover:scale-[1.03] group-hover:rotate-1 animate-float" 
-            />
-          </div>
-        </div>
-
-        <div className="inline-flex items-center space-x-2 bg-indigo-50 px-5 py-2 rounded-full border border-indigo-100 mb-8 shadow-sm">
-           <ShieldCheck className="w-4 h-4 text-indigo-600" />
-           <span className="text-[10px] font-black text-indigo-600 uppercase tracking-widest leading-none">The Trusted Campus Economy</span>
+    <div className="flex flex-col items-center justify-center py-20 animate-in fade-in duration-1000">
+      <div className="max-w-6xl text-center px-6">
+        
+        {/* Badge */}
+        <div className="inline-flex items-center space-x-3 bg-emerald-500/5 px-6 py-3 rounded-2xl border border-emerald-500/20 mb-12 shadow-2xl">
+           <ShieldCheck className="w-5 h-5 text-emerald-500" />
+           <span className="text-[10px] font-black text-emerald-500 uppercase tracking-[0.3em] leading-none">Protocol v2.4: Secured Campus Ledger</span>
         </div>
         
-        <h1 className="text-7xl md:text-9xl font-black text-slate-900 tracking-tighter mb-8 leading-[0.85] uppercase">
-          Build. <span className="text-gradient">Prove.</span> Earn.
-        </h1>
-        
-        <p className="text-xl md:text-2xl text-slate-500 font-medium mb-12 max-w-3xl mx-auto leading-relaxed">
-          The first closed-campus skill marketplace where your portfolio is your currency. Transform from a student to a verified earner.
-        </p>
+        {/* Hero Title */}
+        <div className="relative mb-16">
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[40rem] h-[40rem] bg-emerald-500/5 rounded-full blur-[150px] pointer-events-none -z-10"></div>
+          <h1 className="text-7xl md:text-[10rem] font-black text-white tracking-tighter mb-6 leading-[0.85] uppercase font-heading">
+            Forge. <span className="text-emerald-500 italic">Prove.</span> Earn.
+          </h1>
+          <p className="text-xl md:text-2xl text-slate-500 font-medium max-w-3xl mx-auto leading-relaxed mt-10">
+            The decentralized skill marketplace where <span className="text-white font-bold italic">proof of work</span> is your primary currency. 
+            Transform technical ability into verified campus credits.
+          </p>
+        </div>
 
-        <div className="flex flex-col sm:flex-row justify-center gap-6 mt-12 px-4 mb-32">
+        {/* Hero Actions */}
+        <div className="flex flex-col sm:flex-row justify-center gap-8 mt-16 px-4 mb-40">
           <Link 
             to="/register" 
-            className="premium-btn text-white font-black py-6 px-14 rounded-[2rem] shadow-2xl shadow-indigo-600/30 text-sm uppercase tracking-widest transition-transform hover:scale-105 active:scale-95"
+            className="btn-primary"
           >
-            Join SkillForge
+            Initiate Sequence
           </Link>
           <Link 
             to="/login" 
-            className="bg-white hover:bg-slate-50 text-slate-900 border border-slate-200 font-black py-6 px-14 rounded-[2rem] shadow-xl hover:shadow-2xl transition-all text-sm uppercase tracking-widest hover:scale-105 active:scale-95"
+            className="btn-secondary"
           >
-            Sign In
+            Access Vault
           </Link>
         </div>
 
-        {/* The Pipeline */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
-           {[
-             { title: 'LEARN', desc: 'Complete admin-seeded dummy projects to build your baseline technical reputation.', icon: <BookOpen className="w-8 h-8" />, color: 'indigo' },
-             { title: 'PROVE', desc: 'Achieve 3.8+ rating and 3 project completions to unlock the verified Earner mode.', icon: <Target className="w-8 h-8" />, color: 'amber' },
-             { title: 'EARN', desc: 'Secure high-impact real projects from campus clubs and startups for real credits.', icon: <TrendingUp className="w-8 h-8" />, color: 'emerald' }
-           ].map((step, i) => (
-             <div key={i} className="glass-card p-10 rounded-[3rem] border-slate-100 group hover:border-indigo-600 transition-all flex flex-col items-center text-center">
-                <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-8 bg-${step.color}-50 text-${step.color}-600 group-hover:bg-indigo-600 group-hover:text-white transition-all`}>
-                  {step.icon}
-                </div>
-                <h3 className="text-2xl font-black text-slate-900 mb-4 tracking-tight">{step.title}</h3>
-                <p className="text-slate-500 font-medium text-sm leading-relaxed">{step.desc}</p>
-             </div>
-           ))}
+        {/* The Pipeline Section */}
+        <div className="space-y-16 mb-40">
+          <div className="text-center space-y-4">
+             <h2 className="text-4xl font-black text-white uppercase tracking-tighter">The Technical Pipeline</h2>
+             <p className="text-slate-500 text-sm font-black uppercase tracking-[0.3em]">Phase 01 — Phase 03</p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-left">
+             {[
+               { title: 'LEARN', desc: 'Execute admin-seeded projects to establish your technical baseline reputation.', icon: <Cpu className="w-8 h-8" />, color: 'emerald' },
+               { title: 'PROVE', desc: 'Maintain 3.8+ rating to unlock verified Earner status and secure level 2 clearance.', icon: <Target className="w-8 h-8" />, color: 'teal' },
+               { title: 'EARN', desc: 'Secure real bounty projects from verified campus entities and earn liquid credits.', icon: <Zap className="w-8 h-8" />, color: 'emerald' }
+             ].map((step, i) => (
+               <div key={i} className="bg-[#0f1219] p-12 rounded-[4rem] border border-white/5 group hover:border-emerald-500/30 transition-all flex flex-col items-center text-center shadow-2xl relative overflow-hidden">
+                  <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 opacity-0 group-hover:opacity-[0.03] rounded-bl-[5rem] transition-opacity"></div>
+                  <div className={`w-20 h-20 rounded-[2rem] flex items-center justify-center mb-10 bg-white/5 text-emerald-400 group-hover:bg-emerald-500 group-hover:text-black transition-all shadow-xl`}>
+                    {step.icon}
+                  </div>
+                  <h3 className="text-2xl font-black text-white mb-4 tracking-tight uppercase">{step.title}</h3>
+                  <p className="text-slate-500 font-medium text-sm leading-relaxed">{step.desc}</p>
+                  
+                  <div className="mt-10 w-full h-px bg-white/5 relative">
+                     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-0 h-full bg-emerald-500 group-hover:w-full transition-all duration-700"></div>
+                  </div>
+               </div>
+             ))}
+          </div>
         </div>
 
-        <div className="mt-40 p-20 glass-card rounded-[4rem] bg-slate-950 text-white relative overflow-hidden text-center group">
-            <div className="relative z-10 max-w-2xl mx-auto space-y-10">
-                <h2 className="text-5xl font-black tracking-tight leading-tight">Ready to fund a <span className="text-emerald-400">Project?</span></h2>
-                <p className="text-slate-400 text-lg font-medium">Post a real task and hire your verified campus peers using your credit wallet.</p>
-                <Link to="/register" className="inline-flex items-center px-12 py-6 bg-emerald-500 text-black rounded-[2rem] font-black text-sm uppercase tracking-widest hover:bg-emerald-400 transition-all shadow-xl shadow-emerald-500/20">
-                    Get Started <ChevronRight className="ml-2 w-5 h-5" />
+        {/* Marketplace CTA */}
+        <div className="p-20 bg-[#0f1219] border border-white/5 rounded-[5rem] text-white relative overflow-hidden text-center group shadow-[0_50px_100px_-20px_rgba(0,0,0,0.8)]">
+            <div className="absolute inset-0 bg-emerald-500 opacity-[0.02] pointer-events-none"></div>
+            <div className="relative z-10 max-w-3xl mx-auto space-y-12">
+                <div className="w-20 h-20 mx-auto bg-emerald-500/10 border border-emerald-500/20 rounded-[2rem] flex items-center justify-center mb-4">
+                   <Globe className="w-10 h-10 text-emerald-500 animate-spin-slow" />
+                </div>
+                <h2 className="text-6xl font-black tracking-tighter leading-none uppercase">Need a <span className="text-emerald-500 italic">Solution?</span></h2>
+                <p className="text-slate-500 text-xl font-medium max-w-2xl mx-auto">Post your task to the closed-campus marketplace and hire verified peers using your secure credit wallet.</p>
+                <Link to="/register" className="inline-flex items-center px-16 py-7 bg-emerald-500 text-black rounded-[2.5rem] font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-2xl shadow-emerald-500/30">
+                    Deploy Tasking Request <ChevronRight className="ml-3 w-5 h-5" />
                 </Link>
             </div>
-            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 bg-emerald-500/10 rounded-full blur-[100px] group-hover:bg-indigo-500/20 transition-colors"></div>
+            
+            <div className="absolute -bottom-20 -left-20 w-[30rem] h-[30rem] bg-emerald-500/10 rounded-full blur-[120px] pointer-events-none group-hover:bg-teal-500/20 transition-all duration-1000"></div>
+            <div className="absolute top-0 right-0 p-12 text-slate-800 pointer-events-none select-none">
+               <Sparkles className="w-40 h-40 opacity-10 rotate-12" />
+            </div>
         </div>
       </div>
     </div>
   );
 }
+
