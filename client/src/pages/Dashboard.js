@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Play, BookOpen, Trophy, CheckCircle2, ChevronRight, TrendingUp, ShieldCheck, Wallet } from 'lucide-react';
+import { Play, BookOpen, Trophy, CheckCircle2, ChevronRight, TrendingUp, ShieldCheck, Wallet, Zap, Star, LayoutGrid } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
 import { useAppContext } from '../context/AppContext';
 
@@ -10,10 +10,10 @@ export default function Dashboard() {
 
   // Safely handle loading or missing user
   if (loading || !user) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="flex flex-col items-center space-y-4">
-        <div className="w-12 h-12 border-4 border-indigo-600 border-t-transparent rounded-full animate-spin"></div>
-        <p className="font-bold text-slate-400 uppercase tracking-widest text-xs">Syncing SkillForge...</p>
+    <div className="flex items-center justify-center min-h-screen bg-[#0f1219]">
+      <div className="flex flex-col items-center space-y-6">
+        <div className="w-16 h-16 border-[6px] border-emerald-500/20 border-t-emerald-500 rounded-full animate-spin"></div>
+        <p className="font-black text-slate-500 uppercase tracking-[0.3em] text-[10px]">Syncing SkillForge Systems...</p>
       </div>
     </div>
   );
@@ -27,97 +27,116 @@ export default function Dashboard() {
   const firstName = user.name ? user.name.split(' ')[0] : 'Member';
 
   return (
-    <div className="space-y-10 animate-in-slide pb-20">
+    <div className="space-y-12 pb-20 animate-in fade-in duration-1000">
+      
       {/* Header Section */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 border-b border-slate-100 pb-10">
-        <div className="space-y-2">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-indigo-50 text-indigo-700 text-[10px] font-black uppercase tracking-widest border border-indigo-100 mb-2">
-            <ShieldCheck className="w-3 h-3" />
-            <span>{user.mode_status === 'learner' ? 'Level: Apprentice' : 'Level: Verified Expert'}</span>
-          </div>
-          <h1 className="text-5xl font-black tracking-tight leading-none">
-            {t('welcome')}, <br /><span className="text-emerald-500">{firstName}!</span>
-          </h1>
+      <div className="relative rounded-[4rem] p-12 overflow-hidden bg-[#0f1219] border border-white/5 shadow-2xl">
+        <div className="absolute inset-0 opacity-10 pointer-events-none">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500 rounded-full blur-[150px]"></div>
+          <div className="absolute bottom-0 left-0 w-64 h-64 bg-teal-500 rounded-full blur-[120px]"></div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <div className="glass-card p-5 rounded-2xl border border-slate-200/10 shadow-sm min-w-[180px] flex flex-col items-center">
-            <span className="text-2xl font-black leading-none mb-1">
-              {wallet.available} <span className="text-sm font-medium opacity-40">CR</span>
-            </span>
-            <span className="text-[10px] font-bold opacity-40 uppercase tracking-widest">{t('available')} {t('credits')}</span>
-          </div>
-          {wallet.escrow_locked > 0 && (
-            <div className="bg-amber-50 p-5 rounded-2xl border border-amber-100 min-w-[180px] flex flex-col items-center">
-              <span className="text-2xl font-black text-amber-700 leading-none mb-1">
-                {wallet.escrow_locked} <span className="text-sm font-medium text-amber-500">CR</span>
-              </span>
-              <span className="text-[10px] font-bold text-amber-500 uppercase tracking-widest">Escrow Locked</span>
+        <div className="relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+          <div className="space-y-4 text-center lg:text-left">
+            <div className="inline-flex items-center space-x-2 px-4 py-2 rounded-full bg-emerald-500/10 text-emerald-400 text-[10px] font-black uppercase tracking-widest border border-emerald-500/20 mb-2">
+              <ShieldCheck className="w-4 h-4" />
+              <span>{user.mode_status === 'learner' ? 'Protocol: Apprentice' : 'Protocol: Verified Legend'}</span>
             </div>
-          )}
+            <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-none uppercase font-heading">
+              {t('welcome')}, <br /><span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-teal-500">{firstName}!</span>
+            </h1>
+            <p className="text-slate-400 text-lg font-medium max-w-md">Your campus economy dashboard is online. Build, earn, and scale.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 w-full lg:w-auto">
+            <div className="bg-black/40 backdrop-blur-xl p-8 rounded-[2.5rem] border border-white/5 shadow-2xl min-w-[220px] text-center group hover:border-emerald-500/30 transition-all">
+              <div className="text-4xl font-black text-white mb-2 tabular-nums">
+                {wallet.available} <span className="text-sm font-black text-emerald-500 ml-1">CR</span>
+              </div>
+              <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest">{t('available')} {t('credits')}</div>
+            </div>
+            {wallet.escrow_locked > 0 ? (
+              <div className="bg-amber-500/5 p-8 rounded-[2.5rem] border border-amber-500/20 shadow-2xl min-w-[220px] text-center">
+                <div className="text-4xl font-black text-amber-500 mb-2 tabular-nums">
+                  {wallet.escrow_locked} <span className="text-sm font-black opacity-40 ml-1">CR</span>
+                </div>
+                <div className="text-[10px] font-black text-amber-500/60 uppercase tracking-widest">Escrow Locked</div>
+              </div>
+            ) : (
+              <div className="bg-white/5 p-8 rounded-[2.5rem] border border-white/5 shadow-2xl min-w-[220px] text-center opacity-60">
+                <div className="text-4xl font-black text-slate-600 mb-2 tabular-nums">0.0</div>
+                <div className="text-[10px] font-black text-slate-700 uppercase tracking-widest">Vault Empty</div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Verification Gateway for Learners */}
       {user.mode_status === 'learner' && (
-        <div className="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-slate-100">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8">
-            <div className="space-y-1">
-              <h2 className="text-2xl font-black text-slate-900">Unlock Earn Mode</h2>
-              <p className="text-slate-500 font-medium">Complete baseline projects to start earning real campus rewards.</p>
+        <div className="bg-[#0f1219] p-10 md:p-14 rounded-[3.5rem] border border-white/5 relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 right-0 p-10">
+             <Zap className="w-20 h-20 text-emerald-500 opacity-5" />
+          </div>
+          
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-10 mb-12">
+            <div className="space-y-3">
+              <h2 className="text-3xl font-black text-white uppercase tracking-tight">Unlock Earn Mode.</h2>
+              <p className="text-slate-500 text-lg font-medium">Complete baseline projects to start earning real campus rewards.</p>
             </div>
-            <div className="px-6 py-3 bg-indigo-600 text-white rounded-xl font-black text-xs uppercase tracking-widest shadow-lg shadow-indigo-600/20">
-              {verification.completed_learn_projects}/3 Projects Done
+            <div className="px-10 py-5 bg-emerald-500 text-black rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-emerald-500/20">
+              {verification.completed_learn_projects}/3 Baseline Tracks
             </div>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className={`p-6 rounded-2xl border-2 transition-all ${verification.completed_learn_projects >= 3 ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-slate-50 border-slate-100 text-slate-400'}`}>
-              <CheckCircle2 className={`w-8 h-8 mb-4 ${verification.completed_learn_projects >= 3 ? 'text-emerald-500' : 'text-slate-200'}`} />
-              <h4 className="font-black text-sm uppercase tracking-widest mb-1">3 Learn Projects</h4>
-              <p className="text-xs font-semibold opacity-70">Technical foundation</p>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div className={`p-8 rounded-[2.5rem] border transition-all ${verification.completed_learn_projects >= 3 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/5 text-slate-600'}`}>
+              <CheckCircle2 className={`w-10 h-10 mb-6 ${verification.completed_learn_projects >= 3 ? 'text-emerald-500' : 'text-slate-800'}`} />
+              <h4 className="font-black text-xs uppercase tracking-widest mb-2">Technical Foundations</h4>
+              <p className="text-[10px] font-black opacity-60 uppercase tracking-widest">{verification.completed_learn_projects}/3 Projects</p>
             </div>
-            <div className={`p-6 rounded-2xl border-2 transition-all ${verification.average_learn_rating >= 3.8 ? 'bg-emerald-50 border-emerald-100 text-emerald-700' : 'bg-slate-50 border-slate-100 text-slate-400'}`}>
-               <Trophy className={`w-8 h-8 mb-4 ${verification.average_learn_rating >= 3.8 ? 'text-emerald-500' : 'text-slate-200'}`} />
-              <h4 className="font-black text-sm uppercase tracking-widest mb-1">3.8+ Rating</h4>
-              <p className="text-xs font-semibold opacity-70">Current: {Number(verification.average_learn_rating || 0).toFixed(1)}/5</p>
+            <div className={`p-8 rounded-[2.5rem] border transition-all ${verification.average_learn_rating >= 3.8 ? 'bg-emerald-500/10 border-emerald-500/30 text-emerald-400' : 'bg-white/5 border-white/5 text-slate-600'}`}>
+               <Trophy className={`w-10 h-10 mb-6 ${verification.average_learn_rating >= 3.8 ? 'text-emerald-500' : 'text-slate-800'}`} />
+              <h4 className="font-black text-xs uppercase tracking-widest mb-2">Quality Standards</h4>
+              <p className="text-[10px] font-black opacity-60 uppercase tracking-widest">Score: {Number(verification.average_learn_rating || 0).toFixed(1)}/5.0</p>
             </div>
-            <Link to="/learn" className="p-6 rounded-2xl border-2 bg-indigo-50 border-dashed border-indigo-200 flex flex-col justify-center items-center text-indigo-600 hover:bg-indigo-600 hover:text-white transition-all group">
-                <Play className="w-8 h-8 mb-2 fill-current" />
-                <h4 className="font-black text-sm uppercase tracking-widest">Start Learning</h4>
+            <Link to="/learn" className="p-8 rounded-[2.5rem] border-2 border-emerald-500/20 border-dashed bg-emerald-500/5 flex flex-col justify-center items-center text-emerald-400 hover:bg-emerald-500 hover:text-black transition-all group shadow-xl">
+                <Play className="w-12 h-12 mb-4 fill-current group-hover:scale-110 transition-transform" />
+                <h4 className="font-black text-[10px] uppercase tracking-[0.2em]">Initialise System</h4>
             </Link>
           </div>
         </div>
       )}
 
       {/* Main Marketplace Actions */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <div className="bg-white p-10 rounded-3xl shadow-sm border border-slate-100 flex flex-col items-start hover:shadow-md transition-shadow">
-           <div className="w-14 h-14 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 mb-8">
-            <BookOpen className="w-7 h-7" />
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+        <div className="bg-[#0f1219] p-12 rounded-[3.5rem] border border-white/5 flex flex-col items-start hover:border-emerald-500/20 transition-all shadow-2xl relative overflow-hidden group">
+           <div className="absolute top-0 right-0 w-32 h-32 bg-emerald-500 opacity-0 group-hover:opacity-[0.03] rounded-bl-[5rem] transition-opacity"></div>
+           <div className="w-16 h-16 bg-white/5 rounded-2xl flex items-center justify-center text-emerald-400 mb-10 group-hover:bg-emerald-500 group-hover:text-black transition-all duration-500">
+            <BookOpen className="w-8 h-8" />
           </div>
-          <h3 className="text-2xl font-black mb-3">{t('learn')} Zone</h3>
-          <p className="text-slate-500 mb-8 leading-relaxed font-medium">Practice with risk-free projects and build your campus reputation.</p>
-          <Link to="/learn" className="btn-primary px-8 py-4 text-sm uppercase tracking-widest inline-flex items-center">
-            Browse Learn <ChevronRight className="w-4 h-4 ml-2" />
+          <h3 className="text-3xl font-black mb-4 text-white uppercase tracking-tight">{t('learn')} Zone.</h3>
+          <p className="text-slate-500 mb-10 leading-relaxed font-medium text-lg">Practice with risk-free projects and build your campus reputation.</p>
+          <Link to="/learn" className="bg-white/5 hover:bg-white/10 text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest border border-white/10 transition-all">
+            Explore Tracks <ChevronRight className="w-4 h-4 ml-2" />
           </Link>
         </div>
 
-        <div className={`p-10 rounded-3xl flex flex-col items-start transition-all ${isEarner ? 'bg-slate-900 text-white shadow-xl shadow-slate-900/10' : 'bg-slate-50 border-2 border-dashed border-slate-200 opacity-60'}`}>
-           <div className={`w-14 h-14 rounded-2xl flex items-center justify-center mb-8 ${isEarner ? 'bg-emerald-500 text-black' : 'bg-slate-200 text-slate-400'}`}>
-            <TrendingUp className="w-7 h-7" />
+        <div className={`p-12 rounded-[3.5rem] flex flex-col items-start transition-all relative overflow-hidden shadow-2xl ${isEarner ? 'bg-black border border-emerald-500/30' : 'bg-[#0f1219] border border-white/5 opacity-60'}`}>
+           <div className={`w-16 h-16 rounded-2xl flex items-center justify-center mb-10 ${isEarner ? 'bg-emerald-500 text-black shadow-lg shadow-emerald-500/20' : 'bg-white/5 text-slate-700'}`}>
+            <TrendingUp className="w-8 h-8" />
           </div>
-          <h3 className={`text-2xl font-black mb-3 ${isEarner ? 'text-white' : 'opacity-40'}`}>{t('marketplace')}</h3>
-          <p className={`mb-8 leading-relaxed font-medium ${isEarner ? 'text-slate-400' : 'text-slate-300'}`}>
-            {isEarner ? 'Real tasks for real credits. Help campus startups grow.' : 'Locked: Complete verification to access paid opportunities.'}
+          <h3 className={`text-3xl font-black mb-4 uppercase tracking-tight ${isEarner ? 'text-white' : 'text-slate-600'}`}>{t('marketplace')}.</h3>
+          <p className={`mb-10 leading-relaxed font-medium text-lg ${isEarner ? 'text-slate-400' : 'text-slate-700'}`}>
+            {isEarner ? 'Real tasks for real credits. Help campus startups grow.' : 'Clearance Required: Complete verification to access earning protocols.'}
           </p>
           {isEarner ? (
-             <Link to="/marketplace" className="bg-emerald-500 text-black px-8 py-4 rounded-xl font-black text-sm uppercase tracking-widest inline-flex items-center hover:bg-emerald-400 transition-colors">
-                Marketplace <ChevronRight className="w-4 h-4 ml-2" />
+             <Link to="/marketplace" className="bg-emerald-500 text-black px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl shadow-emerald-500/40 hover:scale-105 transition-all">
+                Access Market <ChevronRight className="w-4 h-4 ml-2" />
              </Link>
           ) : (
-            <div className="flex items-center text-xs font-black uppercase tracking-widest text-slate-400">
-               <ShieldCheck className="w-4 h-4 mr-2" /> Verification Required
+            <div className="flex items-center text-[10px] font-black uppercase tracking-widest text-slate-700">
+               <ShieldCheck className="w-5 h-5 mr-3" /> System Locked
             </div>
           )}
         </div>
@@ -125,30 +144,32 @@ export default function Dashboard() {
 
       {/* Client Specific Actions */}
       {isClient && (
-        <div className="bg-indigo-600 p-10 rounded-3xl text-white flex flex-col md:flex-row justify-between items-center gap-6 shadow-xl shadow-indigo-600/20">
-          <div className="space-y-1">
-            <h3 className="text-2xl font-black">Need Talent?</h3>
-            <p className="text-indigo-100 font-medium opacity-80">Post a project and fund it to hire from the best students.</p>
+        <div className="bg-emerald-500 p-12 rounded-[3.5rem] text-black flex flex-col lg:flex-row justify-between items-center gap-10 shadow-2xl shadow-emerald-500/20">
+          <div className="space-y-2 text-center lg:text-left">
+            <h3 className="text-4xl font-black uppercase tracking-tighter">Need Talent?</h3>
+            <p className="text-black/60 text-lg font-bold">Post a project and fund it to hire from the campus elite.</p>
           </div>
-          <Link to="/projects/new" className="bg-white text-indigo-600 px-8 py-4 rounded-xl font-black text-sm uppercase tracking-widest hover:bg-indigo-50 transition-colors shadow-lg">
-            Post Project
+          <Link to="/projects/new" className="bg-black text-white px-10 py-5 rounded-2xl font-black text-xs uppercase tracking-widest shadow-2xl hover:scale-105 transition-all">
+            Deploy Project
           </Link>
         </div>
       )}
 
       {/* Activity / Wallet History */}
-      <div className="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-slate-100">
-        <div className="flex items-center justify-between mb-8">
-          <h3 className="text-2xl font-black text-slate-900 flex items-center">
-            <Wallet className="w-6 h-6 mr-3 text-slate-400" />
-            Wallet Activity
+      <div className="bg-[#0f1219] p-10 md:p-14 rounded-[3.5rem] border border-white/5 shadow-2xl">
+        <div className="flex flex-col sm:flex-row items-center justify-between mb-12 gap-6">
+          <h3 className="text-2xl font-black text-white flex items-center uppercase tracking-widest">
+            <Wallet className="w-7 h-7 mr-4 text-emerald-400" />
+            Ledger History
           </h3>
-          <Link to="/wallet" className="text-xs font-black text-indigo-600 hover:text-indigo-800 uppercase tracking-widest border-b-2 border-transparent hover:border-indigo-600 transition-all">View Details</Link>
+          <Link to="/wallet" className="text-[10px] font-black text-slate-500 hover:text-emerald-400 uppercase tracking-[0.2em] transition-all border-b border-transparent hover:border-emerald-400 pb-1">View Full Ledger</Link>
         </div>
-        <div className="flex items-center justify-center p-12 bg-slate-50 rounded-2xl border border-dashed border-slate-200 text-slate-400 font-bold italic text-sm">
-          No recent activity. Start exploring to earn rewards!
+        <div className="flex flex-col items-center justify-center p-20 bg-black/40 rounded-[2.5rem] border border-dashed border-white/5 text-slate-700 font-black uppercase tracking-widest text-[10px] text-center">
+          <LayoutGrid className="w-10 h-10 mb-6 text-slate-800" />
+          No recent transactions in the ledger history.
         </div>
       </div>
     </div>
   );
 }
+
