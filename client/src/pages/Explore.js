@@ -22,7 +22,6 @@ export default function Explore() {
     (selectedCategory === 'All' || bounty.category === selectedCategory) &&
     bounty.title.toLowerCase().includes(searchQuery.toLowerCase())
   );
-
   return (
     <div className="space-y-12 pb-20 animate-in fade-in duration-1000 relative">
       
